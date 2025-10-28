@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADC LIFF App</title>
+    <script>
+      // もしこのページがiframe内（GASのサンドボックスなど）で実行されていたら、
+      // トップレベルのウィンドウでこのページのURLを再読み込みする（フレームから脱出する）
+      if (window.top !== window.self) {
+        window.top.location.replace(window.self.location.href);
+      }
+    </script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+      /* 簡単なデザイン */
+      body { font-family: sans-serif; padding: 1em; }
+      #loading { font-weight: bold; }
+      #profile-card { border: 1px solid #ccc; padding: 1em; border-radius: 8px; margin-top: 1em; }
+      #nickname { font-size: 1.5em; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <script>
+      // もしこのページがiframe内（GASのサンドボックスなど）で実行されていたら、
+      // トップレベルのウィンドウでこのページのURLを再読み込みする（フレームから脱出する）
+      if (window.top !== window.self) {
+        window.top.location.replace(window.self.location.href);
+      }
+    </script>
+    <h1>マイページ！！</h1>
+    <div id="loading">読み込み中...</div>
+
+    <div id="profile-card" style="display: none;">
+      <p>ニックネーム: <span id="nickname"></span></p>
+      <p>年齢: <span id="age"></span>歳</p>
+      <p>所属: <span id="job"></span></p>
+    </div>
+
+       <script>
+        // ▼▼▼▼▼ この<script>タグの中身をすべて置き換え ▼▼▼▼▼
+
+        // 成功時にプロフィールを表示する関数
+        function showProfile(data) {
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("profile-card").style.display = "block";
+          
+          document.getElementById("nickname").innerText = data.nickname || '未設定';
+          document.getElementById("age").innerText = data.age || '?';
+          document.getElementById("job").innerText = data.job || '未設定';
+        }
+
+        // エラー時にメッセージを表示し、連携ボタンを表示する関数
+        function showError(error) {
+          document.getElementById("loading").innerText = "エラー: " + error.message;
+          document.getElementById("sync-button-container").style.display = "block";
+        }
+
+        // 連携ボタンが押された時の処理
+        function syncAccount() {
+          document.getElementById("sync-button").innerText = "連携処理中...";
+          document.getElementById("sync-button").disabled = true;
+
+          const liffUserId = liff.getContext().userId;
+          const nonce = Math.random().toString(36).substring(2);
+
+          google.script.run
+            .withSuccessHandler(() => {
+              liff.sendMessages([
+                { type: 'text', text: `/sync ${nonce}` }
+              ]).then(() => {
+                liff.closeWindow();
+              });
+            })
+            .withFailureHandler(alert)
+            .storeLiffIdWithNonce(liffUserId, nonce);
+        }
+        
+        // LIFFアプリのメイン処理
+        async function main() {
+          await liff.init({ liffId: "2008378264-4O97qRYQ" });
+
+          if (!liff.isLoggedIn()) {
+            liff.login();
+            return;
+          }
+
+          const liffUserId = liff.getContext().userId;
+
+          google.script.run
+            .withSuccessHandler(showProfile)
+            .withFailureHandler(showError)
+            .getMyProfileData(liffUserId);
+        }
+
+        main();
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    </script>
+    
+    
+    <div id="sync-button-container" style="display: none; margin-top: 2em; text-align: center;">
+        <p>MADCアカウントとの連携が必要です。</p>
+        <button id="sync-button" onclick="syncAccount()">アカウントを連携する</button>
+    </div>
+    
+  </body>
+</html>
