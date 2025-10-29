@@ -1,114 +1,44 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ja">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MADC LIFF App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MADC MyPage</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <style>
-      /* 簡単なデザイン */
-      body { font-family: sans-serif; padding: 1em; }
-      #loading { font-weight: bold; }
-      #profile-card { border: 1px solid #ccc; padding: 1em; border-radius: 8px; margin-top: 1em; }
-      #nickname { font-size: 1.5em; font-weight: bold; }
-    </style>
-  </head>
-  <body>
-    <h1>マイページ！</h1>
-    <div id="loading">読み込み中...</div>
+    <script src="script.js" defer></script>
+</head>
+<body>
 
-    <div id="profile-card" style="display: none;">
-      <p>ニックネーム: <span id="nickname"></span></p>
-      <p>年齢: <span id="age"></span>歳</p>
-      <p>所属: <span id="job"></span></p>
+    <div class="container is-loading" id="container">
+        <header class="profile-header">
+            <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
+            <h2 id="nickname">読み込み中...</h2>
+        </header>
+
+        <main class="main-content">
+            <section class="metrics">
+                <div class="metric-card">
+                    <span class="metric-label">保有キュン</span>
+                    <span class="metric-value" id="kyun-points">--</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">診断達成率</span>
+                    <span class="metric-value" id="diagnosis-progress">--%</span>
+                </div>
+            </section>
+
+            <nav class="actions">
+                <a href="#" class="action-button">プロフィール編集</a>
+                <a href="#" class="action-button">キュンを追加</a>
+            </nav>
+        </main>
     </div>
 
-    <div id="sync-button-container" style="display: none; margin-top: 2em; text-align: center;">
-      <p id="error-message"></p>
-      <button id="sync-button" onclick="syncAccount()">アカウントを連携する</button>
+    <div id="sync-button-container" style="display: none;">
+        <p id="error-message"></p>
+        <button id="sync-button" onclick="syncAccount()">アカウントを連携する</button>
     </div>
 
-    <script>
-      // ▼▼▼▼▼ このscriptタグの中身をすべて置き換え ▼▼▼▼▼
-
-      // ★★★ GASのWebアプリURLをここに設定 ★★★
-      const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
-
-      // GASのAPIを呼び出すためのヘルパー関数
-      async function callGasApi(action, payload) {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // GASでPOSTを受け取るためのおまじない
-          body: JSON.stringify({
-            source: 'liff_app', // LIFFからのリクエストであることを示す
-            action: action,
-            ...payload
-          })
-        });
-        if (!response.ok) {
-          throw new Error('APIサーバーとの通信に失敗しました。');
-        }
-        return response.json();
-      }
-
-      // 成功時にプロフィールを表示する関数
-      function showProfile(data) {
-        if (data.success) {
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("profile-card").style.display = "block";
-          document.getElementById("nickname").innerText = data.nickname || '未設定';
-          document.getElementById("age").innerText = data.age || '?';
-          document.getElementById("job").innerText = data.job || '未設定';
-        } else {
-          showError(data);
-        }
-      }
-
-      // エラー時にメッセージを表示し、連携ボタンを表示する関数
-      function showError(error) {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-message").innerText = error.message || "エラーが発生しました。";
-        document.getElementById("sync-button-container").style.display = "block";
-      }
-
-      // 連携ボタンが押された時の処理
-      async function syncAccount() {
-        document.getElementById("sync-button").innerText = "連携処理中...";
-        document.getElementById("sync-button").disabled = true;
-
-        try {
-          const liffUserId = liff.getContext().userId;
-          const nonce = Math.random().toString(36).substring(2);
-
-          const result = await callGasApi('storeLiffIdWithNonce', { liffUserId: liffUserId, nonce: nonce });
-
-          if (result.success) {
-            await liff.sendMessages([{ type: 'text', text: `/sync ${nonce}` }]);
-            liff.closeWindow();
-          } else {
-            alert('連携処理に失敗しました: ' + result.message);
-          }
-        } catch (error) {
-          alert('エラー: ' + error.message);
-        }
-      }
-      
-      // LIFFアプリのメイン処理
-      async function main() {
-        await liff.init({ liffId: "2008378264-4O97qRYQ" });
-        if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
-        }
-
-        const liffUserId = liff.getContext().userId;
-        callGasApi('getMyProfileData', { liffUserId: liffUserId })
-          .then(showProfile)
-          .catch(showError);
-      }
-
-      main();
-      // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-    </script>
-  </body>
+</body>
 </html>
