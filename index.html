@@ -20,7 +20,8 @@
             </div>
         </div>
     </div>
-    <div id="app">
+
+    <div id="app" style="display: none;">
         
         <div id="my-page" class="page">
             <div class="container is-loading" id="container">
@@ -54,8 +55,7 @@
                 <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
                 <h1>旧ユーザー画面</h1>
             </header>
-            <main id="user-grid-container" class="user-grid">
-                </main>
+            <main id="user-grid-container" class="user-grid"></main>
         </div>
 
         <div id="user-swipe-page" class="page" style="display: none;">
@@ -63,6 +63,7 @@
                 <a href="#" class="back-button" data-target="my-page">＜</a>
             </header>
             <main class="swipe-deck-container">
+                <div class="swipe-deck-header-placeholder"></div>
                 <div id="swipe-deck" class="swipe-deck">
                     </div>
                 <div class="swipe-actions">
@@ -72,8 +73,7 @@
                 </div>
             </main>
         </div>
-
-    </div>
+        </div>
 
     <div id="sync-button-container" style="display: none;">
         <p id="error-message"></p>
