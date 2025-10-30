@@ -233,6 +233,7 @@ body {
     width: 100%;
     left: 0;
     opacity: 0;
+    white-space: nowrap; /* ★★★ この行を追記 ★★★ */
     animation-name: fadeInOut;
     animation-duration: 1.5s; /* 1つのテキストが表示される時間 */
     animation-fill-mode: both; /* アニメーション終了後も最後の状態を維持 */
