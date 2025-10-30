@@ -11,25 +11,16 @@
 <body>
 
     <div id="loader-wrapper">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <div class="loader-text-container">
-                <span class="loading-text-item">リダイレクト中です...</span>
-                <span class="loading-text-item">読み込み中です...</span>
-                <span class="loading-text-item">表示情報の取得です</span>
-            </div>
         </div>
-    </div>
 
     <div id="app">
-
+        
         <div id="my-page" class="page">
             <div class="container is-loading" id="container">
                 <header class="profile-header">
                     <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
                     <h2 id="nickname">読み込み中...</h2>
                 </header>
-
                 <main class="main-content">
                     <section class="metrics">
                         <div class="metric-card">
@@ -41,10 +32,9 @@
                             <span class="metric-value" id="diagnosis-progress">--%</span>
                         </div>
                     </section>
-
                     <nav class="actions">
-                        <a href="#" class="action-button primary" id="go-to-new-users">ユーザーを探す</a>
-                        <a href="#" class="action-button" id="go-to-old-users">旧ユーザー画面</a>
+                        <a href="#" class="action-button primary" id="go-to-swipe-page">ユーザーを探す</a>
+                        <a href="#" class="action-button" id="go-to-grid-page">旧ユーザー画面</a>
                         <a href="#" class="action-button">プロフィール編集</a>
                         <a href="#" class="action-button">キュンを追加</a>
                     </nav>
@@ -52,31 +42,30 @@
             </div>
         </div>
 
-        <div id="user-list-page" class="page" style="display: none;">
+        <div id="user-grid-page" class="page" style="display: none;">
             <header class="page-header">
                 <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
                 <h1>旧ユーザー画面</h1>
             </header>
-            <main id="user-list-container" class="user-grid">
+            <main id="user-grid-container" class="user-grid">
                 </main>
         </div>
 
-        <div id="new-user-list-page" class="page" style="display: none;">
-            <header class="page-header">
-                <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
-                <h1>ユーザーを探す</h1>
+        <div id="user-swipe-page" class="page" style="display: none;">
+            <header class="page-header dark">
+                <a href="#" class="back-button" data-target="my-page">＜</a>
             </header>
             <main class="swipe-deck-container">
                 <div id="swipe-deck" class="swipe-deck">
                     </div>
                 <div class="swipe-actions">
-                    <button id="nope-button" class="swipe-button nope">NOPE</button>
-                    <button id="like-button" class="swipe-button like">LIKE</button>
+                    <button id="rewind-button" class="swipe-button rewind">↩︎</button>
+                    <button id="nope-button" class="swipe-button nope">×</button>
+                    <button id="like-button" class="swipe-button like">❤</button>
                 </div>
             </main>
         </div>
-
-    </div>
+        </div>
 
     <div id="sync-button-container" style="display: none;">
         <p id="error-message"></p>
