@@ -45,6 +45,9 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
             document.getElementById("container").classList.remove('is-loading');
             document.getElementById("container").classList.add('is-loaded');
+            // ★★★ ローディング画面を非表示にする ★★★
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+            
         } else {
             showError(data);
         }
@@ -52,7 +55,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
      // エラー時にメッセージを表示し、連携ボタンを表示する関数
     function showError(error) {
-        document.getElementById("container").style.display = "none"; // メインコンテンツを隠す
+        // ★★★ ローディング画面を非表示にする ★★★
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+        
+        document.getElementById("container").style.display = "none";
         document.getElementById("error-message").innerText = error.message || "エラーが発生しました。";
         document.getElementById("sync-button-container").style.display = "block";
     }
