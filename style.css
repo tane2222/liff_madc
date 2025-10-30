@@ -1,10 +1,10 @@
 /* 基本設定とカラーテーマ */
 :root {
-    --bg-color: #121212;
-    --card-color: #1E1E1E;
-    --primary-text: #FFFFFF;
-    --secondary-text: #B3B3B3;
-    --accent-color: #BB86FC;
+    --bg-color: #F7F7F7; /* ★★★ 柔らかいオフホワイトに変更 ★★★ */
+    --card-color: #FFFFFF; /* ★★★ カードを白に変更 ★★★ */
+    --primary-text: #222222; /* ★★★ メインテキストをダークグレーに変更 ★★★ */
+    --secondary-text: #888888; /* ★★★ サブテキストをグレーに変更 ★★★ */
+    --accent-color: #BB86FC; /* アクセントカラーはそのまま */
 }
 
 body {
@@ -37,7 +37,7 @@ body {
     border-radius: 50%;
     border: 3px solid var(--accent-color);
     object-fit: cover;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* ★★★ 影を少し薄く調整 ★★★ */
 }
 .profile-header h2 {
     margin-top: 16px;
@@ -57,7 +57,7 @@ body {
     border-radius: 12px;
     padding: 20px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* ★★★ 影を少し薄く調整 ★★★ */
 }
 .metric-label {
     display: block;
@@ -87,9 +87,10 @@ body {
     text-align: center;
     font-weight: 500;
     transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* ★★★ 影を追加 ★★★ */
 }
 .action-button:hover {
-    background-color: #333;
+    background-color: #f0f0f0; /* ★★★ ホバー時の色を調整 ★★★ */
     transform: scale(1.03);
 }
 
@@ -103,4 +104,5 @@ body {
     background: var(--card-color);
     padding: 2em;
     border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* ★★★ 影を追加 ★★★ */
 }
