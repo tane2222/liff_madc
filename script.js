@@ -1,7 +1,10 @@
+
+   // ★★★ GASのWebアプリURLとLIFF IDをここに設定 ★★★
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
+const LIFF_ID = "2008378264-4O97qRYQ";
+
+// DOMが読み込まれたら、ページロジックを実行
 window.addEventListener('DOMContentLoaded', () => {
-    // ★★★ GASのWebアプリURLとLIFF IDをここに設定 ★★★
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
-    const LIFF_ID = "2008378264-4O97qRYQ";
     
     // GASのAPIを呼び出すためのヘルパー関数
     async function callGasApi(action, payload) {
