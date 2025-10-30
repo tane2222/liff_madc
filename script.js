@@ -22,17 +22,24 @@ window.addEventListener('DOMContentLoaded', () => {
             page.style.display = (page.id === pageId) ? 'block' : 'none';
         });
     }
-
-    document.getElementById('go-to-users').addEventListener('click', (e) => {
+    // --- ページ遷移のイベントリスナー ---
+    document.getElementById('go-to-new-users').addEventListener('click', (e) => {
         e.preventDefault();
-        loadUserListPage();
+        loadNewUserListPage();
+        showPage('new-user-list-page');
+    });
+    document.getElementById('go-to-old-users').addEventListener('click', (e) => {
+        e.preventDefault();
+        loadUserListPage(); // 既存の関数を呼び出す
         showPage('user-list-page');
     });
-
-    document.getElementById('back-to-mypage').addEventListener('click', (e) => {
-        e.preventDefault();
-        showPage('my-page');
+    document.querySelectorAll('.back-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(btn.dataset.target || 'my-page');
+        });
     });
+
     
     function showProfile(data) {
         if (data.success) {
@@ -139,3 +146,92 @@ async function syncAccount() {
         alert('エラー: ' + error.message);
     }
 }
+// ▼▼▼▼▼ 新しいカードスワイプUIのロジックをここから追加 ▼▼▼▼▼
+    
+    let swipeDeck; // カードスタックのコンテナ
+    let allCards; // 全てのカード要素
+
+    async function loadNewUserListPage() {
+        swipeDeck = document.getElementById('swipe-deck');
+        swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
+
+        try {
+            const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
+            if (result.success && result.users.length > 0) {
+                swipeDeck.innerHTML = '';
+                result.users.forEach(user => {
+                    const card = document.createElement('div');
+                    card.classList.add('swipe-card');
+                    card.innerHTML = `
+                        <div class="swipe-badge like-badge">LIKE</div>
+                        <div class="swipe-badge nope-badge">NOPE</div>
+                        <img src="${user.profileImageUrl}" alt="${user.nickname}">
+                        <div class="card-info">
+                            <h3>${user.nickname || 'ななしさん'}</h3>
+                            <p>${user.age || '?'}歳・${user.job || '未設定'}</p>
+                        </div>`;
+                    swipeDeck.appendChild(card);
+                });
+                initSwipe();
+            } else {
+                swipeDeck.innerHTML = '<p>表示できるユーザーがいません。</p>';
+            }
+        } catch (error) {
+            swipeDeck.innerHTML = `<p>エラー: ${error.message}</p>`;
+        }
+    }
+
+    function initSwipe() {
+        allCards = swipeDeck.querySelectorAll('.swipe-card');
+        allCards.forEach(card => {
+            let isDragging = false;
+            let startX = 0, startY = 0;
+
+            function onDragStart(e) {
+                isDragging = true;
+                startX = e.pageX || e.touches[0].pageX;
+                startY = e.pageY || e.touches[0].pageY;
+                card.style.transition = 'none'; // ドラッグ中はアニメーションを無効化
+            }
+            function onDragMove(e) {
+                if (!isDragging) return;
+                const currentX = e.pageX || e.touches[0].pageX;
+                const diffX = currentX - startX;
+                const rotate = diffX * 0.1; // ドラッグ距離に応じてカードを傾ける
+                card.style.transform = `translateX(${diffX}px) rotate(${rotate}deg)`;
+
+                // LIKE/NOPEバッジの表示
+                if (diffX > 0) {
+                    card.querySelector('.like-badge').style.opacity = diffX / 100;
+                } else {
+                    card.querySelector('.nope-badge').style.opacity = -diffX / 100;
+                }
+            }
+            function onDragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                const diffX = (e.pageX || e.changedTouches[0].pageX) - startX;
+                card.style.transition = 'transform 0.3s ease'; // アニメーションを有効化
+                
+                if (Math.abs(diffX) > 100) { // 一定距離以上スワイプしたらカードを飛ばす
+                    const flyOutDirection = diffX > 0 ? 1 : -1;
+                    card.style.transform = `translateX(${flyOutDirection * 500}px) rotate(${flyOutDirection * 20}deg)`;
+                    setTimeout(() => card.remove(), 300);
+                } else { // 距離が足りなければ元の位置に戻す
+                    card.style.transform = '';
+                }
+                card.querySelector('.like-badge').style.opacity = 0;
+                card.querySelector('.nope-badge').style.opacity = 0;
+            }
+
+            card.addEventListener('mousedown', onDragStart);
+            card.addEventListener('mousemove', onDragMove);
+            card.addEventListener('mouseup', onDragEnd);
+            card.addEventListener('mouseleave', onDragEnd); // カードからマウスが離れた時
+            card.addEventListener('touchstart', onDragStart);
+            card.addEventListener('touchmove', onDragMove);
+            card.addEventListener('touchend', onDragEnd);
+        });
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+});
