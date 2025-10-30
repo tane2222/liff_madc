@@ -228,16 +228,19 @@ body {
     height: 20px; /* テキスト1行分の高さを確保 */
     color: var(--secondary-text);
 }
+/* ▼▼▼▼▼ このCSSルールをまるごと置き換え ▼▼▼▼▼ */
 .loading-text-item {
     position: absolute;
-    width: 100%;
-    left: 0;
+    /* width: 100%; */ /* 不要なので削除 */
+    left: 50%; /* 左端を画面の50%の位置に */
+    transform: translateX(-50%); /* 要素自身の幅の半分だけ左にずらす */
     opacity: 0;
-    white-space: nowrap; /* ★★★ この行を追記 ★★★ */
+    white-space: nowrap;
     animation-name: fadeInOut;
-    animation-duration: 1.5s; /* 1つのテキストが表示される時間 */
-    animation-fill-mode: both; /* アニメーション終了後も最後の状態を維持 */
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
 }
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
 .loading-text-item:nth-child(1) { animation-delay: 0.1s; }
 .loading-text-item:nth-child(2) { animation-delay: 1.6s; } /* 0.1s + 1.5s */
 .loading-text-item:nth-child(3) { animation-delay: 3.1s; } /* 1.6s + 1.5s */
