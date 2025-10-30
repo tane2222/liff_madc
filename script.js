@@ -37,12 +37,9 @@ window.addEventListener('DOMContentLoaded', () => {
     function showProfile(data) {
         if (data.success) {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
-            if (data.profileImageUrl) {
-                document.getElementById("profile-image").src = data.profileImageUrl;
-            } else {
-                // 画像がない場合のプレースホルダー
-                document.getElementById("profile-image").src = 'https://placehold.jp/150x150.png?text=?';
-            }
+            // ▼▼▼ 修正点: if文を削除し、受け取ったURLをそのまま設定 ▼▼▼
+            document.getElementById("profile-image").src = data.profileImageUrl; 
+            
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
@@ -60,7 +57,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById("sync-button-container").style.display = "block";
     }
 
-    async function loadUserListPage() {
+async function loadUserListPage() {
         const container = document.getElementById('user-list-container');
         container.innerHTML = '<p>ユーザーを読み込んでいます...</p>';
 
@@ -68,14 +65,13 @@ window.addEventListener('DOMContentLoaded', () => {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
             if (result.success) {
                 container.innerHTML = '';
-                if (result.users.length === 0) {
-                    container.innerHTML = '<p>表示できるユーザーがいません。</p>';
-                    return;
-                }
+                if (result.users.length === 0) { /* ... */ }
+                
                 result.users.forEach(user => {
+                    // ▼▼▼ 修正点: if文を削除し、受け取ったURLをそのまま設定 ▼▼▼
                     const userCard = `
                         <div class="user-card">
-                            <img src="${user.profileImageUrl || 'https://placehold.jp/150x150.png?text=?'}" alt="${user.nickname}">
+                            <img src="${user.profileImageUrl}" alt="${user.nickname}">
                             <div class="user-info">
                                 <span class="user-name">${user.nickname || 'ななしさん'}</span>
                                 <span class="user-details">${user.age || '?'}歳・${user.job || '未設定'}</span>
@@ -84,13 +80,14 @@ window.addEventListener('DOMContentLoaded', () => {
                     `;
                     container.innerHTML += userCard;
                 });
-            } else {
-                container.innerHTML = `<p>エラー: ${result.message}</p>`;
-            }
-        } catch (error) {
-            container.innerHTML = `<p>エラー: ${error.message}</p>`;
-        }
+            } else { container.innerHTML = `<p>エラー: ${result.message}</p>`; }
+        } catch (error) { container.innerHTML = `<p>エラー: ${error.message}</p>`; }
     }
+
+
+
+
+    
 
     async function main() {
         await liff.init({ liffId: LIFF_ID });
