@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-   // --- ページ遷移 ---
+    // --- ページ遷移のイベントリスナー ---
     document.getElementById('go-to-swipe-page').addEventListener('click', (e) => { e.preventDefault(); loadNewUserListPage(); showPage('user-swipe-page'); });
     document.getElementById('go-to-grid-page').addEventListener('click', (e) => { e.preventDefault(); loadUserListPage(); showPage('user-grid-page'); });
     document.querySelectorAll('.back-button').forEach(btn => {
@@ -41,6 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
             
+            document.getElementById("app").style.display = 'block';
             document.getElementById("container").classList.remove('is-loading');
             document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
@@ -58,7 +59,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // --- 各ページのデータ読み込み ---
     async function loadUserListPage() {
-        const container = document.getElementById('user-list-container');
+        const container = document.getElementById('user-grid-container');
         container.innerHTML = '<p>ユーザーを読み込んでいます...</p>';
         try {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
@@ -80,17 +81,10 @@ window.addEventListener('DOMContentLoaded', () => {
                     `;
                     container.innerHTML += userCard;
                 });
-            } else {
-                container.innerHTML = `<p>エラー: ${result.message}</p>`;
-            }
-        } catch (error) {
-            container.innerHTML = `<p>エラー: ${error.message}</p>`;
-        }
+            } else { container.innerHTML = `<p>エラー: ${result.message}</p>`; }
+        } catch (error) { container.innerHTML = `<p>エラー: ${error.message}</p>`; }
     }
 
-
-
-// --- 新しいカードスワイプUIのロジック ---
     let swipeDeck;
     async function loadNewUserListPage() {
         swipeDeck = document.getElementById('swipe-deck');
@@ -110,6 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
             } else { swipeDeck.innerHTML = '<p style="color: white;">表示できるユーザーがいません。</p>'; }
         } catch (error) { swipeDeck.innerHTML = `<p style="color: red;">エラー: ${error.message}</p>`; }
     }
+
     function initSwipe() {
         const nopeButton = document.getElementById('nope-button');
         const likeButton = document.getElementById('like-button');
@@ -134,12 +129,15 @@ window.addEventListener('DOMContentLoaded', () => {
             showProfile(profileData);
         } catch (error) { showError(error); }
     }
+    
+    // ★★★ メイン処理を実行 ★★★
     main();
 });
 
-
 // --- アカウント連携の処理 (グローバルスコープに配置) ---
 async function syncAccount() {
+    const GAS_API_URL = "【あなたのGAS WebアプリのURLをここに貼り付け】"; // こちらにも設定
+
     document.getElementById("sync-button").innerText = "連携処理中...";
     document.getElementById("sync-button").disabled = true;
 
