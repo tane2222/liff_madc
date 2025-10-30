@@ -2,8 +2,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // ★★★ GASのWebアプリURLとLIFF IDをここに設定 ★★★
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
     const LIFF_ID = "2008378264-4O97qRYQ";
-
-    // GASのAPIを呼び出すためのヘルパー関数
+    
+     // GASのAPIを呼び出すためのヘルパー関数
     async function callGasApi(action, payload) {
         const response = await fetch(GAS_API_URL, {
             method: 'POST',
@@ -13,19 +13,39 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!response.ok) throw new Error('APIサーバーとの通信に失敗しました。');
         return response.json();
     }
+    
+    // ▼▼▼▼▼ ここから修正・追加 ▼▼▼▼▼
 
-    // 成功時にプロフィールを表示する関数
+    const pages = document.querySelectorAll('.page');
+    function showPage(pageId) {
+        pages.forEach(page => {
+            page.style.display = (page.id === pageId) ? 'block' : 'none';
+        });
+    }
+
+    document.getElementById('go-to-users').addEventListener('click', (e) => {
+        e.preventDefault();
+        loadUserListPage();
+        showPage('user-list-page');
+    });
+
+    document.getElementById('back-to-mypage').addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage('my-page');
+    });
+    
     function showProfile(data) {
         if (data.success) {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
             if (data.profileImageUrl) {
                 document.getElementById("profile-image").src = data.profileImageUrl;
+            } else {
+                // 画像がない場合のプレースホルダー
+                document.getElementById("profile-image").src = 'https://placehold.jp/150x150.png?text=?';
             }
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
-
-            // ローディングを解除し、アニメーションを開始
             document.getElementById("container").classList.remove('is-loading');
             document.getElementById("container").classList.add('is-loaded');
         } else {
@@ -33,20 +53,53 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // エラー時にメッセージを表示し、連携ボタンを表示する関数
+     // エラー時にメッセージを表示し、連携ボタンを表示する関数
     function showError(error) {
         document.getElementById("container").style.display = "none"; // メインコンテンツを隠す
         document.getElementById("error-message").innerText = error.message || "エラーが発生しました。";
         document.getElementById("sync-button-container").style.display = "block";
     }
 
-    // LIFFアプリのメイン処理
+    async function loadUserListPage() {
+        const container = document.getElementById('user-list-container');
+        container.innerHTML = '<p>ユーザーを読み込んでいます...</p>';
+
+        try {
+            const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
+            if (result.success) {
+                container.innerHTML = '';
+                if (result.users.length === 0) {
+                    container.innerHTML = '<p>表示できるユーザーがいません。</p>';
+                    return;
+                }
+                result.users.forEach(user => {
+                    const userCard = `
+                        <div class="user-card">
+                            <img src="${user.profileImageUrl || 'https://placehold.jp/150x150.png?text=?'}" alt="${user.nickname}">
+                            <div class="user-info">
+                                <span class="user-name">${user.nickname || 'ななしさん'}</span>
+                                <span class="user-details">${user.age || '?'}歳・${user.job || '未設定'}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += userCard;
+                });
+            } else {
+                container.innerHTML = `<p>エラー: ${result.message}</p>`;
+            }
+        } catch (error) {
+            container.innerHTML = `<p>エラー: ${error.message}</p>`;
+        }
+    }
+
     async function main() {
         await liff.init({ liffId: LIFF_ID });
         if (!liff.isLoggedIn()) {
             liff.login();
             return;
         }
+        // 最初にマイページを表示する
+        showPage('my-page'); 
         const liffUserId = liff.getContext().userId;
         callGasApi('getMyProfileData', { liffUserId: liffUserId })
             .then(showProfile)
