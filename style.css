@@ -180,3 +180,72 @@ body {
 }
 
 /* ▲▲▲▲▲ 追記はここまで ▲▲▲▲▲ */
+/* ... (既存のスタイルはそのまま) ... */
+
+/* ▼▼▼▼▼ 以下を追記してください ▼▼▼▼▼ */
+
+/* ローディング画面の全体設定 */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+#loader-wrapper.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+.loader-content {
+    text-align: center;
+}
+
+/* くるくる回るスピナー */
+.spinner {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--accent-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 24px auto;
+    animation: spin 1.2s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* テキストアニメーション */
+.loader-text-container {
+    position: relative;
+    height: 20px; /* テキスト1行分の高さを確保 */
+    color: var(--secondary-text);
+}
+.loading-text-item {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    opacity: 0;
+    animation-name: fadeInOut;
+    animation-duration: 1.5s; /* 1つのテキストが表示される時間 */
+    animation-fill-mode: both; /* アニメーション終了後も最後の状態を維持 */
+}
+.loading-text-item:nth-child(1) { animation-delay: 0.1s; }
+.loading-text-item:nth-child(2) { animation-delay: 1.6s; } /* 0.1s + 1.5s */
+.loading-text-item:nth-child(3) { animation-delay: 3.1s; } /* 1.6s + 1.5s */
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(10px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ▲▲▲▲▲ 追記はここまで ▲▲▲▲▲ */
