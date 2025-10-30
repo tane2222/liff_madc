@@ -25,23 +25,11 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ページ遷移のイベントリスナー ---
-    document.getElementById('go-to-new-users').addEventListener('click', (e) => {
-        e.preventDefault();
-        loadNewUserListPage();
-        showPage('new-user-list-page');
-    });
-    document.getElementById('go-to-old-users').addEventListener('click', (e) => {
-        e.preventDefault();
-        loadUserListPage();
-        showPage('user-list-page');
-    });
+   // --- ページ遷移 ---
+    document.getElementById('go-to-swipe-page').addEventListener('click', (e) => { e.preventDefault(); loadNewUserListPage(); showPage('user-swipe-page'); });
+    document.getElementById('go-to-grid-page').addEventListener('click', (e) => { e.preventDefault(); loadUserListPage(); showPage('user-grid-page'); });
     document.querySelectorAll('.back-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetPage = e.currentTarget.getAttribute('data-target');
-            showPage(targetPage || 'my-page');
-        });
+        btn.addEventListener('click', (e) => { e.preventDefault(); showPage(e.currentTarget.getAttribute('data-target') || 'my-page'); });
     });
     
     // --- データ表示関連 ---
@@ -100,106 +88,52 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let swipeDeck;
-    let allCards;
 
+
+// --- 新しいカードスワイプUIのロジック ---
+    let swipeDeck;
     async function loadNewUserListPage() {
         swipeDeck = document.getElementById('swipe-deck');
-        swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
+        swipeDeck.innerHTML = '<p style="color: white;">ユーザーを探しています...</p>';
         try {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
             if (result.success && result.users.length > 0) {
                 swipeDeck.innerHTML = '';
-                result.users.forEach(user => {
+                result.users.reverse().forEach(user => {
                     const card = document.createElement('div');
                     card.classList.add('swipe-card');
-                    card.innerHTML = `
-                        <div class="swipe-badge like-badge">LIKE</div>
-                        <div class="swipe-badge nope-badge">NOPE</div>
-                        <img src="${user.profileImageUrl}" alt="${user.nickname}">
-                        <div class="card-info">
-                            <h3>${user.nickname || 'ななしさん'}</h3>
-                            <p>${user.age || '?'}歳・${user.job || '未設定'}</p>
-                        </div>`;
+                    card.style.backgroundImage = `url(${user.profileImageUrl || 'https://placehold.jp/400x600/333/ccc?text=No+Image'})`;
+                    card.innerHTML = `<div class="card-info-overlay"><h3>${user.nickname || 'ななしさん'}</h3><p>${user.age || '?'}歳・${user.job || '未設定'}</p></div>`;
                     swipeDeck.appendChild(card);
                 });
                 initSwipe();
-            } else {
-                swipeDeck.innerHTML = '<p>表示できるユーザーがいません。</p>';
-            }
-        } catch (error) {
-            swipeDeck.innerHTML = `<p>エラー: ${error.message}</p>`;
-        }
+            } else { swipeDeck.innerHTML = '<p style="color: white;">表示できるユーザーがいません。</p>'; }
+        } catch (error) { swipeDeck.innerHTML = `<p style="color: red;">エラー: ${error.message}</p>`; }
     }
-
     function initSwipe() {
-        allCards = swipeDeck.querySelectorAll('.swipe-card');
-        allCards.forEach(card => {
-            let isDragging = false;
-            let startX = 0, startY = 0;
-
-            function onDragStart(e) {
-                isDragging = true;
-                startX = e.pageX || e.touches[0].pageX;
-                startY = e.pageY || e.touches[0].pageY;
-                card.style.transition = 'none';
-            }
-            function onDragMove(e) {
-                if (!isDragging) return;
-                const currentX = e.pageX || e.touches[0].pageX;
-                const diffX = currentX - startX;
-                const rotate = diffX * 0.1;
-                card.style.transform = `translateX(${diffX}px) rotate(${rotate}deg)`;
-                if (diffX > 0) {
-                    card.querySelector('.like-badge').style.opacity = diffX / 100;
-                } else {
-                    card.querySelector('.nope-badge').style.opacity = -diffX / 100;
-                }
-            }
-            function onDragEnd(e) {
-                if (!isDragging) return;
-                isDragging = false;
-                const diffX = (e.pageX || e.changedTouches[0].pageX) - startX;
-                card.style.transition = 'transform 0.3s ease';
-                if (Math.abs(diffX) > 100) {
-                    const flyOutDirection = diffX > 0 ? 1 : -1;
-                    card.style.transform = `translateX(${flyOutDirection * 500}px) rotate(${flyOutDirection * 20}deg)`;
-                    setTimeout(() => card.remove(), 300);
-                } else {
-                    card.style.transform = '';
-                }
-                card.querySelector('.like-badge').style.opacity = 0;
-                card.querySelector('.nope-badge').style.opacity = 0;
-            }
-
-            card.addEventListener('mousedown', onDragStart);
-            card.addEventListener('mousemove', onDragMove);
-            card.addEventListener('mouseup', onDragEnd);
-            card.addEventListener('mouseleave', onDragEnd);
-            card.addEventListener('touchstart', onDragStart);
-            card.addEventListener('touchmove', onDragMove);
-            card.addEventListener('touchend', onDragEnd);
-        });
+        const nopeButton = document.getElementById('nope-button');
+        const likeButton = document.getElementById('like-button');
+        function swipe(direction) {
+            const topCard = swipeDeck.querySelector('.swipe-card:last-child');
+            if (!topCard) return;
+            topCard.style.transform = `translateX(${direction * 100}vw) rotate(${direction * 30}deg)`;
+            setTimeout(() => { topCard.remove(); }, 400);
+        }
+        nopeButton.addEventListener('click', () => swipe(-1));
+        likeButton.addEventListener('click', () => swipe(1));
     }
     
     // --- LIFFアプリのメイン処理 ---
     async function main() {
         try {
             await liff.init({ liffId: LIFF_ID });
-            if (!liff.isLoggedIn()) {
-                liff.login();
-                return;
-            }
+            if (!liff.isLoggedIn()) { liff.login(); return; }
             showPage('my-page');
             const liffUserId = liff.getContext().userId;
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
             showProfile(profileData);
-        } catch (error) {
-            showError(error);
-        }
+        } catch (error) { showError(error); }
     }
-    
-    // ★★★ メイン処理を実行 ★★★
     main();
 });
 
