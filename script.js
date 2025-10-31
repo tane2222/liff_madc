@@ -26,8 +26,10 @@ async function initializeLiff() {
 
 /**
  * Swiper.js を初期化する関数
+ * (古いinitializeSwipe関数は完全に削除します)
  */
 function initializeSwiper() {
+    // "Swing" ではなく、"Swiper" クラスを使用します
     const swiper = new Swiper('.swiper', {
         // カードがめくれるエフェクトを有効にする
         effect: 'cards',
@@ -37,13 +39,9 @@ function initializeSwiper() {
 
         // カードエフェクトの詳細設定
         cardsEffect: {
-            // スライドが回転するかどうか
             rotate: true,
-            // スライドごとの回転角度
             perSlideRotate: 2,
-            // スライドごとのオフセット（ずらし具合）
             perSlideOffset: 8,
-            // スライドの影を表示するか
             slideShadows: true,
         },
 
