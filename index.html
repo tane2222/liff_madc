@@ -3,75 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LIFF App UI</title>
+    <title>MADC LIFF App</title>
 
     <link rel="stylesheet" href="swiper-bundle.min.css">
-    
-    <link rel="stylesheet" href="style.css?v=1.0.3">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <button class="icon-btn"><i class="fas fa-redo"></i></button>
-            <h1>Moms Nearby</h1>
-            <button class="icon-btn"><i class="fas fa-sliders-h"></i></button>
-        </header>
 
-        <main class="main-content">
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="profile-card">
-                            <div class="profile-image">
-                                <img src="https://picsum.photos/400/500?random=1" alt="Profile Picture">
-                                <div class="age-tags"><span>8 m.</span><span>2 y.</span><span>7 y.</span></div>
-                                <button class="more-btn">More</button>
-                            </div>
-                            <div class="profile-info"><h2>Myrtle, 27</h2><p><i class="fas fa-map-marker-alt"></i> Tokyo, Japan</p></div>
-                            <div class="interest-icons"><div class="icon-circle"><i class="fas fa-baby"></i></div><div class="icon-circle"><i class="fas fa-wine-glass-alt"></i></div><div class="icon-circle"><i class="fas fa-camera"></i></div><div class="icon-circle"><i class="fas fa-futbol"></i></div></div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="profile-card">
-                            <div class="profile-image">
-                                <img src="https://picsum.photos/400/500?random=2" alt="Profile Picture">
-                                <div class="age-tags"><span>1 y.</span><span>5 y.</span></div>
-                                <button class="more-btn">More</button>
-                            </div>
-                            <div class="profile-info"><h2>Sophia, 31</h2><p><i class="fas fa-map-marker-alt"></i> Kyoto, Japan</p></div>
-                            <div class="interest-icons"><div class="icon-circle"><i class="fas fa-baby"></i></div><div class="icon-circle"><i class="fas fa-coffee"></i></div><div class="icon-circle"><i class="fas fa-camera"></i></div><div class="icon-circle"><i class="fas fa-shopping-bag"></i></div></div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="profile-card">
-                            <div class="profile-image">
-                                <img src="https://picsum.photos/400/500?random=3" alt="Profile Picture">
-                                <div class="age-tags"><span>5 m.</span><span>3 y.</span></div>
-                                <button class="more-btn">More</button>
-                            </div>
-                            <div class="profile-info"><h2>Olivia, 29</h2><p><i class="fas fa-map-marker-alt"></i> Osaka, Japan</p></div>
-                            <div class="interest-icons"><div class="icon-circle"><i class="fas fa-utensils"></i></div><div class="icon-circle"><i class="fas fa-music"></i></div><div class="icon-circle"><i class="fas fa-plane"></i></div><div class="icon-circle"><i class="fas fa-book-open"></i></div></div>
-                        </div>
-                    </div>
-                </div>
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <div class="loader-text-container">
+                <span class="loading-text-item">リダイレクト中です...</span>
+                <span class="loading-text-item">読み込み中です...</span>
+                <span class="loading-text-item">表示情報の取得です</span>
             </div>
-        </main>
+        </div>
+    </div>
 
-        <nav class="nav-bar">
-            <button class="nav-item active"><i class="fas fa-clone"></i></button>
-            <button class="nav-item"><i class="fas fa-comments"></i></button>
-            <button class="nav-item"><i class="fas fa-bell"></i></button>
-            <button class="nav-item"><i class="fas fa-user"></i></button>
-            <button class="nav-item"><i class="fas fa-users"></i></button>
-        </nav>
+    <div id="app" style="display: none;">
+        
+        <div id="my-page" class="page">
+            <div class="container is-loading" id="container">
+                <header class="profile-header">
+                    <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
+                    <h2 id="nickname">読み込み中...</h2>
+                </header>
+                <main class="main-content">
+                    <section class="metrics">
+                        <div class="metric-card">
+                            <span class="metric-label">保有キュン</span>
+                            <span class="metric-value" id="kyun-points">--</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">診断達成率</span>
+                            <span class="metric-value" id="diagnosis-progress">--%</span>
+                        </div>
+                    </section>
+                    <nav class="actions">
+                        <a href="#" class="action-button primary" id="go-to-swipe-page">ユーザーを探す</a>
+                        <a href="#" class="action-button" id="go-to-grid-page">旧ユーザー画面</a>
+                        <a href="#" class="action-button">プロフィール編集</a>
+                        <a href="#" class="action-button">キュンを追加</a>
+                    </nav>
+                </main>
+            </div>
+        </div>
+
+        <div id="user-grid-page" class="page" style="display: none;">
+            <header class="page-header">
+                <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
+                <h1>旧ユーザー画面</h1>
+            </header>
+            <main id="user-grid-container" class="user-grid"></main>
+        </div>
+
+        <div id="user-swipe-page" class="page" style="display: none;">
+            <div class="app-container">
+                <header class="app-header">
+                    <button class="icon-btn back-button" data-target="my-page"><i class="fas fa-chevron-left"></i></button>
+                    <h1>MADC</h1>
+                    <button class="icon-btn"><i class="fas fa-sliders-h"></i></button>
+                </header>
+                <main class="main-content">
+                    <div class="swiper">
+                        <div class="swiper-wrapper" id="swipe-deck">
+                            </div>
+                    </div>
+                </main>
+                <nav class="nav-bar">
+                    <button class="nav-item active"><i class="fas fa-clone"></i></button>
+                    <button class="nav-item"><i class="fas fa-comments"></i></button>
+                    <button class="nav-item"><i class="fas fa-bell"></i></button>
+                    <button class="nav-item"><i class="fas fa-user"></i></button>
+                </nav>
+            </div>
+        </div>
+        </div>
+
+    <div id="sync-button-container" style="display: none;">
+        <p id="error-message"></p>
+        <button id="sync-button" onclick="syncAccount()">アカウントを連携する</button>
     </div>
 
     <script src="swiper-bundle.min.js"></script>
-    
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    
-    <script src="script.js?v=1.0.3"></script>
+    <script src="script.js"></script>
 </body>
 </html>
