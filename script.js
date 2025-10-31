@@ -29,7 +29,7 @@ async function initializeLiff() {
  * (古いinitializeSwipe関数は完全に削除します)
  */
 function initializeSwiper() {
-    // "Swing" ではなく、"Swiper" クラスを使用します
+    // "Swing" ではなく、"Swiper" クラスを使用しま-す
     const swiper = new Swiper('.swiper', {
         // カードがめくれるエフェクトを有効にする
         effect: 'cards',
