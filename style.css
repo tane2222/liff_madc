@@ -2,11 +2,11 @@
  * 基本設定 & カラー
  * ---------------- */
 :root {
-    --primary-color: #FCEFF1; /* メインの背景ピンク */
+    --primary-color: #FCEFF1;
     --card-bg: #FFFFFF;
     --text-color: #333;
     --text-light: #888;
-    --accent-color: #F5AAB9; /* Moreボタンのピンク */
+    --accent-color: #F5AAB9;
     --icon-color: #CCC;
     --icon-active: #E6859A;
 }
@@ -16,7 +16,6 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--primary-color);
     color: var(--text-color);
-    /* スクロールを禁止し、アプリ全体を1画面に収める */
     height: 100vh;
     overflow: hidden;
 }
@@ -25,13 +24,13 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    max-width: 420px; /* スマートフォン表示を想定 */
+    max-width: 420px;
     margin: 0 auto;
-    background-color: var(--card-bg);
+    background-color: var(--card-bg); /* 背景を一旦白に */
 }
 
 /* ----------------
- * 1. ヘッダー
+ * 1. ヘッダー (変更なし)
  * ---------------- */
 .app-header {
     display: flex;
@@ -40,66 +39,90 @@ body {
     padding: 15px 20px;
     background-color: var(--card-bg);
     border-bottom: 1px solid #f0f0f0;
+    /* ヘッダーがカードより手前に来るように */
+    position: relative;
+    z-index: 10;
 }
 
-.app-header h1 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    font-size: 1.1rem;
-    color: var(--text-light);
-    cursor: pointer;
-}
+.app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+.icon-btn { background: none; border: none; font-size: 1.1rem; color: var(--text-light); cursor: pointer; }
 
 /* ----------------
- * 2. メインコンテンツ
+ * 2. メインコンテンツ & カードスタック
  * ---------------- */
 .main-content {
-    flex-grow: 1; /* 残りの高さいっぱいを占める */
-    padding: 15px;
+    flex-grow: 1;
     background-color: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto; /* カードがはみ出たらスクロール */
+    position: relative;
+    padding-top: 20px; /* カードを少し下げる */
+}
+
+/* カードを重ねるためのコンテナ */
+.card-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .profile-card {
-    width: 100%;
+    /* カードを重ねる設定 */
+    position: absolute;
+    top: 0;
+    left: 15px;
+    right: 15px;
+    margin: 0 auto;
+
+    width: calc(100% - 30px);
     max-width: 350px;
     background: var(--card-bg);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    
+    /* スワイプ時の動きを滑らかに */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    
+    /* ドラッグ操作を快適にする */
+    touch-action: none;
 }
 
-/* お子様の年齢タグ */
-.age-tags {
-    padding: 15px 20px 10px;
-    display: flex;
-    gap: 10px;
+/* 後ろのカードのスタイル */
+.card-stack .profile-card:nth-last-child(2) {
+    transform: translateY(10px) scale(0.95);
+    z-index: 2;
+}
+.card-stack .profile-card:nth-last-child(1) {
+    z-index: 3; /* 一番上のカード */
 }
 
-.age-tags span {
-    background-color: #f0f0f0;
-    color: var(--text-light);
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 5px 10px;
-    border-radius: 15px;
+/* これ以上後ろのカードは基本的に見えない */
+.card-stack .profile-card:nth-last-child(n+3) {
+    transform: translateY(20px) scale(0.9);
+    z-index: 1;
+    opacity: 0;
 }
 
-/* プロフィール画像 */
+
+/* ----------------
+ * 3. カード内部のスタイル修正
+ * ---------------- */
 .profile-image {
-    position: relative; /* "More"ボタンの基準位置 */
+    position: relative;
     width: 100%;
-    padding-top: 110%; /* 画像のアスペクト比を保持 (高さ/幅) */
+    padding-top: 110%;
     overflow: hidden;
+}
+
+/* 文字を読みやすくするためのグラデーション */
+.profile-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+    pointer-events: none; /* グラデーションがクリックを邪魔しないように */
 }
 
 .profile-image img {
@@ -108,7 +131,28 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 画像をトリミングしてフィット */
+    object-fit: cover;
+}
+
+/* お子様の年齢タグ (ヒーローヘッダー化) */
+.age-tags {
+    position: absolute; /* 画像の上に配置 */
+    top: 15px;
+    left: 20px;
+    z-index: 5; /* ボタンなどより手前に */
+    display: flex;
+    gap: 10px;
+}
+
+.age-tags span {
+    /* 背景を半透明に */
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px); /* すりガラス効果 */
+    color: var(--text-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 15px;
 }
 
 .more-btn {
@@ -124,49 +168,26 @@ body {
     font-weight: 600;
     box-shadow: 0 4px 15px rgba(245, 170, 185, 0.5);
     cursor: pointer;
+    z-index: 5;
 }
 
-/* プロフィール情報 */
-.profile-info {
+.profile-info, .interest-icons {
     padding: 15px 20px;
 }
+.profile-info h2 { margin: 0 0 5px 0; font-size: 1.5rem; }
+.profile-info p { margin: 0; color: var(--text-light); font-size: 0.9rem; }
+.profile-info p .fas { margin-right: 5px; }
 
-.profile-info h2 {
-    margin: 0 0 5px 0;
-    font-size: 1.5rem;
-}
-
-.profile-info p {
-    margin: 0;
-    color: var(--text-light);
-    font-size: 0.9rem;
-}
-.profile-info p .fas {
-    margin-right: 5px;
-}
-
-/* 興味・関心アイコン */
 .interest-icons {
     display: flex;
     justify-content: space-around;
-    padding: 15px 20px;
     border-top: 1px solid #f0f0f0;
 }
+.icon-circle { width: 44px; height: 44px; border-radius: 50%; background-color: #f7f7f7; display: flex; justifyContent: center; align-items: center; font-size: 1.2rem; color: var(--text-light); }
 
-.icon-circle {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: #f7f7f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    color: var(--text-light);
-}
 
 /* ----------------
- * 3. ナビゲーションバー
+ * 4. ナビゲーションバー (変更なし)
  * ---------------- */
 .nav-bar {
     display: flex;
@@ -175,17 +196,9 @@ body {
     background-color: var(--card-bg);
     border-top: 1px solid #f0f0f0;
     box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 10;
 }
 
-.nav-item {
-    background: none;
-    border: none;
-    font-size: 1.4rem;
-    color: var(--icon-color);
-    padding: 10px;
-    cursor: pointer;
-}
-
-.nav-item.active {
-    color: var(--icon-active);
-}
+.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--icon-color); padding: 10px; cursor: pointer; }
+.nav-item.active { color: var(--icon-active); }
