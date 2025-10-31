@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function initializeLiff() {
     try {
         await liff.init({
-            liffId: "YOUR_LIFF_ID" // <-- ここをあなたのLIFF IDに書き換えてください
+            liffId: "2008378264-4O97qRYQ" // <-- ここをあなたのLIFF IDに書き換えてください
         });
 
         if (!liff.isLoggedIn()) {
