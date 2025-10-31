@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // LIFFの初期化
     initializeLiff();
 
-    // シンプルにスワイプ機能を初期化
-    initializeSwipe();
+    // Swiperの初期化
+    initializeSwiper();
 });
 
-// LIFF初期化
+// LIFF初期化 (変更なし)
 async function initializeLiff() {
     try {
         await liff.init({
@@ -24,30 +24,30 @@ async function initializeLiff() {
     }
 }
 
-// スワイプ機能の初期化 (待機処理を削除し、元の形に戻す)
-function initializeSwipe() {
-    const stackElement = document.querySelector('.card-stack');
-    
-    // Swingライブラリがローカルにあるため、この時点では必ず定義されているはず
-    const stack = Swing.Stack({
-        throwOutConfidence: (xOffset, yOffset, element) => {
-            return Math.min(Math.abs(xOffset) / (element.offsetWidth / 2.5), 1);
+/**
+ * Swiper.js を初期化する関数
+ */
+function initializeSwiper() {
+    const swiper = new Swiper('.swiper', {
+        // カードがめくれるエフェクトを有効にする
+        effect: 'cards',
+
+        // スワイプ時にマウスカーソルを掴む形にする
+        grabCursor: true,
+
+        // カードエフェクトの詳細設定
+        cardsEffect: {
+            // スライドが回転するかどうか
+            rotate: true,
+            // スライドごとの回転角度
+            perSlideRotate: 2,
+            // スライドごとのオフセット（ずらし具合）
+            perSlideOffset: 8,
+            // スライドの影を表示するか
+            slideShadows: true,
         },
-        rotation: (xOffset, yOffset, element, confidence) => {
-            const rotationDegree = (xOffset / element.offsetWidth) * 15;
-            return rotationDegree * confidence;
-        }
-    });
 
-    const cardElements = Array.from(stackElement.querySelectorAll('.profile-card'));
-    cardElements.reverse().forEach(cardElement => {
-        stack.createCard(cardElement);
-    });
-
-    stack.on('throwout', (event) => {
-        console.log(`Card ${event.target.dataset.cardId} was thrown out.`);
-        setTimeout(() => {
-            event.target.remove();
-        }, 300);
+        // 無限にループさせる
+        loop: true,
     });
 }
