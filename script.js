@@ -95,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
         swiperInstance = new Swiper('.swiper', {
             effect: 'cards',
             grabCursor: true,
-            loop: false, // ループは一旦オフにします
+            loop: false,
             cardsEffect: {
                 rotate: true,
                 perSlideRotate: 2,
