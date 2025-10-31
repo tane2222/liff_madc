@@ -15,7 +15,6 @@ body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--primary-color);
-    color: var(--text-color);
     height: 100vh;
     overflow: hidden;
 }
@@ -26,11 +25,11 @@ body {
     height: 100vh;
     max-width: 420px;
     margin: 0 auto;
-    background-color: var(--card-bg); /* 背景を一旦白に */
+    background-color: var(--card-bg);
 }
 
 /* ----------------
- * 1. ヘッダー
+ * 1. ヘッダー (変更なし)
  * ---------------- */
 .app-header {
     display: flex;
@@ -42,93 +41,58 @@ body {
     position: relative;
     z-index: 10;
 }
-
 .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
 .icon-btn { background: none; border: none; font-size: 1.1rem; color: var(--text-light); cursor: pointer; }
 
 /* ----------------
- * 2. メインコンテンツ & カードスタック
+ * 2. メインコンテンツ & Swiper
  * ---------------- */
 .main-content {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--primary-color);
     position: relative;
-    /* カードの最上部がヘッダーの下にくるように調整 */
-    padding-top: 10px; /* カード全体を少し下にずらす */
-    padding-bottom: 10px; /* ナビバーとの間に少しスペースを確保 */
-    overflow: hidden; /* カードが動いた時にはみ出しを隠す */
 }
 
-.card-stack {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex; /* カードを重ねるためにFlexboxも使う */
-    justify-content: center;
-    align-items: flex-start; /* 上部に寄せる */
+.swiper {
+    width: calc(100% - 40px); /* 左右に20pxずつの余白 */
+    height: 85%; /* 高さを調整 */
+    max-height: 600px;
+    /* カードがはみ出して回転するアニメーションを見せるために必須 */
+    overflow: visible; 
 }
 
-.profile-card {
-    position: absolute;
-    width: calc(100% - 30px);
-    max-width: 350px;
-    background: var(--card-bg);
+.swiper-slide {
+    background-color: var(--card-bg);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    
-    /* カードの初期位置を調整 */
-    top: 50%; /* 垂直中央に配置の基準 */
-    left: 50%; /* 水平中央に配置の基準 */
-    transform: translate(-50%, -55%); /* 垂直中央から上に5%ずらす */
-    
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    touch-action: none; /* スワイプ可能にするために重要 */
-}
-
-/* 後ろのカードのスタイル (重なり具合を調整) */
-.card-stack .profile-card:nth-last-child(2) {
-    transform: translate(-50%, -50%) scale(0.97) translateY(10px);
-    z-index: 2;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* 影を薄く */
-    opacity: 1; /* 重なっているカードは見える */
-}
-.card-stack .profile-card:nth-last-child(3) {
-    transform: translate(-50%, -45%) scale(0.94) translateY(20px);
-    z-index: 1;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); /* 影をさらに薄く */
-    opacity: 0.8; /* わずかに半透明 */
-}
-/* 最前面のカード */
-.card-stack .profile-card:nth-last-child(1) {
-    z-index: 3;
-    opacity: 1;
-    transform: translate(-50%, -55%); /* 最前面は通常位置 */
-}
-
-/* これ以上後ろのカードは透明に */
-.card-stack .profile-card:nth-last-child(n+4) {
-    opacity: 0;
-    transform: translate(-50%, -40%) scale(0.8); /* 見えないが位置は確保 */
+    /* Swiperが中身を管理するので、ここではデザインのみ */
 }
 
 
 /* ----------------
- * 3. カード内部のスタイル修正
+ * 3. カード内部のスタイル (ほぼ変更なし)
  * ---------------- */
+.profile-card {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .profile-image {
     position: relative;
     width: 100%;
-    padding-top: 110%;
-    overflow: hidden;
+    flex-grow: 1; /* 高さを可変にする */
 }
 
 .profile-image::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 100px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
     pointer-events: none;
@@ -136,52 +100,41 @@ body {
 
 .profile-image img {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* お子様の年齢タグ (ヒーローヘッダー化) */
 .age-tags {
     position: absolute;
-    top: 15px;
-    left: 20px;
+    top: 15px; left: 20px;
     z-index: 5;
     display: flex;
     gap: 10px;
 }
-
 .age-tags span {
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(5px);
     color: var(--text-color);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.8rem; font-weight: 500;
     padding: 5px 10px;
     border-radius: 15px;
 }
 
 .more-btn {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 20px; right: 20px;
     background-color: var(--accent-color);
     color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border: none; border-radius: 20px;
+    padding: 8px 16px; font-size: 0.9rem; font-weight: 600;
     box-shadow: 0 4px 15px rgba(245, 170, 185, 0.5);
     cursor: pointer;
     z-index: 5;
 }
 
-.profile-info, .interest-icons {
-    padding: 15px 20px;
-}
+.profile-info { padding: 15px 20px; }
 .profile-info h2 { margin: 0 0 5px 0; font-size: 1.5rem; }
 .profile-info p { margin: 0; color: var(--text-light); font-size: 0.9rem; }
 .profile-info p .fas { margin-right: 5px; }
@@ -189,13 +142,13 @@ body {
 .interest-icons {
     display: flex;
     justify-content: space-around;
+    padding: 15px 20px;
     border-top: 1px solid #f0f0f0;
 }
-.icon-circle { width: 44px; height: 44px; border-radius: 50%; background-color: #f7f7f7; display: flex; justifyContent: center; align-items: center; font-size: 1.2rem; color: var(--text-light); }
-
+.icon-circle { width: 44px; height: 44px; border-radius: 50%; background-color: #f7f7f7; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: var(--text-light); }
 
 /* ----------------
- * 4. ナビゲーションバー
+ * 4. ナビゲーションバー (変更なし)
  * ---------------- */
 .nav-bar {
     display: flex;
@@ -207,6 +160,5 @@ body {
     position: relative;
     z-index: 10;
 }
-
 .nav-item { background: none; border: none; font-size: 1.4rem; color: var(--icon-color); padding: 10px; cursor: pointer; }
 .nav-item.active { color: var(--icon-active); }
