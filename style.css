@@ -30,7 +30,7 @@ body {
 }
 
 /* ----------------
- * 1. ヘッダー (変更なし)
+ * 1. ヘッダー
  * ---------------- */
 .app-header {
     display: flex;
@@ -39,7 +39,6 @@ body {
     padding: 15px 20px;
     background-color: var(--card-bg);
     border-bottom: 1px solid #f0f0f0;
-    /* ヘッダーがカードより手前に来るように */
     position: relative;
     z-index: 10;
 }
@@ -54,24 +53,23 @@ body {
     flex-grow: 1;
     background-color: var(--primary-color);
     position: relative;
-    padding-top: 20px; /* カードを少し下げる */
+    /* カードの最上部がヘッダーの下にくるように調整 */
+    padding-top: 10px; /* カード全体を少し下にずらす */
+    padding-bottom: 10px; /* ナビバーとの間に少しスペースを確保 */
+    overflow: hidden; /* カードが動いた時にはみ出しを隠す */
 }
 
-/* カードを重ねるためのコンテナ */
 .card-stack {
     position: relative;
     width: 100%;
     height: 100%;
+    display: flex; /* カードを重ねるためにFlexboxも使う */
+    justify-content: center;
+    align-items: flex-start; /* 上部に寄せる */
 }
 
 .profile-card {
-    /* カードを重ねる設定 */
     position: absolute;
-    top: 0;
-    left: 15px;
-    right: 15px;
-    margin: 0 auto;
-
     width: calc(100% - 30px);
     max-width: 350px;
     background: var(--card-bg);
@@ -79,27 +77,39 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     
-    /* スワイプ時の動きを滑らかに */
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    /* カードの初期位置を調整 */
+    top: 50%; /* 垂直中央に配置の基準 */
+    left: 50%; /* 水平中央に配置の基準 */
+    transform: translate(-50%, -55%); /* 垂直中央から上に5%ずらす */
     
-    /* ドラッグ操作を快適にする */
-    touch-action: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    touch-action: none; /* スワイプ可能にするために重要 */
 }
 
-/* 後ろのカードのスタイル */
+/* 後ろのカードのスタイル (重なり具合を調整) */
 .card-stack .profile-card:nth-last-child(2) {
-    transform: translateY(10px) scale(0.95);
+    transform: translate(-50%, -50%) scale(0.97) translateY(10px);
     z-index: 2;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* 影を薄く */
+    opacity: 1; /* 重なっているカードは見える */
 }
+.card-stack .profile-card:nth-last-child(3) {
+    transform: translate(-50%, -45%) scale(0.94) translateY(20px);
+    z-index: 1;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); /* 影をさらに薄く */
+    opacity: 0.8; /* わずかに半透明 */
+}
+/* 最前面のカード */
 .card-stack .profile-card:nth-last-child(1) {
-    z-index: 3; /* 一番上のカード */
+    z-index: 3;
+    opacity: 1;
+    transform: translate(-50%, -55%); /* 最前面は通常位置 */
 }
 
-/* これ以上後ろのカードは基本的に見えない */
-.card-stack .profile-card:nth-last-child(n+3) {
-    transform: translateY(20px) scale(0.9);
-    z-index: 1;
+/* これ以上後ろのカードは透明に */
+.card-stack .profile-card:nth-last-child(n+4) {
     opacity: 0;
+    transform: translate(-50%, -40%) scale(0.8); /* 見えないが位置は確保 */
 }
 
 
@@ -113,7 +123,6 @@ body {
     overflow: hidden;
 }
 
-/* 文字を読みやすくするためのグラデーション */
 .profile-image::after {
     content: '';
     position: absolute;
@@ -122,7 +131,7 @@ body {
     right: 0;
     height: 100px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
-    pointer-events: none; /* グラデーションがクリックを邪魔しないように */
+    pointer-events: none;
 }
 
 .profile-image img {
@@ -136,18 +145,17 @@ body {
 
 /* お子様の年齢タグ (ヒーローヘッダー化) */
 .age-tags {
-    position: absolute; /* 画像の上に配置 */
+    position: absolute;
     top: 15px;
     left: 20px;
-    z-index: 5; /* ボタンなどより手前に */
+    z-index: 5;
     display: flex;
     gap: 10px;
 }
 
 .age-tags span {
-    /* 背景を半透明に */
     background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px); /* すりガラス効果 */
+    backdrop-filter: blur(5px);
     color: var(--text-color);
     font-size: 0.8rem;
     font-weight: 500;
@@ -187,7 +195,7 @@ body {
 
 
 /* ----------------
- * 4. ナビゲーションバー (変更なし)
+ * 4. ナビゲーションバー
  * ---------------- */
 .nav-bar {
     display: flex;
