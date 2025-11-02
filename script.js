@@ -31,9 +31,16 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
+            
+            // ★★★ アプリ本体を表示する処理を追加 ★★★
             document.getElementById("app").style.display = 'block';
+            
+            document.getElementById("container").classList.remove('is-loading');
+            document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
-        } else { showError(data); }
+        } else {
+            showError(data);
+        }
     }
     function showError(error) {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
