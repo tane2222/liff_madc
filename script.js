@@ -147,22 +147,55 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
+    // 1. GASのURLと操作するDOM要素を取得
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
-    document.getElementById("sync-button").innerText = "連携処理中...";
-    document.getElementById("sync-button").disabled = true;
+    const syncButton = document.getElementById("sync-button");
+    const errorMessage = document.getElementById("error-message");
+    
+    // 2. ボタンを「処理中」に変更
+    syncButton.innerText = "連携処理中...";
+    syncButton.disabled = true;
+    
     try {
         const liffUserId = liff.getContext().userId;
         const nonce = Math.random().toString(36).substring(2);
-        const result = await (await fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ source: 'liff_app', action: 'storeLiffIdWithNonce', liffUserId: liffUserId, nonce: nonce }) })).json();
+
+        // 3. GASにNonce（合言葉）を保存するよう依頼
+        const result = await (await fetch(GAS_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'storeLiffIdWithNonce', 
+                liffUserId: liffUserId, 
+                nonce: nonce 
+            }) 
+        })).json();
+
         if (result.success) {
+            // 4. トーク画面に同期メッセージを送信
             await liff.sendMessages([{ type: 'text', text: `/sync ${nonce}` }]);
-            liff.closeWindow();
+            
+            // 5. 【重要】画面内でフィードバックを出す
+            errorMessage.innerText = "連携メッセージを送信しました。ボットが「連携完了」と返信したら、アプリを再読み込みします。";
+            errorMessage.style.color = "#28a745"; // メッセージを成功色（緑）に変更
+            syncButton.style.display = 'none'; // ボタンを非表示にする
+
+            // 6. 【重要】ボット側の処理時間（4秒）待ってから、LIFFをリロード
+            setTimeout(() => {
+                location.reload();
+            }, 4000); // 4秒 (4000ms)
+
         } else {
-            alert('連携処理に失敗しました: ' + result.message);
-            document.getElementById("sync-button").disabled = false;
+            // 連携失敗時
+            errorMessage.innerText = '連携処理に失敗しました: ' + result.message;
+            syncButton.innerText = "アカウントを連携する";
+            syncButton.disabled = false;
         }
     } catch (error) {
-        alert('エラー: ' + error.message);
-        document.getElementById("sync-button").disabled = false;
+        // エラー発生時
+        errorMessage.innerText = 'エラー: ' + error.message;
+        syncButton.innerText = "アカウントを連携する";
+        syncButton.disabled = false;
     }
 }
