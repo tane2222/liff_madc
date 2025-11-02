@@ -32,9 +32,15 @@ window.addEventListener('DOMContentLoaded', () => {
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
             
+            // ★★★ アプリ本体を表示する処理を追加 ★★★
             document.getElementById("app").style.display = 'block';
+            
+            document.getElementById("container").classList.remove('is-loading');
+            document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
-        } else { showError(data); }
+        } else {
+            showError(data);
+        }
     }
     function showError(error) {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
@@ -60,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
         } catch (error) { container.innerHTML = `<p>エラー: ${error.message}</p>`; }
     }
 
-    // --- 新しいカードスワイプUIのロジック ---
+// --- 新しいカードスワイプUIのロジック ---
     let swiperInstance = null;
     async function loadNewUserListPage() {
         const swipeDeck = document.getElementById('swipe-deck');
@@ -70,18 +76,37 @@ window.addEventListener('DOMContentLoaded', () => {
             if (result.success && result.users.length > 0) {
                 swipeDeck.innerHTML = '';
                 result.users.forEach(user => {
+                    
+                    // ▼▼▼▼▼ ここからが修正点 ▼▼▼▼▼
+                    // カードのHTML構造を「理想のUI」レイアウトに変更します
                     const cardSlide = `
                         <div class="swiper-slide">
                             <div class="profile-card">
                                 <div class="profile-image">
-                                    <img src="${user.profileImageUrl || 'https://placehold.jp/400x500/eee/ccc?text=No+Image'}" alt="${user.nickname}">
+                                    <img src="${user.profileImageUrl || 'https.picsum.photos/400/500'}" alt="${user.nickname}">
+                                    
+                                    <div class="age-tags">
+                                        <span>8 m.</span>
+                                        <span>2 y.</span>
+                                    </div>
+                                    <button class="more-btn">More</button>
                                 </div>
+                                
                                 <div class="profile-info">
                                     <h2>${user.nickname || 'ななしさん'}, ${user.age || '?'}</h2>
                                     <p><i class="fas fa-briefcase"></i> ${user.job || '未設定'}</p>
                                 </div>
+                                
+                                <div class="interest-icons">
+                                    <div class="icon-circle"><i class="fas fa-baby"></i></div>
+                                    <div class="icon-circle"><i class="fas fa-wine-glass-alt"></i></div>
+                                    <div class="icon-circle"><i class="fas fa-camera"></i></div>
+                                    <div class="icon-circle"><i class="fas fa-futbol"></i></div>
+                                </div>
                             </div>
                         </div>`;
+                    // ▲▲▲▲▲ ここまでが修正点 ▲▲▲▲▲
+                        
                     swipeDeck.innerHTML += cardSlide;
                 });
                 initializeSwiper();
@@ -96,7 +121,7 @@ window.addEventListener('DOMContentLoaded', () => {
         swiperInstance = new Swiper('.swiper', {
             effect: 'cards',
             grabCursor: true,
-            loop: false,
+            loop: false, // マッチングアプリなのでループはfalseのままにします
             cardsEffect: {
                 rotate: true,
                 perSlideRotate: 2,
