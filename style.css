@@ -246,7 +246,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     box-shadow: none;
     
     /* 添付いただいた「壁紙登録.jpg」を背景に設定 */
-    background-image: url('https://drive.google.com/file/d/13S--0NDpIevubYSU2XaFJ3nBboY_9FQ3/view?usp=sharing');
+    background-image: url('img/壁紙登録.png');
     background-size: cover;
     background-position: center center;
     
