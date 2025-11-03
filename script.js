@@ -39,13 +39,24 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
         } else {
+            // ★★★ 修正点 ★★★
+            // showErrorに、liffUserIdも渡せるようにする（main関数側で対応）
             showError(data);
         }
     }
-    function showError(error) {
+    // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
+    function showError(error, liffUserId = '不明') { 
         document.getElementById("loader-wrapper").classList.add('is-hidden');
         document.getElementById("app").style.display = "none";
-        document.getElementById("error-message").innerText = error.message || "エラーが発生しました。";
+        
+        // エラーメッセージと、デバッグ用のIDを両方表示する
+        const errorMessageText = error.message || "エラーが発生しました。";
+        document.getElementById("error-message").innerHTML = `
+            ${errorMessageText}
+            <br>
+            <span style="font-size: 10px; color: #888;">(デバッグ情報: ${liffUserId})</span>
+        `;
+        
         document.getElementById("sync-button-container").style.display = "block";
     }
 
