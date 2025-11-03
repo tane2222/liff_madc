@@ -45,12 +45,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
-    function showError(error, liffUserId = '不明') { 
+    function showError(error, liffUserId = '不明') {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
         document.getElementById("app").style.display = "none";
         
-        // エラーメッセージと、デバッグ用のIDを両方表示する
-        const errorMessageText = error.message || "エラーが発生しました。";
+        const errorMessageText = error.message || "原因不明のエラーが発生しました。";
+        
+        // ★★★ 強制アラート表示 ★★★
+        // ここにGASからのエラーメッセージと、JSが送信したIDが表示されます
+        alert(
+            "GASからの応答:\n" + errorMessageText + "\n\n" +
+            "送信したLIFF ID:\n" + liffUserId
+        );
+
+        // ページにもエラーを表示
         document.getElementById("error-message").innerHTML = `
             ${errorMessageText}
             <br>
@@ -59,7 +67,6 @@ window.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById("sync-button-container").style.display = "block";
     }
-
     // --- 旧ユーザー一覧読み込み ---
     async function loadUserListPage() {
         const container = document.getElementById('user-grid-container');
@@ -144,13 +151,13 @@ window.addEventListener('DOMContentLoaded', () => {
     
 // --- LIFFアプリのメイン処理 ---
     // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
-    async function main() {
+async function main() {
         let liffUserId = 'ID取得前'; // デバッグ用にIDを外側で定義
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
 
-            // 変更点：liff.getContext() の代わりに liff.getProfile() を使って確実にIDを取得します
+            // 確実性のため liff.getProfile() を使用
             const profile = await liff.getProfile();
             liffUserId = profile.userId; 
 
@@ -175,7 +182,7 @@ window.addEventListener('DOMContentLoaded', () => {
             showError(error, liffUserId); 
         }
     }
-    // ▲▲▲▲▲ この関数を丸ごと置き換えてください ▲▲▲▲▲
+    // ▲▲▲▲▲ この main 関数を置き換えてください ▲▲▲▲▲
     main();
 });
 // --- (これ以降の syncAccount 関数などは変更ありません) ---
