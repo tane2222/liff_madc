@@ -132,18 +132,36 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- LIFFアプリのメイン処理 ---
+    // --- LIFFアプリのメイン処理 ---
     async function main() {
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
-            showPage('my-page');
-            const liffUserId = liff.getContext().userId;
+
+            // 変更点：liff.getContext() の代わりに liff.getProfile() を使って確実にIDを取得します
+            const profile = await liff.getProfile();
+            const liffUserId = profile.userId; 
+
+            // 確実にIDが取得できてからGASを呼び出します
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
-            showProfile(profileData);
-        } catch (error) { showError(error); }
+            
+            // GASからの応答が成功した場合にのみ、マイページを表示します
+            if (profileData.success) {
+                showPage('my-page'); // ページ表示を、成功が確認できた後に移動
+                showProfile(profileData);
+            } else {
+                // GASが { success: false } を返した場合 (未連携など)
+                showError(profileData);
+            }
+        } catch (error) { 
+            // liff.init() や liff.getProfile() 自体が失敗した場合
+            showError(error); 
+        }
     }
     main();
 });
+// --- (これ以降の syncAccount 関数などは変更ありません) ---
+
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
