@@ -228,3 +228,96 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     color: var(--icon-active);
 }
 /* ▲▲▲▲▲ 新しいUIのスタイルはここまで ▲▲▲▲▲ */
+/* ▼▼▼▼▼ 登録/連携画面のスタイル ▼▼▼▼▼ */
+
+/* 全画面の背景コンテナ (#sync-button-container) */
+#sync-button-container {
+    /* 既存のスタイルを !important で強制的に上書き */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important; /* 100% から 100vh に変更して確実性を高めます */
+    transform: none !important;
+    text-align: left !important;
+    background-color: #fff !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    
+    /* あなたが実際に配置した日本語ファイル名を指定します。
+      もしファイル名を 'bg-register.png' に変更した場合は、
+      url('img/bg-register.png') にしてください。
+    */
+    background-image: url('img/bg-register.png') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    
+    /* Flexboxで、内容(registration-content)を一番下に配置 */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+}
+
+/* 下部の白いコンテナ */
+.registration-content {
+    background-color: white;
+    padding: 30px 20px 40px 20px; /* 下部(ホームバー)に余白 */
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 各要素の間の余白 */
+    text-align: center;
+    box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
+}
+
+/* エラーメッセージ（「〜連携されていません」）のスタイル */
+#error-message {
+    color: #E63946; /* エラーが目立つように赤色に */
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* 連携ボタン (理想UIのプライマリボタン風) */
+.registration-button.primary {
+    background-color: #F5AAB9; /* 理想UIのピンク */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+.registration-button.primary:disabled {
+    background-color: #CCC;
+}
+.registration-button.primary:hover:not(:disabled) {
+    background-color: #E6859A;
+}
+
+
+/* フッターのテキスト */
+.registration-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+}
+.registration-footer a {
+    color: #E6859A; /* テーマカラーに合わせる */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+}
+.registration-footer p {
+    margin-top: 10px;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+/* ▲▲▲▲▲ 登録/連携画面のスタイルはここまで ▲▲▲▲▲ */
