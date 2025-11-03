@@ -188,7 +188,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     // (※もしマイページ表示を優先し、スワイプページの読み込みを遅らせたい場合は、
                     //    loadNewUserListPage() の呼び出しを「スワイプページへ移動するボタン」の
                     //    クリックイベント内に移動することも可能です)
-                    await loadNewUserListPage();
                     
                 } else {
                     // MADC未連携
