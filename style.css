@@ -33,7 +33,23 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color-light); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; visibility: visible; transition: opacity 0.5s ease-out, visibility 0.5s ease-out; }
 #loader-wrapper.is-hidden { opacity: 0; visibility: hidden; }
 .loader-content { text-align: center; }
-.spinner { border: 3px solid rgba(0, 0, 0, 0.1); border-left-color: var(--accent-color); border-radius: 50%; width: 40px; height: 40px; margin: 0 auto 24px auto; animation: spin 1.2s linear infinite; }
+/* ▼▼▼▼▼ ここから修正 ▼▼▼▼▼ */
+.spinner { 
+    /* border: 3px solid rgba(0, 0, 0, 0.1); */ /* 既存の薄いグレーの円を削除 */
+    /* border-left-color: var(--accent-color); */ /* 既存の単色指定を削除 */
+    
+    /* 2色のアニメーションに変更 */
+    border: 4px solid transparent; /* 枠の太さ（4px）を維持し、ベースは透明に */
+    border-top-color: #EC027E;     /* テーマカラー1 (ピンク) */
+    border-bottom-color: #0E1F89;  /* テーマカラー2 (青) */
+    
+    border-radius: 50%; 
+    width: 40px; 
+    height: 40px; 
+    margin: 0 auto 24px auto; 
+    animation: spin 1.0s linear infinite; /* 回転速度を少し速くしても良いかもしれません (1.0s) */ 
+}
+/* ▲▲▲▲▲ ここまで修正 ▲▲▲▲▲ */
 .loader-text-container { position: relative; height: 20px; color: var(--secondary-text); }
 .loading-text-item { position: absolute; width: 100%; left: 0; text-align: center; opacity: 0; white-space: nowrap; animation-name: fadeInOut; animation-duration: 1.5s; animation-fill-mode: both; }
 .loading-text-item:nth-child(1) { animation-delay: 0.1s; }
