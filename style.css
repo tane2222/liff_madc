@@ -1,15 +1,19 @@
-/* 基本設定とカラーテーマ */
+/* --- 基本設定 & カラー --- */
 :root {
     --bg-color-light: #F7F7F7;
-    --bg-color-dark: #1C1C1E;
     --card-color-light: #FFFFFF;
     --primary-text-light: #222222;
-    --primary-text-dark: #FFFFFF;
-    --secondary-text: #888888;
+    --secondary-text: #888;
     --accent-color: #BB86FC;
+    --swiper-theme-color: #F5AAB9;
+    --icon-color: #CCC;
+    --icon-active: #E6859A;
 }
 
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color-light); color: var(--primary-text-light); padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-color-light); color: var(--primary-text-light); height: 100vh; overflow: hidden; }
+#app { display: none; }
+
+/* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
 .container { padding: 24px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
 .container.is-loaded { opacity: 1; transform: translateY(0); }
 .profile-header { text-align: center; margin-bottom: 32px; }
@@ -41,9 +45,9 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 /* --- ページ共通 & 旧ユーザー画面 --- */
 .page { animation: fadeIn 0.5s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.page-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; background-color: var(--card-color-light); }
-.page-header h1 { margin: 0; font-size: 18px; position: absolute; left: 50%; transform: translateX(-50%); }
-.back-button { color: var(--primary-text-light); text-decoration: none; font-size: 14px; }
+#user-grid-page .page-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; background-color: var(--card-color-light); }
+#user-grid-page .page-header h1 { margin: 0; font-size: 18px; position: absolute; left: 50%; transform: translateX(-50%); }
+#user-grid-page .back-button { color: var(--primary-text-light); text-decoration: none; font-size: 14px; }
 .user-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
 .user-card { background-color: var(--card-color-light); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
 .user-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
@@ -51,26 +55,176 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .user-name { font-weight: 600; font-size: 15px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-details { font-size: 12px; color: var(--secondary-text); display: block; }
 
+
 /* ▼▼▼▼▼ 新しいカードスワイプUIのスタイル ▼▼▼▼▼ */
-#user-swipe-page { background-color: var(--bg-color-dark); }
-#user-swipe-page .page-header.dark { background-color: transparent; border-bottom: none; }
-#user-swipe-page .back-button { color: var(--primary-text-dark); font-size: 24px; font-weight: bold; }
+/* ここから下を、前回提案した「理想のUI」のスタイルに置き換えます。
+    CSSの構文エラーを修正済みです。
+*/
 
-.swipe-deck-container { height: calc(100vh - 60px); display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
-.swipe-deck { width: 90vw; max-width: 400px; height: 70vh; position: relative; margin-top: -40px; }
-.swipe-card { position: absolute; width: 100%; height: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background-size: cover; background-position: center; touch-action: none; transition: transform 0.4s ease-out, opacity 0.4s ease-out; }
-.swipe-card:nth-child(n+4) { opacity: 0; } /* 4枚目以降は完全に隠す */
-.swipe-card:nth-child(3) { transform: translateY(20px) scale(0.90); z-index: -2; opacity: 0.8; }
-.swipe-card:nth-child(2) { transform: translateY(10px) scale(0.95); z-index: -1; }
+/* --- ページ全体 --- */
+#user-swipe-page .app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 420px;
+    margin: 0 auto;
+    background-color: #FCEFF1; /* 理想のUIの背景ピンク */
+}
 
-.card-info-overlay { position: absolute; bottom: 0; width: 100%; padding: 40px 20px 20px 20px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; }
-.card-info-overlay h3 { margin: 0 0 4px 0; font-size: 28px; font-weight: bold; }
-.card-info-overlay p { margin: 0; font-size: 16px; }
+/* --- ヘッダー --- */
+#user-swipe-page .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: white;
+    border-bottom: 1px solid #f0f0f0;
+    z-index: 10;
+    flex-shrink: 0;
+}
+#user-swipe-page .app-header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+#user-swipe-page .icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--secondary-text);
+    cursor: pointer;
+    /* ★★★ ここのコメントの閉じ方がエラーの原因でした ★★★ */
+}
+#user-swipe-page .back-button {
+    color: var(--secondary-text);
+    text-decoration: none;
+}
 
-.swipe-actions { margin-top: 20px; display: flex; gap: 20px; align-items: center; }
-.swipe-button { border: none; background: #2C2C2E; font-weight: bold; cursor: pointer; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.2s; }
-.swipe-button:active { transform: scale(0.9); }
-.rewind { width: 50px; height: 50px; font-size: 20px; color: #f3c951; }
-.nope { width: 70px; height: 70px; font-size: 30px; color: #ff6060; }
-.like { width: 70px; height: 70px; font-size: 30px; color: white; background: linear-gradient(135deg, #72EDF2, #5151E5); }
-/* ▲▲▲▲▲ 追記はここまで ▲▲▲▲▲ */
+/* --- メイン (Swiperコンテナ) --- */
+#user-swipe-page .main-content {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#user-swipe-page .swiper {
+    width: calc(100% - 50px); /* カードの幅を調整 */
+    height: 85%; /* カードの高さを調整 */
+    max-height: 600px;
+    /* カードがはみ出して回転するアニメーションを見せるために必須 */
+    overflow: visible; 
+}
+
+/* --- スライドとカードの基本 --- */
+#user-swipe-page .swiper-slide {
+    /* Swiper.jsがスタイルを適用するため、背景色や影は内側の .profile-card に設定 */
+    background-color: transparent;
+    box-shadow: none;
+}
+#user-swipe-page .profile-card {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- カード内部 (理想のUIレイアウト) --- */
+#user-swipe-page .profile-image {
+    position: relative;
+    width: 100%;
+    flex-grow: 1; /* 画像が可能な限り高さを占めるように */
+}
+#user-swipe-page .profile-image::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+    pointer-events: none;
+}
+#user-swipe-page .profile-image img {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+#user-swipe-page .age-tags {
+    position: absolute; top: 15px; left: 20px;
+    z-index: 5;
+    display: flex; gap: 10px;
+}
+#user-swipe-page .age-tags span {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    color: var(--primary-text-light);
+    font-size: 0.8rem; font-weight: 500;
+    padding: 5px 10px; border-radius: 15px;
+}
+#user-swipe-page .more-btn {
+    position: absolute; bottom: 20px; right: 20px;
+    background-color: #F5AAB9; /* 理想のUIのピンク */
+    color: white;
+    border: none; border-radius: 20px;
+    padding: 8px 16px; font-size: 0.9rem; font-weight: 600;
+    box-shadow: 0 4px 15px rgba(245, 170, 185, 0.5);
+    cursor: pointer; z-index: 5;
+}
+#user-swipe-page .profile-info {
+    padding: 15px 20px;
+    flex-shrink: 0; /* 高さが縮まないように */
+}
+#user-swipe-page .profile-info h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.5rem;
+}
+#user-swipe-page .profile-info p {
+    margin: 0;
+    color: var(--secondary-text);
+    font-size: 0.9rem;
+}
+#user-swipe-page .profile-info p .fas {
+    margin-right: 5px;
+}
+#user-swipe-page .interest-icons {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 20px;
+    border-top: 1px solid #f0f0f0;
+    flex-shrink: 0; /* 高さが縮まないように */
+}
+#user-swipe-page .icon-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: var(--secondary-text);
+}
+
+/* --- フッターナビゲーション --- */
+#user-swipe-page .nav-bar {
+    display: flex;
+    justify-content: space-around;
+    /* 変更: 上下のパディングを調整し、特に下部（ホームバー付近）に余白を追加 */
+    padding: 12px 0 28px 0; 
+    background-color: white;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+    z-index: 10;
+}
+#user-swipe-page .nav-item {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--icon-color);
+    cursor: pointer;
+}
+#user-swipe-page .nav-item.active {
+    color: var(--icon-active);
+}
+/* ▲▲▲▲▲ 新しいUIのスタイルはここまで ▲▲▲▲▲ */
