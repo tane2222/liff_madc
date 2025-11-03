@@ -131,30 +131,36 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- LIFFアプリのメイン処理 ---
-async function main() {
-    try {
-        await liff.init({ liffId: LIFF_ID });
-        if (!liff.isLoggedIn()) { liff.login(); return; }
+// --- LIFFアプリのメイン処理 ---
+    async function main() {
+        try {
+            await liff.init({ liffId: LIFF_ID });
+            if (!liff.isLoggedIn()) { liff.login(); return; }
 
-        // 確実性のため liff.getProfile() を使用
-        const profile = await liff.getProfile();
-        const liffUserId = profile.userId; 
+            // 変更：liff.getProfile() がフリーズするため、liff.getContext() に戻します
+            const liffUserId = liff.getContext().userId; 
+            
+            // ★★★【重要】IDがnullでないか確認します ★★★
+            if (!liffUserId) {
+                // IDが取得できない（null）場合は、連携エラーとして扱います
+                throw new Error("LINEユーザーIDが取得できませんでした。LIFFの権限を許可してください。");
+            }
 
-        // 確実にIDが取得できてからGASを呼び出します
-        const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
-
-        if (profileData.success) {
-            showPage('my-page'); // 成功時にページを表示
-            showProfile(profileData);
-        } else {
-            showError(profileData); // 未連携時
+            // IDが取得できてからGASを呼び出します
+            const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
+            
+            if (profileData.success) {
+                showPage('my-page'); // 成功時にページを表示
+                showProfile(profileData);
+            } else {
+                showError(profileData); // 未連携時 (GASが success: false を返した場合)
+            }
+        } catch (error) { 
+            showError(error); // LIFFの初期化失敗時
         }
-    } catch (error) { 
-        showError(error); // LIFFの初期化失敗時
     }
-}
-main();
+    main();
+});
 // --- (これ以降の syncAccount 関数などは変更ありません) ---
 
 
