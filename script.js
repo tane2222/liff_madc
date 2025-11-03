@@ -1,4 +1,4 @@
-// ★★★ GASのWebアプリURLとLIFF IDをここに設定 ★★★
+// ★★★ GASのWebアプリURLとLIFF IDをここに設定 ★★★★
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
 const LIFF_ID = "2008378264-4O97qRYQ";
 
@@ -39,16 +39,34 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
         } else {
+            // ★★★ 修正点 ★★★
+            // showErrorに、liffUserIdも渡せるようにする（main関数側で対応）
             showError(data);
         }
     }
-    function showError(error) {
+    // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
+    function showError(error, liffUserId = '不明') {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
         document.getElementById("app").style.display = "none";
-        document.getElementById("error-message").innerText = error.message || "エラーが発生しました。";
+        
+        const errorMessageText = error.message || "原因不明のエラーが発生しました。";
+        
+        // ★★★ 強制アラート表示 ★★★
+        // ここにGASからのエラーメッセージと、JSが送信したIDが表示されます
+        alert(
+            "GASからの応答:\n" + errorMessageText + "\n\n" +
+            "送信したLIFF ID:\n" + liffUserId
+        );
+
+        // ページにもエラーを表示
+        document.getElementById("error-message").innerHTML = `
+            ${errorMessageText}
+            <br>
+            <span style="font-size: 10px; color: #888;">(デバッグ情報: ${liffUserId})</span>
+        `;
+        
         document.getElementById("sync-button-container").style.display = "block";
     }
-
     // --- 旧ユーザー一覧読み込み ---
     async function loadUserListPage() {
         const container = document.getElementById('user-grid-container');
@@ -131,38 +149,96 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- LIFFアプリのメイン処理 ---
-    async function main() {
+// --- LIFFアプリのメイン処理 ---
+    // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
+async function main() {
+        let liffUserId = 'ID取得前'; // デバッグ用にIDを外側で定義
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
-            showPage('my-page');
-            const liffUserId = liff.getContext().userId;
+
+            // 確実性のため liff.getProfile() を使用
+            const profile = await liff.getProfile();
+            liffUserId = profile.userId; 
+
+            if (!liffUserId) {
+                throw new Error("LINEユーザーIDが取得できませんでした。LIFFの権限を許可してください。");
+            }
+
+            // 確実にIDが取得できてからGASを呼び出します
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
-            showProfile(profileData);
-        } catch (error) { showError(error); }
+            
+            if (profileData.success) {
+                showPage('my-page'); // 成功時にページを表示
+                showProfile(profileData);
+            } else {
+                // 未連携時 (GASが success: false を返した場合)
+                // 検索に使ったliffUserIdもshowErrorに渡す
+                showError(profileData, liffUserId);
+            }
+        } catch (error) { 
+            // LIFFの初期化失敗時や、ID取得失敗時
+            // liffUserIdが取得できていれば、それも表示する
+            showError(error, liffUserId); 
+        }
     }
+    // ▲▲▲▲▲ この main 関数を置き換えてください ▲▲▲▲▲
     main();
 });
+// --- (これ以降の syncAccount 関数などは変更ありません) ---
+
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
+    // 1. GASのURLと操作するDOM要素を取得
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
-    document.getElementById("sync-button").innerText = "連携処理中...";
-    document.getElementById("sync-button").disabled = true;
+    const syncButton = document.getElementById("sync-button");
+    const errorMessage = document.getElementById("error-message");
+    
+    // 2. ボタンを「処理中」に変更
+    syncButton.innerText = "連携処理中...";
+    syncButton.disabled = true;
+    
     try {
         const liffUserId = liff.getContext().userId;
         const nonce = Math.random().toString(36).substring(2);
-        const result = await (await fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ source: 'liff_app', action: 'storeLiffIdWithNonce', liffUserId: liffUserId, nonce: nonce }) })).json();
+
+        // 3. GASにNonce（合言葉）を保存するよう依頼
+        const result = await (await fetch(GAS_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'storeLiffIdWithNonce', 
+                liffUserId: liffUserId, 
+                nonce: nonce 
+            }) 
+        })).json();
+
         if (result.success) {
+            // 4. トーク画面に同期メッセージを送信
             await liff.sendMessages([{ type: 'text', text: `/sync ${nonce}` }]);
-            liff.closeWindow();
+            
+            // 5. 【重要】画面内でフィードバックを出す
+            errorMessage.innerText = "連携メッセージを送信しました。ボットが「連携完了」と返信したら、アプリを再読み込みします。";
+            errorMessage.style.color = "#28a745"; // メッセージを成功色（緑）に変更
+            syncButton.style.display = 'none'; // ボタンを非表示にする
+
+            // 6. 【重要】ボット側の処理時間（4秒）待ってから、LIFFをリロード
+            setTimeout(() => {
+                location.reload();
+            }, 4000); // 4秒 (4000ms)
+
         } else {
-            alert('連携処理に失敗しました: ' + result.message);
-            document.getElementById("sync-button").disabled = false;
+            // 連携失敗時
+            errorMessage.innerText = '連携処理に失敗しました: ' + result.message;
+            syncButton.innerText = "アカウントを連携する";
+            syncButton.disabled = false;
         }
     } catch (error) {
-        alert('エラー: ' + error.message);
-        document.getElementById("sync-button").disabled = false;
+        // エラー発生時
+        errorMessage.innerText = 'エラー: ' + error.message;
+        syncButton.innerText = "アカウントを連携する";
+        syncButton.disabled = false;
     }
 }
