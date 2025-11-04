@@ -23,7 +23,20 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .container { padding: 24px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
 .container.is-loaded { opacity: 1; transform: translateY(0); }
 .profile-header { text-align: center; margin-bottom: 32px; }
-.profile-header img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-color); object-fit: cover; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+/* style.css (修正後) */
+.profile-header img { 
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%; 
+    
+    /* borderをpaddingとbackgroundの組み合わせに変更してグラデーションを表現 */
+    border: none; /* 既存のborderを削除 */
+    padding: 4px; /* グラデーションの枠の太さ */
+    background: linear-gradient(45deg, var(--theme-color-pink), var(--theme-color-blue));
+    
+    object-fit: cover; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* 影を少し調整 */
+}
 .profile-header h2 { 
     margin: 16px 0 0 0; 
     font-size: 28px; /* 少し大きく */
