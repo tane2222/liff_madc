@@ -20,14 +20,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 #app { display: none; }
 
 /* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
-/* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
-.container { 
-    /* padding: 24px; */ /* ← 既存のpaddingを削除 */
-    padding: 0; /* ← 0に変更 */
-    opacity: 0; 
-    transform: translateY(20px); 
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
-}
+.container { padding: 24px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
 .container.is-loaded { opacity: 1; transform: translateY(0); }
 .profile-header { 
     /* text-align: center; */ /* ← paddingで指定するので削除 */
@@ -133,29 +126,8 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 #user-grid-page .page-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; background-color: var(--card-color-light); }
 #user-grid-page .page-header h1 { margin: 0; font-size: 18px; position: absolute; left: 50%; transform: translateX(-50%); }
 #user-grid-page .back-button { color: var(--primary-text-light); text-decoration: none; font-size: 14px; }
-.user-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    /* margin-bottom: 32px; */ /* ← 削除 */
-
-    /* --- ↓↓↓ 新しいスタイルを適用 ↓↓↓ --- */
-    padding: 0 24px; /* 左右の余白 */
-    margin-top: -50px; /* ヘッダーのカーブ部分に重ねる */
-    position: relative; /* ヘッダーより手前に表示 */
-    z-index: 10;
-}
-.user-card {
-    background-color: var(--card-color-light);
-    padding: 20px;
-    text-align: center;
-    /* border-radius: 12px; */ /* ← 変更 */
-    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); */ /* ← 変更 */
-
-    /* --- ↓↓↓ 新しいスタイルを適用 ↓↓↓ --- */
-    border-radius: 16px; /* 角を丸く */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* 影をしっかり */
-}
+.user-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+.user-card { background-color: var(--card-color-light); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
 .user-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
 .user-info { padding: 12px; }
 .user-name { font-weight: 600; font-size: 15px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
