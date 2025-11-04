@@ -22,6 +22,27 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', (e) => { e.preventDefault(); showPage(e.currentTarget.getAttribute('data-target') || 'my-page'); });
     });
+    // ▼▼▼▼▼ ここから追加 ▼▼▼▼▼
+    // 連携画面の「ログイン (マイページへ)」ボタンの処理
+    document.getElementById('show-my-page-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // 1. 連携画面を隠す
+        document.getElementById("sync-button-container").style.display = "none";
+        
+        // 2. アプリ本体を表示する
+        document.getElementById("app").style.display = "block";
+        
+        // 3. アプリ内のマイページを表示状態にする
+        showPage('my-page');
+        
+        // ※注意: この操作は、あくまで画面を切り替えるだけです。
+        // もしマイページに必要なデータ（プロフィール情報など）が
+        // 読み込まれていない場合は、別途 main() 関数のような
+        // データ取得処理を呼び出す必要があります。
+        // (現状では、既にデータがある前提でページのみ切り替えます)
+    });
+    // ▲▲▲▲▲ ここまで追加 ▲▲▲▲▲
     
     // --- データ表示 ---
     function showProfile(data) {
