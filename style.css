@@ -29,19 +29,20 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 }
 .container.is-loaded { opacity: 1; transform: translateY(0); }
 .profile-header { 
-    /* text-align: center; */ /* ← paddingで指定するので削除 */
-    /* margin-bottom: 32px; */ /* ← 削除 */
-
-    /* --- ↓↓↓ 新しいスタイルを適用 ↓↓↓ --- */
+    /* ...（background, color などはそのまま）... */
     background: linear-gradient(135deg, var(--theme-color-pink), var(--theme-color-blue));
     color: white;
-    padding: 40px 24px 50px 24px; /* ← 変更後: padding-bottomを 80px から 50px に減らし、カーブを浅くします */
+    
+    /* ▼ 修正点 1: padding-bottomを 50px から 30px に減らします */
+    padding: 40px 24px 30px 24px; 
+    
     text-align: center;
-    position: relative; /* カード配置の基準点 */
+    position: relative; 
     margin-bottom: 0;
     
-    /* 下部を内側にカーブさせる */
-    border-radius: 0 0 40% 40% / 0 0 40px 40px;
+    /* ▼ 修正点 2: 下部カーブの高さを 40px から 20px に減らします */
+    border-radius: 0 0 40% 40% / 0 0 20px 20px;
+    
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .profile-header img { 
