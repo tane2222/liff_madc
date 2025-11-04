@@ -402,7 +402,27 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .registration-button.primary:hover:not(:disabled) {
     background-color: #E6859A;
 }
-
+/* ▼▼▼▼▼ ここから追加 ▼▼▼▼▼ */
+.registration-button.secondary {
+    background-color: var(--card-color-light); /* #FFFFFF */
+    color: #F5AAB9; /* 理想UIのピンク */
+    border: 1px solid #F5AAB9; /* 枠線 */
+    border-radius: 30px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box; /* 念のため追加 */
+    transition: background-color 0.2s, color 0.2s;
+}
+.registration-button.secondary:hover:not(:disabled) {
+    background-color: #fdf0f3; /* ほんのりピンク */
+    color: #E6859A; /* ホバー時に濃いピンク */
+}
+/* ▲▲▲▲▲ ここまで追加 ▲▲▲▲▲ */
 
 /* フッターのテキスト */
 .registration-footer {
