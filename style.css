@@ -20,7 +20,13 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 #app { display: none; }
 
 /* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
-.container { padding: 24px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+.container { 
+    /* padding: 24px; */ /* ← 変更前 */
+    padding: 24px 0; /* ← 変更後: 左右のpaddingを0にし、上下のみに */
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
 .container.is-loaded { opacity: 1; transform: translateY(0); }
 .profile-header { 
     /* text-align: center; */ /* ← paddingで指定するので削除 */
@@ -29,7 +35,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     /* --- ↓↓↓ 新しいスタイルを適用 ↓↓↓ --- */
     background: linear-gradient(135deg, var(--theme-color-pink), var(--theme-color-blue));
     color: white;
-    padding: 40px 24px 80px 24px; /* 上、左右、下（カーブ領域）の余白 */
+    padding: 40px 24px 50px 24px; /* ← 変更後: padding-bottomを 80px から 50px に減らし、カーブを浅くします */
     text-align: center;
     position: relative; /* カード配置の基準点 */
     margin-bottom: 0;
@@ -81,11 +87,27 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     border-color: var(--theme-color-pink); /* 枠線もピンクに */
 }
 
-.metrics { display: flex; gap: 16px; margin-bottom: 32px; }
+.metrics { 
+    display: flex; 
+    gap: 16px; 
+    margin-bottom: 32px; 
+    /* --- ↓↓↓ 追加 ↓↓↓ --- */
+    /* containerから削除した左右の余白(24px)を、この要素に追加 */
+    margin-left: 24px;
+    margin-right: 24px;
+}
 .metric-card { flex: 1; background-color: var(--card-color-light); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
 .metric-label { display: block; font-size: 14px; color: var(--secondary-text); margin-bottom: 8px; }
 .metric-value { font-size: 28px; font-weight: 700; color: var(--accent-color); }
-.actions { display: flex; flex-direction: column; gap: 12px; }
+.actions { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    /* --- ↓↓↓ 追加 ↓↓↓ --- */
+    /* containerから削除した左右の余白(24px)を、この要素に追加 */
+    margin-left: 24px;
+    margin-right: 24px;
+}
 .action-button { display: block; background-color: var(--card-color-light); color: var(--primary-text-light); text-decoration: none; padding: 16px; border-radius: 8px; text-align: center; font-weight: 500; transition: background-color 0.3s, transform 0.2s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
 .action-button:hover { background-color: #f0f0f0; transform: scale(1.03); }
 .primary.action-button { background-color: var(--accent-color); color: #FFFFFF; font-weight: bold; }
