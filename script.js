@@ -52,6 +52,15 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
+
+            const progressBarFill = document.getElementById('diagnosis-progress-fill');
+        const progressValueText = document.getElementById('diagnosis-progress-value');
+
+        // プログレスバーの幅とテキストを更新
+        if (progressBarFill && progressValueText) {
+            progressBarFill.style.width = `${diagnosisProgress}%`;
+            progressValueText.textContent = diagnosisProgress;
+        }
             
             // ★★★ アプリ本体を表示する処理を追加 ★★★
             document.getElementById("app").style.display = 'block';
