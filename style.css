@@ -112,7 +112,6 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .action-button { display: block; background-color: var(--card-color-light); color: var(--primary-text-light); text-decoration: none; padding: 16px; border-radius: 8px; text-align: center; font-weight: 500; transition: background-color 0.3s, transform 0.2s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
 .action-button:hover { background-color: #f0f0f0; transform: scale(1.03); }
 .primary.action-button { background-color: var(--accent-color); color: #FFFFFF; font-weight: bold; }
-#sync-button-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: var(--card-color-light); padding: 2em; border-radius: 12px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
 
 /* --- ローディング画面 --- */
 #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color-light); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; visibility: visible; transition: opacity 0.5s ease-out, visibility 0.5s ease-out; }
@@ -358,7 +357,6 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     /* Flexboxで、内容(.registration-content)を一番下に配置 */
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* ← この指定で子要素が下端に寄ります */
 }
 
 /* 下部の白いコンテナ */
@@ -372,6 +370,8 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     gap: 15px; /* 各要素の間の余白 */
     text-align: center;
     box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
+
+    margin-top: auto; /* ← この行を追加 */
 }
 
 /* エラーメッセージ（「〜連携されていません」）のスタイル */
