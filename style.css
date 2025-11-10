@@ -338,6 +338,8 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     left: 0;
     width: 100%;
     height: 100vh; /* 画面全体の高さ */
+    /* モバイルブラウザのビューポート問題対策 */
+    height: -webkit-fill-available;
     transform: none;
     text-align: left;
     background-color: #fff; /* 背景画像のフォールバック */
