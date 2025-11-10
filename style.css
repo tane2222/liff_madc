@@ -357,7 +357,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     
     /* --- ここが重要 --- */
     /* Flexboxで、内容(.registration-content)を一番下に配置 */
-    display: flex;
+    display: flex !important;
     flex-direction: column;
 }
 
