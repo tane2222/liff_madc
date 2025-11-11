@@ -35,11 +35,10 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     
     /* ▼ 修正点 1: padding-bottomを 50px から 30px に減らします */
     padding: 40px 24px 30px 24px; 
-    margin:5vh;
     
     text-align: center;
     position: relative; 
-    margin-bottom: 0;
+    margin-bottom: 5vh;
     
     /* ▼ 修正点 2: 下部カーブの高さを 40px から 20px に減らします */
     border-radius: 0 0 40% 40% / 0 0 40px 40px;
