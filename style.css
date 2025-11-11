@@ -22,7 +22,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 /* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
 .container { 
     /* padding: 24px; */ /* ← 変更前 */
-    padding: 24px 0; /* ← 変更後: 左右のpaddingを0にし、上下のみに */
+    padding: 0px 0; /* ← 変更後: 左右のpaddingを0にし、上下のみに */
     opacity: 0; 
     transform: translateY(20px); 
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
@@ -35,13 +35,14 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     
     /* ▼ 修正点 1: padding-bottomを 50px から 30px に減らします */
     padding: 40px 24px 30px 24px; 
+    margin:5vh;
     
     text-align: center;
     position: relative; 
     margin-bottom: 0;
     
     /* ▼ 修正点 2: 下部カーブの高さを 40px から 20px に減らします */
-    border-radius: 0 0 40% 40% / 0 0 20px 20px;
+    border-radius: 0 0 40% 40% / 0 0 40px 40px;
     
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
