@@ -373,7 +373,10 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     text-align: center;
     box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
 
-    margin-top: auto; /* ← この行を追加 */
+    position: fixed; /* 画面(ビューポート)基準で位置を固定 */
+    bottom: 0;       /* 画面の下端に配置 */
+    left: 0;         /* 画面の左端に配置 */
+    right: 0;
 }
 
 /* エラーメッセージ（「〜連携されていません」）のスタイル */
