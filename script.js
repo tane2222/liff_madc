@@ -17,56 +17,67 @@ window.addEventListener('DOMContentLoaded', () => {
     function showPage(pageId) { pages.forEach(page => { page.style.display = (page.id === pageId) ? 'block' : 'none'; }); }
 
     // --- ページ遷移 ---
-    document.getElementById('go-to-swipe-page').addEventListener('click', (e) => { e.preventDefault(); loadNewUserListPage(); showPage('user-swipe-page'); });
-    document.getElementById('go-to-grid-page').addEventListener('click', (e) => { e.preventDefault(); loadUserListPage(); showPage('user-grid-page'); });
-    document.querySelectorAll('.back-button').forEach(btn => {
-        btn.addEventListener('click', (e) => { e.preventDefault(); showPage(e.currentTarget.getAttribute('data-target') || 'my-page'); });
+    // ▼▼▼ 理想UIのフッターナビの「さがす」ボタンに対応 ▼▼▼
+    document.getElementById('go-to-swipe-page-footer').addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        loadNewUserListPage(); 
+        showPage('user-swipe-page'); 
+        // (オプション)フッターナビのアクティブ状態を変更する処理
+        document.querySelectorAll('.footer-nav .nav-item').forEach(item => item.classList.remove('active'));
+        e.currentTarget.classList.add('active');
     });
-    // ▼▼▼▼▼ ここから追加 ▼▼▼▼▼
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    // (旧ユーザー画面へのボタンはHTMLから削除されたため、リスナーも不要)
+    // document.getElementById('go-to-grid-page').addEventListener('click', ...);
+
+    document.querySelectorAll('.back-button').forEach(btn => {
+        btn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            showPage(e.currentTarget.getAttribute('data-target') || 'my-page'); 
+            // (オプション)マイページに戻った時にフッターナビを「ホーム」に戻す
+            document.querySelectorAll('.footer-nav .nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.footer-nav .nav-item:first-child').classList.add('active');
+        });
+    });
+    
     // 連携画面の「ログイン (マイページへ)」ボタンの処理
     document.getElementById('show-my-page-button').addEventListener('click', (e) => {
         e.preventDefault();
-        
-        // 1. 連携画面を隠す
         document.getElementById("sync-button-container").style.display = "none";
-        
-        // 2. アプリ本体を表示する
         document.getElementById("app").style.display = "block";
-        
-        // 3. アプリ内のマイページを表示状態にする
         showPage('my-page');
-        
-        // ※注意: この操作は、あくまで画面を切り替えるだけです。
-        // もしマイページに必要なデータ（プロフィール情報など）が
-        // 読み込まれていない場合は、別途 main() 関数のような
-        // データ取得処理を呼び出す必要があります。
-        // (現状では、既にデータがある前提でページのみ切り替えます)
+        // ※注意: ここで main() を再実行するか、必要なデータをロードする必要があるかもしれません
     });
-    // ▲▲▲▲▲ ここまで追加 ▲▲▲▲▲
     
     // --- データ表示 ---
+    // ▼▼▼ 理想UIに合わせて showProfile を修正 ▼▼▼
     function showProfile(data) {
         if (data.success) {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
+            
+            // 理想UIの「28歳・〇〇」を更新 (GASから age, location が返される前提)
+            document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.location || '未設定'}`;
+            
             document.getElementById("profile-image").src = data.profileImageUrl;
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
 
             
-            // ★★★ アプリ本体を表示する処理を追加 ★★★
+            // ★★★ アプリ本体を表示する処理 ★★★
             document.getElementById("app").style.display = 'block';
             
-            document.getElementById("container").classList.remove('is-loading');
-            document.getElementById("container").classList.add('is-loaded');
+            // ( .container は無くなったため、ローディング解除処理を変更 )
+            // document.getElementById("container").classList.remove('is-loading');
+            // document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
         } else {
-            // ★★★ 修正点 ★★★
-            // showErrorに、liffUserIdも渡せるようにする（main関数側で対応）
             showError(data);
         }
     }
-    // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
+    // ▲▲▲▲▲ showProfile の修正ここまで ▲▲▲▲▲
+
     function showError(error, liffUserId = '不明') {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
         document.getElementById("app").style.display = "none";
@@ -74,7 +85,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const errorMessageText = error.message || "原因不明のエラーが発生しました。";
         
         // ★★★ 強制アラート表示 ★★★
-        // ここにGASからのエラーメッセージと、JSが送信したIDが表示されます
         alert(
             "GASからの応答:\n" + errorMessageText + "\n\n" +
             "送信したLIFF ID:\n" + liffUserId
@@ -89,7 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById("sync-button-container").style.display = "block";
     }
-    // --- 旧ユーザー一覧読み込み ---
+    // --- 旧ユーザー一覧読み込み (変更なし) ---
     async function loadUserListPage() {
         const container = document.getElementById('user-grid-container');
         container.innerHTML = '<p>ユーザーを読み込んでいます...</p>';
@@ -106,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
         } catch (error) { container.innerHTML = `<p>エラー: ${error.message}</p>`; }
     }
 
-// --- 新しいカードスワイプUIのロジック ---
+// --- 新しいカードスワイプUIのロジック (変更なし) ---
     let swiperInstance = null;
     async function loadNewUserListPage() {
         const swipeDeck = document.getElementById('swipe-deck');
@@ -116,9 +126,6 @@ window.addEventListener('DOMContentLoaded', () => {
             if (result.success && result.users.length > 0) {
                 swipeDeck.innerHTML = '';
                 result.users.forEach(user => {
-                    
-                    // ▼▼▼▼▼ ここからが修正点 ▼▼▼▼▼
-                    // カードのHTML構造を「理想のUI」レイアウトに変更します
                     const cardSlide = `
                         <div class="swiper-slide">
                             <div class="profile-card">
@@ -145,8 +152,6 @@ window.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                         </div>`;
-                    // ▲▲▲▲▲ ここまでが修正点 ▲▲▲▲▲
-                        
                     swipeDeck.innerHTML += cardSlide;
                 });
                 initializeSwiper();
@@ -161,7 +166,7 @@ window.addEventListener('DOMContentLoaded', () => {
         swiperInstance = new Swiper('.swiper', {
             effect: 'cards',
             grabCursor: true,
-            loop: false, // マッチングアプリなのでループはfalseのままにします
+            loop: false,
             cardsEffect: {
                 rotate: true,
                 perSlideRotate: 2,
@@ -171,15 +176,13 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-// --- LIFFアプリのメイン処理 ---
-    // ▼▼▼▼▼ この関数を丸ごと置き換えてください ▼▼▼▼▼
+// --- LIFFアプリのメイン処理 (変更なし) ---
 async function main() {
-        let liffUserId = 'ID取得前'; // デバッグ用にIDを外側で定義
+        let liffUserId = 'ID取得前';
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
 
-            // 確実性のため liff.getProfile() を使用
             const profile = await liff.getProfile();
             liffUserId = profile.userId; 
 
@@ -187,24 +190,18 @@ async function main() {
                 throw new Error("LINEユーザーIDが取得できませんでした。LIFFの権限を許可してください。");
             }
 
-            // 確実にIDが取得できてからGASを呼び出します
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
             
             if (profileData.success) {
-                showPage('my-page'); // 成功時にページを表示
+                showPage('my-page'); 
                 showProfile(profileData);
             } else {
-                // 未連携時 (GASが success: false を返した場合)
-                // 検索に使ったliffUserIdもshowErrorに渡す
                 showError(profileData, liffUserId);
             }
         } catch (error) { 
-            // LIFFの初期化失敗時や、ID取得失敗時
-            // liffUserIdが取得できていれば、それも表示する
             showError(error, liffUserId); 
         }
     }
-    // ▲▲▲▲▲ この main 関数を置き換えてください ▲▲▲▲▲
     main();
 });
 // --- (これ以降の syncAccount 関数などは変更ありません) ---
