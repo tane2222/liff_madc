@@ -1,139 +1,269 @@
-/* style.css (修正後) */
+/* style.css (理想UIへの修正版) */
 :root {
-    --bg-color-light: #F7F7F7;
+    --bg-color-light: #F7F7F7; /* 理想UIの背景色に近い色 */
     --card-color-light: #FFFFFF;
     --primary-text-light: #222222;
     --secondary-text: #888;
     
     /* --- テーマカラー定義 --- */
     --theme-color-pink: #EC027E;
-    --theme-color-blue: #0E1F89;
-
-    /* --- 既存変数の置き換え --- */
-    --accent-color: var(--theme-color-pink); /* メインのアクセントカラーをピンクに */
-    --swiper-theme-color: var(--theme-color-pink); /* Swiperもピンクに */
+    /* 理想UIの紫 (ヘッダーグラデーション用) */
+    --theme-color-purple: #9B27AF; 
+    /* 理想UIの濃いピンク (ヘッダーグラデーション用) */
+    --theme-color-deep-pink: #E03C7E;
+    
+    --accent-color: var(--theme-color-pink);
+    --swiper-theme-color: var(--theme-color-pink);
     --icon-color: #CCC;
-    --icon-active: var(--theme-color-pink); /* アクティブアイコンもピンクに */
+    --icon-active: var(--theme-color-pink);
 }
 
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-color-light); color: var(--primary-text-light); height: 100vh; overflow: hidden; }
+body { 
+    margin: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+    background-color: var(--bg-color-light); /* 理想UIの背景色 */
+    color: var(--primary-text-light); 
+    height: 100vh; 
+    /* overflow: hidden; */ /* ← スクロール可能にするためコメントアウト */
+}
 #app { display: none; }
 
-/* --- 既存のUIスタイル (マイページ / 旧ユーザー画面) --- */
-.container { 
-    /* padding: 24px; */ /* ← 変更前 */
-    padding: 0px 0; /* ← 変更後: 左右のpaddingを0にし、上下のみに */
-    opacity: 0; 
-    transform: translateY(20px); 
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+/* --- ページ共通 --- */
+.page { 
+    animation: fadeIn 0.5s ease-in-out; 
+    /* フッターナビの分だけ下部に余白を確保 */
+    padding-bottom: 80px; 
 }
-.container.is-loaded { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ▼▼▼▼▼ 理想UIのマイページスタイル ▼▼▼▼▼ */
+
+/* #my-page 専用のコンテナ設定を削除 */
+/* .container { ... } */
+
+/* 理想UIのプロフィールヘッダー */
 .profile-header { 
-    /* ...（background, color などはそのまま）... */
-    background: linear-gradient(135deg, var(--theme-color-pink), var(--theme-color-blue));
+    /* 理想UIのグラデーション（紫からピンクへ） */
+    background: linear-gradient(135deg, var(--theme-color-purple) 0%, var(--theme-color-deep-pink) 100%);
     color: white;
-    
-    /* ▼ 修正点 1: padding-bottomを 50px から 30px に減らします */
-    padding: 40px 24px 30px 24px; 
-    
+    padding: 30px 24px 30px 24px; /* 高さを調整 */
     text-align: center;
     position: relative; 
-    margin-bottom: 5vh;
-    
-    /* ▼ 修正点 2: 下部カーブの高さを 40px から 20px に減らします */
-    border-radius: 0 0 40% 40% / 0 0 40px 40px;
-    
+    /* 理想UIのカーブ */
+    border-radius: 0 0 45% 45% / 0 0 35px 35px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: -15px; /* メインコンテンツと少し重ねる */
+    z-index: 10;
 }
 .profile-header img { 
-    width: 120px; 
-    height: 120px; 
+    width: 100px; /* 理想UIに合わせて少し小さく */
+    height: 100px; 
     border-radius: 50%; 
     object-fit: cover; 
-    
-    /* --- ↓↓↓ グラデーション枠を白枠に変更 ↓↓↓ --- */
-    border: 4px solid var(--card-color-light); /* 白い枠線 */
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* 影を濃くする */
+    border: 4px solid var(--card-color-light);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     padding: 0;
-    background: none; /* 以前のグラデーションボーダーを削除 */
+    background: none;
 }
 .profile-header h2 { 
-    margin: 16px 0 0 0; 
-    font-size: 24px; /* 少し戻す */
-    font-weight: 600; /* 少し戻す */
-    color: white; /* ユーザー名を白に */
+    margin: 12px 0 4px 0; /* 余白調整 */
+    font-size: 22px; 
+    font-weight: 600; 
+    color: white;
 }
-/* style.css (修正後) */
-.btn-primary { 
-    /* background-color: var(--accent-color); */ /* 削除 */
-    background: linear-gradient(90deg, var(--theme-color-pink), var(--theme-color-blue)); /* グラデーションに変更 */
-    color: white; 
-    box-shadow: 0 6px 20px rgba(236, 2, 126, 0.4); /* ピンク系の影に変更 */
-}
-.btn-secondary { 
-    background-color: var(--card-color-light); 
-    color: var(--theme-color-blue); /* テキストをテーマカラーの青に */
-    border: 1px solid #E0E0E0; /* 枠線を少しだけ濃く */
+/* 理想UIの「28歳・〇〇」のスタイル */
+#user-details {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: white;
+    opacity: 0.9;
 }
 
-/* 触った時のインタラクションを強化 */
-.btn-primary:active { 
-    transform: translateY(2px); 
-    opacity: 0.8; /* 既存より少し透明に */
-}
-.btn-secondary:active { 
-    transform: translateY(2px); 
-    background-color: #f0f0f0;
-    color: var(--theme-color-pink); /* アクティブ時にピンクに */
-    border-color: var(--theme-color-pink); /* 枠線もピンクに */
+/* 理想UIのメインコンテンツエリア */
+#my-page .main-content {
+    padding: 0 16px; /* 左右に余白 */
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* 各セクション間の余白 */
 }
 
+/* 理想UIの「今日のピックアップ」 */
+.pickup-section {
+    background-color: var(--theme-color-deep-pink);
+    color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 30px; /* ヘッダーと重なる分＋余白 */
+}
+.pickup-section h3 {
+    margin: 0;
+    font-size: 1em; /* 親のフォントサイズを継承 */
+}
+
+/* 理想UIのメトリクス */
 .metrics { 
     display: flex; 
     gap: 16px; 
-    margin-bottom: 32px; 
-    /* --- ↓↓↓ 追加 ↓↓↓ --- */
-    /* containerから削除した左右の余白(24px)を、この要素に追加 */
-    margin-left: 24px;
-    margin-right: 24px;
+    /* margin-bottom: 0; */ /* main-contentのgapで管理 */
+    margin-left: 0; /* 左右余白は親(.main-content)で管理 */
+    margin-right: 0;
 }
-.metric-card { flex: 1; background-color: var(--card-color-light); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
-.metric-label { display: block; font-size: 14px; color: var(--secondary-text); margin-bottom: 8px; }
-.metric-value { font-size: 28px; font-weight: 700; color: var(--accent-color); }
-.actions { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-    /* --- ↓↓↓ 追加 ↓↓↓ --- */
-    /* containerから削除した左右の余白(24px)を、この要素に追加 */
-    margin-left: 24px;
-    margin-right: 24px;
+.metric-card { 
+    flex: 1; 
+    background-color: var(--card-color-light); 
+    border-radius: 12px; 
+    padding: 16px; /* 少し小さく */
+    text-align: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
 }
-.action-button { display: block; background-color: var(--card-color-light); color: var(--primary-text-light); text-decoration: none; padding: 16px; border-radius: 8px; text-align: center; font-weight: 500; transition: background-color 0.3s, transform 0.2s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
-.action-button:hover { background-color: #f0f0f0; transform: scale(1.03); }
-.primary.action-button { background-color: var(--accent-color); color: #FFFFFF; font-weight: bold; }
+.metric-label { 
+    display: block; 
+    font-size: 13px; /* 少し小さく */
+    color: var(--secondary-text); 
+    margin-bottom: 6px; 
+}
+.metric-value { 
+    font-size: 26px; /* 少し小さく */
+    font-weight: 700; 
+    color: var(--accent-color); 
+}
 
-/* --- ローディング画面 --- */
+/* 理想UIのピックアップユーザー */
+.pickup-users {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+.pickup-users img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 理想UIのタイムライン */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.timeline-item {
+    background-color: var(--card-color-light);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.timeline-item img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.timeline-item p {
+    margin: 0;
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.timeline-item i {
+    font-size: 20px;
+    color: var(--theme-color-pink);
+}
+/* タイムライン（ボタン付き） */
+.timeline-item-action {
+    flex-wrap: wrap; /* ボタンがはみ出たら改行 */
+}
+.timeline-item-content {
+    flex-grow: 1;
+}
+.timeline-subtext {
+    font-size: 12px !important;
+    color: var(--secondary-text);
+}
+.timeline-button {
+    background-color: var(--theme-color-purple);
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 20px;
+    margin-left: auto; /* 右寄せ */
+}
+
+
+/* 理想UIのフッターナビゲーション */
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 65px; /* 高さ指定 */
+    background-color: var(--card-color-light);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    border-top: 1px solid #f0f0f0;
+    padding-bottom: 10px; /* iPhoneのホームバー避け */
+    box-sizing: border-box; /* paddingを含めて高さ65px+10pxに */
+    z-index: 100;
+}
+.footer-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--secondary-text);
+    font-size: 10px;
+    gap: 2px;
+    flex: 1; /* 均等割り付け */
+    padding-top: 5px; /* アイコンとテキストの配置調整 */
+}
+.footer-nav .nav-item i {
+    font-size: 20px;
+}
+.footer-nav .nav-item.active {
+    color: var(--theme-color-pink);
+}
+
+
+/* 既存の .actions は 理想UI では使わないため非表示 */
+.actions { 
+    display: none; 
+}
+
+/* ▲▲▲▲▲ 理想UIのマイページスタイルここまで ▲▲▲▲▲ */
+
+
+/* --- ローディング画面 (変更なし) --- */
 #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color-light); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 1; visibility: visible; transition: opacity 0.5s ease-out, visibility 0.5s ease-out; }
 #loader-wrapper.is-hidden { opacity: 0; visibility: hidden; }
 .loader-content { text-align: center; }
-/* ▼▼▼▼▼ ここから修正 ▼▼▼▼▼ */
 .spinner { 
-    /* border: 3px solid rgba(0, 0, 0, 0.1); */ /* 既存の薄いグレーの円を削除 */
-    /* border-left-color: var(--accent-color); */ /* 既存の単色指定を削除 */
-    
-    /* 2色のアニメーションに変更 */
-    border: 4px solid transparent; /* 枠の太さ（4px）を維持し、ベースは透明に */
-    border-top-color: #EC027E;     /* テーマカラー1 (ピンク) */
-    border-bottom-color: #0E1F89;  /* テーマカラー2 (青) */
-    
+    border: 4px solid transparent;
+    border-top-color: #EC027E;
+    border-bottom-color: #0E1F89;
     border-radius: 50%; 
     width: 40px; 
     height: 40px; 
     margin: 0 auto 24px auto; 
-    animation: spin 1.0s linear infinite; /* 回転速度を少し速くしても良いかもしれません (1.0s) */ 
+    animation: spin 1.0s linear infinite; 
 }
-/* ▲▲▲▲▲ ここまで修正 ▲▲▲▲▲ */
 .loader-text-container { position: relative; height: 20px; color: var(--secondary-text); }
 .loading-text-item { position: absolute; width: 100%; left: 0; text-align: center; opacity: 0; white-space: nowrap; animation-name: fadeInOut; animation-duration: 1.5s; animation-fill-mode: both; }
 .loading-text-item:nth-child(1) { animation-delay: 0.1s; }
@@ -142,9 +272,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
 
-/* --- ページ共通 & 旧ユーザー画面 --- */
-.page { animation: fadeIn 0.5s ease-in-out; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* --- 旧ユーザー画面 (変更なし) --- */
 #user-grid-page .page-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; background-color: var(--card-color-light); }
 #user-grid-page .page-header h1 { margin: 0; font-size: 18px; position: absolute; left: 50%; transform: translateX(-50%); }
 #user-grid-page .back-button { color: var(--primary-text-light); text-decoration: none; font-size: 14px; }
@@ -156,295 +284,131 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .user-details { font-size: 12px; color: var(--secondary-text); display: block; }
 
 
-/* ▼▼▼▼▼ 新しいカードスワイプUIのスタイル ▼▼▼▼▼ */
-/* ここから下を、前回提案した「理想のUI」のスタイルに置き換えます。
-    CSSの構文エラーを修正済みです。
-*/
-
-/* --- ページ全体 --- */
+/* --- 新しいカードスワイプUIのスタイル (変更なし) --- */
 #user-swipe-page .app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    max-width: 420px;
-    margin: 0 auto;
-    background-color: #FCEFF1; /* 理想のUIの背景ピンク */
+    display: flex; flex-direction: column; height: 100vh;
+    max-width: 420px; margin: 0 auto; background-color: #FCEFF1;
 }
-
-/* --- ヘッダー --- */
 #user-swipe-page .app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-color: white;
-    border-bottom: 1px solid #f0f0f0;
-    z-index: 10;
-    flex-shrink: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 20px; background-color: white;
+    border-bottom: 1px solid #f0f0f0; z-index: 10; flex-shrink: 0;
 }
-#user-swipe-page .app-header h1 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-#user-swipe-page .icon-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: var(--secondary-text);
-    cursor: pointer;
-    /* ★★★ ここのコメントの閉じ方がエラーの原因でした ★★★ */
-}
-#user-swipe-page .back-button {
-    color: var(--secondary-text);
-    text-decoration: none;
-}
-
-/* --- メイン (Swiperコンテナ) --- */
+#user-swipe-page .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+#user-swipe-page .icon-btn { background: none; border: none; font-size: 1.2rem; color: var(--secondary-text); cursor: pointer; }
+#user-swipe-page .back-button { color: var(--secondary-text); text-decoration: none; }
 #user-swipe-page .main-content {
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-grow: 1; position: relative; display: flex;
+    align-items: center; justify-content: center;
 }
 #user-swipe-page .swiper {
-    width: calc(100% - 50px); /* カードの幅を調整 */
-    height: 85%; /* カードの高さを調整 */
-    max-height: 600px;
-    /* カードがはみ出して回転するアニメーションを見せるために必須 */
+    width: calc(100% - 50px); height: 85%; max-height: 600px;
     overflow: visible; 
 }
-
-/* --- スライドとカードの基本 --- */
-#user-swipe-page .swiper-slide {
-    /* Swiper.jsがスタイルを適用するため、背景色や影は内側の .profile-card に設定 */
-    background-color: transparent;
-    box-shadow: none;
-}
+#user-swipe-page .swiper-slide { background-color: transparent; box-shadow: none; }
 #user-swipe-page .profile-card {
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    width: 100%; height: 100%; background: white;
+    border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden; display: flex; flex-direction: column;
 }
-
-/* --- カード内部 (理想のUIレイアウト) --- */
-#user-swipe-page .profile-image {
-    position: relative;
-    width: 100%;
-    flex-grow: 1; /* 画像が可能な限り高さを占めるように */
-}
+#user-swipe-page .profile-image { position: relative; width: 100%; flex-grow: 1; }
 #user-swipe-page .profile-image::after {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 100px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 100px; background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
     pointer-events: none;
 }
 #user-swipe-page .profile-image img {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     object-fit: cover;
 }
 #user-swipe-page .age-tags {
-    position: absolute; top: 15px; left: 20px;
-    z-index: 5;
+    position: absolute; top: 15px; left: 20px; z-index: 5;
     display: flex; gap: 10px;
 }
 #user-swipe-page .age-tags span {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    color: var(--primary-text-light);
-    font-size: 0.8rem; font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);
+    color: var(--primary-text-light); font-size: 0.8rem; font-weight: 500;
     padding: 5px 10px; border-radius: 15px;
 }
 #user-swipe-page .more-btn {
     position: absolute; bottom: 20px; right: 20px;
-    background-color: #F5AAB9; /* 理想のUIのピンク */
-    color: white;
-    border: none; border-radius: 20px;
+    background-color: #F5AAB9; color: white; border: none; border-radius: 20px;
     padding: 8px 16px; font-size: 0.9rem; font-weight: 600;
     box-shadow: 0 4px 15px rgba(245, 170, 185, 0.5);
     cursor: pointer; z-index: 5;
 }
-#user-swipe-page .profile-info {
-    padding: 15px 20px;
-    flex-shrink: 0; /* 高さが縮まないように */
-}
-#user-swipe-page .profile-info h2 {
-    margin: 0 0 5px 0;
-    font-size: 1.5rem;
-}
-#user-swipe-page .profile-info p {
-    margin: 0;
-    color: var(--secondary-text);
-    font-size: 0.9rem;
-}
-#user-swipe-page .profile-info p .fas {
-    margin-right: 5px;
-}
+#user-swipe-page .profile-info { padding: 15px 20px; flex-shrink: 0; }
+#user-swipe-page .profile-info h2 { margin: 0 0 5px 0; font-size: 1.5rem; }
+#user-swipe-page .profile-info p { margin: 0; color: var(--secondary-text); font-size: 0.9rem; }
+#user-swipe-page .profile-info p .fas { margin-right: 5px; }
 #user-swipe-page .interest-icons {
-    display: flex;
-    justify-content: space-around;
-    padding: 15px 20px;
-    border-top: 1px solid #f0f0f0;
-    flex-shrink: 0; /* 高さが縮まないように */
+    display: flex; justify-content: space-around; padding: 15px 20px;
+    border-top: 1px solid #f0f0f0; flex-shrink: 0;
 }
 #user-swipe-page .icon-circle {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background-color: #f7f7f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    color: var(--secondary-text);
+    width: 44px; height: 44px; border-radius: 50%;
+    background-color: #f7f7f7; display: flex;
+    justify-content: center; align-items: center;
+    font-size: 1.2rem; color: var(--secondary-text);
 }
-
-/* --- フッターナビゲーション --- */
 #user-swipe-page .nav-bar {
-    display: flex;
-    justify-content: space-around;
-    /* 変更: 上下のパディングを調整し、特に下部（ホームバー付近）に余白を追加 */
-    padding: 12px 0 28px 0; 
-    background-color: white;
+    display: flex; justify-content: space-around;
+    padding: 12px 0 28px 0; background-color: white;
     box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-    flex-shrink: 0;
-    z-index: 10;
+    flex-shrink: 0; z-index: 10;
 }
 #user-swipe-page .nav-item {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--icon-color);
-    cursor: pointer;
+    background: none; border: none; font-size: 1.5rem;
+    color: var(--icon-color); cursor: pointer;
 }
-#user-swipe-page .nav-item.active {
-    color: var(--icon-active);
-}
-/* ▲▲▲▲▲ 新しいUIのスタイルはここまで ▲▲▲▲▲ */
-/* ▼▼▼▼▼ 登録/連携画面のスタイル ▼▼▼▼▼ */
+#user-swipe-page .nav-item.active { color: var(--icon-active); }
 
-/* 全画面の背景コンテナ (#sync-button-container) */
+/* --- 登録/連携画面のスタイル (変更なし) --- */
 #sync-button-container {
-    /* --- !important をすべて削除 --- */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh; /* 画面全体の高さ */
-    /* モバイルブラウザのビューポート問題対策 */
-    height: -webkit-fill-available;
-    transform: none;
-    text-align: left;
-    background-color: #fff; /* 背景画像のフォールバック */
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
-    
-    /* * 背景画像 
-     * (パスが 'img/bg-register.png' で正しいか確認してください。
-     * 添付画像とは異なる画像が指定されているようです。)
-     */
+    position: fixed; top: 0; left: 0; width: 100%;
+    height: 100vh; height: -webkit-fill-available;
+    transform: none; text-align: left; background-color: #fff;
+    padding: 0; border-radius: 0; box-shadow: none;
     background-image: url('img/bg-register.png'); 
-    background-size: cover;
-    background-position: center center;
-    
-    /* --- ここが重要 --- */
-    /* Flexboxで、内容(.registration-content)を一番下に配置 */
-    display: flex;
-    flex-direction: column;
+    background-size: cover; background-position: center center;
+    display: flex; flex-direction: column;
 }
-
-/* 下部の白いコンテナ */
 .registration-content {
-    background-color: white;
-    padding: 30px 20px 40px 20px; /* 下部(ホームバー)に余白 */
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* 各要素の間の余白 */
-    text-align: center;
-    box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
-
-    position: fixed; /* 画面(ビューポート)基準で位置を固定 */
-    bottom: 0;       /* 画面の下端に配置 */
-    left: 0;         /* 画面の左端に配置 */
-    right: 0;
+    background-color: white; padding: 30px 20px 40px 20px;
+    border-top-left-radius: 30px; border-top-right-radius: 30px;
+    display: flex; flex-direction: column; gap: 15px;
+    text-align: center; box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
+    position: fixed; bottom: 0; left: 0; right: 0;
 }
-
-/* エラーメッセージ（「〜連携されていません」）のスタイル */
 #error-message {
-    color: #E63946; /* エラーが目立つように赤色に */
-    font-size: 14px;
-    font-weight: 500;
-    margin: 0;
+    color: #E63946; font-size: 14px; font-weight: 500; margin: 0;
 }
-
-/* 連携ボタン (理想UIのプライマリボタン風) */
 .registration-button.primary {
-    background-color: #F5AAB9; /* 理想UIのピンク */
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 16px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.2s;
+    background-color: #F5AAB9; color: white; border: none;
+    border-radius: 30px; padding: 16px; font-size: 16px;
+    font-weight: bold; text-align: center; text-decoration: none;
+    cursor: pointer; width: 100%; transition: background-color 0.2s;
 }
-.registration-button.primary:disabled {
-    background-color: #CCC;
-}
-.registration-button.primary:hover:not(:disabled) {
-    background-color: #E6859A;
-}
-/* ▼▼▼▼▼ ここから追加 ▼▼▼▼▼ */
+.registration-button.primary:disabled { background-color: #CCC; }
+.registration-button.primary:hover:not(:disabled) { background-color: #E6859A; }
 .registration-button.secondary {
-    background-color: var(--card-color-light); /* #FFFFFF */
-    color: #F5AAB9; /* 理想UIのピンク */
-    border: 1px solid #F5AAB9; /* 枠線 */
-    border-radius: 30px;
-    padding: 16px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box; /* 念のため追加 */
+    background-color: var(--card-color-light); color: #F5AAB9;
+    border: 1px solid #F5AAB9; border-radius: 30px;
+    padding: 16px; font-size: 16px; font-weight: bold;
+    text-align: center; text-decoration: none; cursor: pointer;
+    width: 100%; box-sizing: border-box;
     transition: background-color 0.2s, color 0.2s;
 }
 .registration-button.secondary:hover:not(:disabled) {
-    background-color: #fdf0f3; /* ほんのりピンク */
-    color: #E6859A; /* ホバー時に濃いピンク */
+    background-color: #fdf0f3; color: #E6859A;
 }
-/* ▲▲▲▲▲ ここまで追加 ▲▲▲▲▲ */
-
-/* フッターのテキスト */
 .registration-footer {
-    text-align: center;
-    font-size: 12px;
-    color: #888;
+    text-align: center; font-size: 12px; color: #888;
 }
 .registration-footer a {
-    color: #E6859A; /* テーマカラーに合わせる */
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 13px;
+    color: #E6859A; text-decoration: none;
+    font-weight: 500; font-size: 13px;
 }
 .registration-footer p {
-    margin-top: 10px;
-    line-height: 1.5;
-    margin-bottom: 0;
+    margin-top: 10px; line-height: 1.5; margin-bottom: 0;
 }
-/* ▲▲▲▲▲ 登録/連携画面のスタイルはここまで ▲▲▲▲▲ */
