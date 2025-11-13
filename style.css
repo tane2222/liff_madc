@@ -119,22 +119,33 @@ body {
 }
 .metric-card { 
     flex: 1; 
-    background-color: var(--card-color-light); 
+    /* ▼▼▼ ここから変更 ▼▼▼ */
+    background-color: #72f3f9; /* 基調色を指定 */
     border-radius: 12px; 
+    border: 3px solid var(--card-color-light); /* 白い縁(3px)を追加 */
+    /* ▲▲▲▲▲▲▲▲▲▲▲ */
     padding: 16px; /* 少し小さく */
     text-align: center; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+    /* 影を少し調整（白枠が目立つように） */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 .metric-label { 
     display: block; 
     font-size: 13px; /* 少し小さく */
-    color: var(--secondary-text); 
+    /* 背景色 #72f3f9 が明るいため、文字色を濃くします */
+    color: #005A60; /* #72f3f9 と相性の良い濃いシアン */
+    font-weight: 500; /* 少し太くして視認性を上げます */
+    /* ▲▲▲▲▲▲▲▲▲▲▲ */
     margin-bottom: 6px; 
 }
 .metric-value { 
     font-size: 26px; /* 少し小さく */
     font-weight: 700; 
-    color: var(--accent-color); 
+    /* ▼▼▼ ここから変更 ▼▼▼ */
+    /* 背景色 #72f3f9 と accent-color(ピンク) は相性が悪いため、
+       ラベルよりさらに濃い色に変更し、バランスを取ります */
+    color: #003C40; 
+    /* ▲▲▲▲▲▲▲▲▲▲▲ */
 }
 
 /* 理想UIのピックアップユーザー */
