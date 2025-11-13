@@ -27,32 +27,82 @@
     <div id="app" style="display: none;">
         
         <div id="my-page" class="page">
-            <div class="container is-loading" id="container">
-                <header class="profile-header">
-                    <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
-                    <h2 id="nickname">読み込み中...</h2>
-                </header>
-                <main class="main-content">
-                    <section class="metrics">
-                        <div class="metric-card">
-                            <span class="metric-label">保有キュン</span>
-                            <span class="metric-value" id="kyun-points">--</span>
-                        </div>
-                     <div class="metric-card">
-                            <span class="metric-label">診断達成率</span>
-                            <span class="metric-value" id="diagnosis-progress">--%</span>
-                        </div>
-                    </section>
-                    <nav class="actions">
-                        <a href="#" class="action-button primary" id="go-to-swipe-page">ユーザーを探す</a>
-                        <a href="#" class="action-button" id="go-to-grid-page">旧ユーザー画面</a>
-                        <a href="#" class="action-button">プロフィール編集</a>
-                        <a href="#" class="action-button">キュンを追加</a>
-                    </nav>
-                </main>
-            </div>
-        </div>
+            
+            <header class="profile-header">
+                <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
+                <h2 id="nickname">読み込み中...</h2>
+                <p id="user-details">--歳・--</p>
+            </header>
 
+            <main class="main-content">
+                
+                <section class="pickup-section">
+                    <h3>今日のピックアップ</h3>
+                </section>
+
+                <section class="metrics">
+                    <div class="metric-card">
+                        <span class="metric-label">保有キュン</span>
+                        <span class="metric-value" id="kyun-points">--</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">診断達成率</span>
+                        <span class="metric-value" id="diagnosis-progress">--%</span>
+                    </div>
+                </section>
+
+                <section class="pickup-users">
+                    <img src="https://placehold.jp/100x100.png?text=User1" alt="ピックアップユーザー1">
+                    <img src="https://placehold.jp/100x100.png?text=User2" alt="ピックアップユーザー2">
+                    <img src="https://placehold.jp/100x100.png?text=User3" alt="ピックアップユーザー3">
+                </section>
+
+                <section class="timeline">
+                    <div class="timeline-item">
+                        <img src="https://placehold.jp/100x100.png?text=User4" alt="ゆりん">
+                        <p><strong>ゆりん(24)</strong>とマッチングしました！</p>
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="timeline-item">
+                        <img src="https://placehold.jp/100x100.png?text=User5" alt="さおり">
+                        <p><strong>さおりさん(24)</strong>が「いいね！」しました。</p>
+                        <i class="fas fa-heart" style="color: #FFC0CB;"></i>
+                    </div>
+                    <div class="timeline-item timeline-item-action">
+                        <img src="https://placehold.jp/100x100.png?text=User6" alt="いれん">
+                        <div class="timeline-item-content">
+                            <p><strong>いれんさん</strong>が「いいね！」しました。</p>
+                            <p class="timeline-subtext">プロフィールを30%更新しました！</p>
+                        </div>
+                        <a href="#" class="timeline-button">可能する</a>
+                    </div>
+                </section>
+
+                </main>
+
+            <nav class="footer-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>ホーム</span>
+                </a>
+                <a href="#" class="nav-item" id="go-to-swipe-page-footer">
+                    <i class="fas fa-search"></i>
+                    <span>さがす</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>メーエ？</span> </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>メッセージ</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>マイページ</span>
+                </a>
+            </nav>
+
+        </div>
         <div id="user-grid-page" class="page" style="display: none;">
             <header class="page-header">
                 <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
@@ -105,6 +155,5 @@
     </div>
 
     <script src="swiper-bundle.min.js"></script>
-   <script src="script.js?v=1.0.4"></script>
-</body>
+   <script src="script.js?v=1.0.5"></script> </body>
 </html>
