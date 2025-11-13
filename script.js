@@ -17,29 +17,63 @@ window.addEventListener('DOMContentLoaded', () => {
     function showPage(pageId) { pages.forEach(page => { page.style.display = (page.id === pageId) ? 'block' : 'none'; }); }
 
     // --- ページ遷移 ---
-    // ▼▼▼ 理想UIのフッターナビの「さがす」ボタンに対応 ▼▼▼
-    document.getElementById('go-to-swipe-page-footer').addEventListener('click', (e) => { 
+  // ▼▼▼▼▼ フッターナビゲーションの処理 ▼▼▼▼▼
+    
+    // 1. 「さがす」ページへ (ホーム画面 / スワイプ画面 両方から)
+    function goToSwipePage(e) {
+        if (e) e.preventDefault();
+        loadNewUserListPage(); // ユーザー一覧を読み込む
+        showPage('user-swipe-page'); // ページ切り替え
+        
+        // (オプション) フッターのアクティブ状態を更新
+        // ( script.js で行うより、HTML側でデフォルトで active にしておき、
+        //   遷移時のみ showPage と連動させる方が確実かもしれません )
+    }
+    document.getElementById('go-to-swipe-from-home').addEventListener('click', goToSwipePage);
+    // (スワイプ画面で「さがす」を押してもリロードするように)
+    document.getElementById('go-to-swipe-from-swipe').addEventListener('click', goToSwipePage);
+
+
+    // 2. 「ホーム」ページへ (スワイプ画面から)
+    function goToHomePage(e) {
+        if (e) e.preventDefault();
+        showPage('my-page'); // マイページ表示
+        
+        // (オプション) フッターのアクティブ状態を更新
+    }
+    document.getElementById('go-to-home-from-swipe').addEventListener('click', goToHomePage);
+    // (ホーム画面で「ホーム」を押してもリロードはしない、またはデータ再読み込み)
+    document.getElementById('go-to-home-from-home').addEventListener('click', (e) => {
         e.preventDefault(); 
-        loadNewUserListPage(); 
-        showPage('user-swipe-page'); 
-        // (オプション)フッターナビのアクティブ状態を変更する処理
-        document.querySelectorAll('.footer-nav .nav-item').forEach(item => item.classList.remove('active'));
-        e.currentTarget.classList.add('active');
+        // (必要なら main() を再実行してデータ更新)
     });
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    
+    // 3. 「マイページ」へ (両方から)
+    // ( ※ 現在の仕様では「ホーム」＝「マイページ」なので、goToHomePage と同じ動作 )
+    document.getElementById('go-to-mypage-from-home').addEventListener('click', goToHomePage);
+    document.getElementById('go-to-mypage-from-swipe').addEventListener('click', goToHomePage);
 
-    // (旧ユーザー画面へのボタンはHTMLから削除されたため、リスナーも不要)
-    // document.getElementById('go-to-grid-page').addEventListener('click', ...);
+    // 4. その他のダミーボタン (押してもアラートを出すだけ)
+    function showNotImplemented(e) {
+        e.preventDefault();
+        alert('この機能は現在準備中です。');
+    }
+    document.getElementById('go-to-maee-from-home').addEventListener('click', showNotImplemented);
+    document.getElementById('go-to-maee-from-swipe').addEventListener('click', showNotImplemented);
+    document.getElementById('go-to-messages-from-home').addEventListener('click', showNotImplemented);
+    document.getElementById('go-to-messages-from-swipe').addEventListener('click', showNotImplemented);
 
+
+    // --- 既存の戻るボタン (フッターと動作を合わせる) ---
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', (e) => { 
             e.preventDefault(); 
-            showPage(e.currentTarget.getAttribute('data-target') || 'my-page'); 
-            // (オプション)マイページに戻った時にフッターナビを「ホーム」に戻す
-            document.querySelectorAll('.footer-nav .nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelector('.footer-nav .nav-item:first-child').classList.add('active');
+            const targetPage = e.currentTarget.getAttribute('data-target') || 'my-page';
+            showPage(targetPage); 
+            // (フッターナビのアクティブ状態も「ホーム」に戻す処理)
         });
     });
+    // ▲▲▲▲▲ フッターナビゲーションの処理ここまで ▲▲▲▲▲
     
     // 連携画面の「ログイン (マイページへ)」ボタンの処理
     document.getElementById('show-my-page-button').addEventListener('click', (e) => {
