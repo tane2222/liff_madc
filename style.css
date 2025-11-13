@@ -56,7 +56,7 @@ body {
     border-radius: 0 0 45% 45% / 0 0 35px 35px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     margin-bottom: -15px; /* メインコンテンツと少し重ねる */
-    z-index: 10;
+    z-index: 5;
 }
 .profile-header img { 
     width: 100px; /* 理想UIに合わせて少し小さく */
@@ -87,7 +87,7 @@ body {
 #my-page .main-content {
     padding: 0 16px; /* 左右に余白 */
     position: relative;
-    z-index: 5;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     gap: 16px; /* 各セクション間の余白 */
