@@ -35,11 +35,6 @@
             </header>
 
             <main class="main-content">
-                
-                <section class="pickup-section">
-                    <h3>今日のピックアップ</h3>
-                </section>
-
                 <section class="metrics">
                     <div class="metric-card">
                         <span class="metric-label">保有キュン</span>
@@ -50,7 +45,9 @@
                         <span class="metric-value" id="diagnosis-progress">--%</span>
                     </div>
                 </section>
-
+                <section class="pickup-section">
+                    <h3>今日のピックアップ</h3>
+                </section>
                 <section class="pickup-users">
                     <img src="https://placehold.jp/100x100.png?text=User1" alt="ピックアップユーザー1">
                     <img src="https://placehold.jp/100x100.png?text=User2" alt="ピックアップユーザー2">
@@ -81,22 +78,23 @@
                 </main>
 
             <nav class="footer-nav">
-                <a href="#" class="nav-item active">
+                <a href="#" class="nav-item active" id="go-to-home-from-home">
                     <i class="fas fa-home"></i>
                     <span>ホーム</span>
                 </a>
-                <a href="#" class="nav-item" id="go-to-swipe-page-footer">
+                <a href="#" class="nav-item" id="go-to-swipe-from-home">
                     <i class="fas fa-search"></i>
                     <span>さがす</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" id="go-to-maee-from-home">
                     <i class="fas fa-heart"></i>
-                    <span>メール</span> </a>
-                <a href="#" class="nav-item">
+                    <span>メール</span>
+                </a>
+                <a href="#" class="nav-item" id="go-to-messages-from-home">
                     <i class="fas fa-comments"></i>
                     <span>メッセージ</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="#" class="nav-item" id="go-to-mypage-from-home">
                     <i class="fas fa-user"></i>
                     <span>マイページ</span>
                 </a>
@@ -124,11 +122,27 @@
                             </div>
                     </div>
                 </main>
-                <nav class="nav-bar">
-                    <button class="nav-item active"><i class="fas fa-clone"></i></button>
-                    <button class="nav-item"><i class="fas fa-comments"></i></button>
-                    <button class="nav-item"><i class="fas fa-bell"></i></button>
-                    <button class="nav-item"><i class="fas fa-user"></i></button>
+                <nav class="footer-nav">
+                    <a href="#" class="nav-item" id="go-to-home-from-swipe">
+                        <i class="fas fa-home"></i>
+                        <span>ホーム</span>
+                    </a>
+                    <a href="#" class="nav-item active" id="go-to-swipe-from-swipe">
+                        <i class="fas fa-search"></i>
+                        <span>さがす</span>
+                    </a>
+                    <a href="#" class="nav-item" id="go-to-maee-from-swipe">
+                        <i class="fas fa-heart"></i>
+                        <span>メール</span>
+                    </a>
+                    <a href="#" class="nav-item" id="go-to-messages-from-swipe">
+                        <i class="fas fa-comments"></i>
+                        <span>メッセージ</span>
+                    </a>
+                    <a href="#" class="nav-item" id="go-to-mypage-from-swipe">
+                        <i class="fas fa-user"></i>
+                        <span>マイページ</span>
+                    </a>
                 </nav>
             </div>
         </div>
