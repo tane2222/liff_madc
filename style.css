@@ -424,3 +424,79 @@ body {
 .registration-footer p {
     margin-top: 10px; line-height: 1.5; margin-bottom: 0;
 }
+
+/* ... (既存のスタイルはそのまま) ... */
+
+
+/* --- 初回登録ページ (性別選択) --- */
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--card-color-light);
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+.registration-header {
+    text-align: center;
+    padding: 40px 0;
+}
+.registration-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+.registration-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--primary-text-light);
+    margin: 0 0 10px 0;
+}
+.registration-header p {
+    font-size: 14px;
+    color: var(--secondary-text);
+    margin: 0;
+}
+
+.registration-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+.sex-button {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #EEE;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #FFF;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.sex-button:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.sex-button img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+.sex-button span {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary-text-light);
+}
+
+/* 連携ボタンのコンテナを画面全体に */
+#sync-button-container {
+    background-color: var(--bg-color-light);
+    height: 100vh;
+    box-sizing: border-box;
+}
+
