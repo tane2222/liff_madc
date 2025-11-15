@@ -74,6 +74,11 @@ body {
     font-weight: 600; 
     color: white;
 }
+.profile-header .user-details {
+    margin: 4px 0 0 0;
+    font-size: 16px;
+    color: var(--secondary-text);
+}
 /* 理想UIの「28歳・〇〇」のスタイル */
 #user-details {
     margin: 0;
