@@ -90,8 +90,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
             
-            // 理想UIの「28歳・〇〇」を更新 (GASから age, location が返される前提)
-            document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.location || '未設定'}`;
+            // 理想UIの「28歳・〇〇」を更新 (GASから age, job が返される前提)
+            document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.job || '未設定'}`;
             
             document.getElementById("profile-image").src = data.profileImageUrl;
             document.getElementById("kyun-points").innerText = data.totalKyun;
