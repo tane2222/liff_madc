@@ -75,40 +75,37 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // ▲▲▲▲▲ フッターナビゲーションの処理ここまで ▲▲▲▲▲
     
-  );
+    // 連携画面の「ログイン (マイページへ)」ボタンの処理
+    document.getElementById('show-my-page-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById("sync-button-container").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        showPage('my-page');
+        // ※注意: ここで main() を再実行するか、必要なデータをロードする必要があるかもしれません
+    });
     
     // --- データ表示 ---
     // ▼▼▼ 理想UIに合わせて showProfile を修正 ▼▼▼
     function showProfile(data) {
         if (data.success) {
-        　// --- 登録ステップに応じて表示するページを振り分け ---
-            if (data.step === 'Complete') {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
+            
             // 理想UIの「28歳・〇〇」を更新 (GASから age, job が返される前提)
             document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.job || '未設定'}`;
+            
             document.getElementById("profile-image").src = data.profileImageUrl;
             document.getElementById("kyun-points").innerText = data.totalKyun;
             const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
             document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
 
-            showPage('my-page'); // マイページを表示
             
             // ★★★ アプリ本体を表示する処理 ★★★
-            document.getElementById("app").style.display = 'block'; 
+            document.getElementById("app").style.display = 'block';
+            
             // ( .container は無くなったため、ローディング解除処理を変更 )
             // document.getElementById("container").classList.remove('is-loading');
             // document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
-        　} else if (data.step === 'follow-1') {
-                // 【B】新規登録ユーザー (STEP_1)
-                showPage('sex-selection-page'); // 性別選択ページを表示
-                document.getElementById("app").style.display = 'block';
-                document.getElementById("loader-wrapper").classList.add('is-hidden');
-
-            } else {
-                // (今後、STEP_2, STEP_3 などがここに追加される)
-                showPage('sex-selection-page'); // とりあえず性別選択に戻す
-            }
         } else {
             showError(data);
         }
@@ -212,53 +209,32 @@ window.addEventListener('DOMContentLoaded', () => {
             },
         });
     }
-
-// ▼▼▼▼▼ 以下の関数を追記 ▼▼▼▼▼
-    // --- 新規登録ステップの処理 ---
-    async function submitSex(sexChoice) { // sexChoiceは 'men' または 'women'
-        try {
-            document.getElementById("loader-wrapper").classList.remove('is-hidden'); // ローディング表示
-            const result = await callGasApi('handleRegistrationStep', {
-                liffUserId: liff.getContext().userId,
-                stepData: {
-                    step: 'STEP_1',
-                    value: sexChoice
-                }
-            });
-
-            if (result.success) {
-                // 成功したら、次のステップ（例: 年齢入力ページ）に遷移
-                // alert('性別を登録しました！次のステップに進みます。');
-                // location.reload(); // または次の登録ページを表示
-                
-                // ここでは仮に、GASから返された次のステップを表示（まだ作っていないのでアラート）
-                alert('性別を登録しました！次のステップは ' + result.nextStep + ' です。');
-                document.getElementById("loader-wrapper").classList.add('is-hidden');
-
-            } else {
-                throw new Error(result.message);
-            }
-        } catch (error) {
-            alert('登録に失敗しました: ' + error.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    }
-
-    document.getElementById('select-men').addEventListener('click', () => submitSex('men'));
-    document.getElementById('select-women').addEventListener('click', () => submitSex('women'));
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     
 // --- LIFFアプリのメイン処理 (変更なし) ---
-// --- LIFFアプリのメイン処理 ---
-    async function main() {
+async function main() {
+        let liffUserId = 'ID取得前';
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
-            // ★★★ showPage('my-page')を削除 ★★★
-            const liffUserId = liff.getContext().userId;
+
+            const profile = await liff.getProfile();
+            liffUserId = profile.userId; 
+
+            if (!liffUserId) {
+                throw new Error("LINEユーザーIDが取得できませんでした。LIFFの権限を許可してください。");
+            }
+
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
-            showProfile(profileData); // 振り分けはshowProfileに任せる
-        } catch (error) { showError(error); }
+            
+            if (profileData.success) {
+                showPage('my-page'); 
+                showProfile(profileData);
+            } else {
+                showError(profileData, liffUserId);
+            }
+        } catch (error) { 
+            showError(error, liffUserId); 
+        }
     }
     main();
 });
