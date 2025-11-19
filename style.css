@@ -419,3 +419,45 @@ body {
 .registration-footer p {
     margin-top: 10px; line-height: 1.5; margin-bottom: 0;
 }
+
+/* ▼▼▼ 性別選択画面のスタイル ▼▼▼ */
+.gender-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+    background-color: var(--bg-color-light);
+}
+.gender-container h2 { margin-bottom: 10px; }
+.gender-container p { color: var(--secondary-text); margin-bottom: 40px; }
+
+.gender-buttons {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+.gender-btn {
+    flex: 1;
+    padding: 40px 20px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.gender-btn i { font-size: 2.5rem; }
+.gender-btn:active { transform: scale(0.95); }
+.gender-btn.male { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.gender-btn.female { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
