@@ -88,6 +88,15 @@ window.addEventListener('DOMContentLoaded', () => {
     // ▼▼▼ 理想UIに合わせて showProfile を修正 ▼▼▼
     function showProfile(data) {
         if (data.success) {
+           // ▼▼▼ ステップによる分岐を追加 ▼▼▼
+            if (data.step === "follow-1") {
+                // 初回登録（性別選択）へ
+                document.getElementById("app").style.display = 'block';
+                showPage('gender-selection-page');
+                
+                document.getElementById("loader-wrapper").classList.add('is-hidden');
+           } else {
+            
             document.getElementById("nickname").innerText = data.nickname || '未設定';
             
             // 理想UIの「28歳・〇〇」を更新 (GASから age, job が返される前提)
@@ -106,6 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
             // document.getElementById("container").classList.remove('is-loading');
             // document.getElementById("container").classList.add('is-loaded');
             document.getElementById("loader-wrapper").classList.add('is-hidden');
+
+          } 
         } else {
             showError(data);
         }
@@ -240,6 +251,33 @@ async function main() {
 });
 // --- (これ以降の syncAccount 関数などは変更ありません) ---
 
+// --- 性別選択処理 (グローバルスコープ) ---
+async function selectGender(gender) {
+    document.getElementById("loader-wrapper").classList.remove('is-hidden'); // ローディング表示
+    
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec"; // 貼り付け
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ source: 'liff_app', action: 'registerUserGender', liffUserId: liffUserId, gender: gender })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            alert("登録しました！");
+            location.reload(); // 再読み込みしてマイページへ
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
