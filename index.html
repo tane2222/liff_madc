@@ -148,6 +148,22 @@
         </div>
         </div>
 
+    <div id="gender-selection-page" class="page" style="display: none;">
+            <div class="gender-container">
+                <h2>あなたの性別を教えてください</h2>
+                <p>マッチングのために必要です</p>
+                <div class="gender-buttons">
+                    <button class="gender-btn male" onclick="selectGender('Men')">
+                        <i class="fas fa-mars"></i> 男性
+                    </button>
+                    <button class="gender-btn female" onclick="selectGender('Women')">
+                        <i class="fas fa-venus"></i> 女性
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+
     <div id="sync-button-container" style="display: none;">
         
         <div class="registration-content">
@@ -156,9 +172,9 @@
             <button id="sync-button" class="registration-button primary" onclick="syncAccount()">
                 アカウントを連携する
             </button>
-            <button id="show-my-page-button" class="registration-button secondary">
-            ログイン (マイページへ)
-           </button>
+            <button id="sync-button" class="registration-button primary" onclick="syncAccount()">
+                初回登録（初めての方）
+            </button>
             
             <div class="registration-footer">
                 <a href="#">新規登録・ログインでお困りの方へ</a>
