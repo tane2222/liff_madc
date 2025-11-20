@@ -76,13 +76,13 @@ window.addEventListener('DOMContentLoaded', () => {
     // ▲▲▲▲▲ フッターナビゲーションの処理ここまで ▲▲▲▲▲
     
     // 連携画面の「ログイン (マイページへ)」ボタンの処理
-    document.getElementById('show-my-page-button').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById("sync-button-container").style.display = "none";
-        document.getElementById("app").style.display = "block";
-        showPage('my-page');
+     // document.getElementById('show-my-page-button').addEventListener('click', (e) => {
+         // e.preventDefault();
+         // document.getElementById("sync-button-container").style.display = "none";
+         // document.getElementById("app").style.display = "block";
+         // showPage('my-page');
         // ※注意: ここで main() を再実行するか、必要なデータをロードする必要があるかもしれません
-    });
+     // });
     
     // --- データ表示 ---
     // ▼▼▼ 理想UIに合わせて showProfile を修正 ▼▼▼
