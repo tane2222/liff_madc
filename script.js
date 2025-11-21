@@ -88,13 +88,16 @@ window.addEventListener('DOMContentLoaded', () => {
     // ▼▼▼ 理想UIに合わせて showProfile を修正 ▼▼▼
     function showProfile(data) {
         if (data.success) {
+            document.getElementById("app").style.display = 'block';
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+            
            // ▼▼▼ ステップによる分岐を追加 ▼▼▼
             if (data.step === "follow-1") {
-                // 初回登録（性別選択）へ
-                document.getElementById("app").style.display = 'block';
+                // 初回登録 Step 1: 性別選択へ
                 showPage('gender-selection-page');
-                
-                document.getElementById("loader-wrapper").classList.add('is-hidden');
+                } else if (data.step === "S-2") {
+                // Step 2: 本名入力へ
+                showPage('name-input-page');
            } else {
             
             document.getElementById("nickname").innerText = data.nickname || '未設定';
@@ -267,7 +270,7 @@ async function selectGender(gender) {
         const result = await response.json();
         
         if (result.success) {
-            alert("登録しました！");
+            //alert("登録しました！");
             location.reload(); // 再読み込みしてマイページへ
         } else {
             alert("エラー: " + result.message);
@@ -278,6 +281,42 @@ async function selectGender(gender) {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
     }
 }
+
+// ▼▼▼▼▼ 本名登録処理 (グローバルスコープ) ▼▼▼▼▼
+async function submitName() {
+    const nameInput = document.getElementById("user-name-input");
+    const name = nameInput.value.trim();
+
+    if (!name) {
+        alert("お名前を入力してください。");
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec"; // 貼り付け
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ source: 'liff_app', action: 'registerUserName', liffUserId: liffUserId, name: name })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            location.reload(); // リロードして次のステップへ
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
