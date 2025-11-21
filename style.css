@@ -461,3 +461,35 @@ body {
 .gender-btn.male { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
 .gender-btn.female { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* ▼▼▼ 入力フォーム画面の追加スタイル ▼▼▼ */
+.input-group {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.registration-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.3s;
+    box-sizing: border-box; /* パディングを含めた幅計算 */
+}
+
+.registration-input:focus {
+    border-color: var(--accent-color);
+}
+
+/* 「次へ」ボタンのスタイル（性別ボタンのスタイルをベースに調整） */
+.gender-btn.next-step {
+    background: linear-gradient(135deg, #BB86FC 0%, #7c4dff 100%);
+    flex-direction: row; /* 横並び */
+    justify-content: center;
+    padding: 20px;
+    height: auto;
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
