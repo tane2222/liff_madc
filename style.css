@@ -517,3 +517,75 @@ body {
     border-color: var(--accent-color);
 }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* ... (既存のスタイル) ... */
+
+/* ▼▼▼ 所属選択ボタン (Step 6) のスタイル ▼▼▼ */
+/* ---※ステップ６のプルダウン選択をやめたので、この項目は削除した方が良いかも--- */
+.department-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2列で表示 */
+    gap: 15px; /* ボタン同士の間隔 */
+    margin-top: 20px;
+}
+
+.dept-btn {
+    border: none;
+    border-radius: 15px;
+    padding: 20px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 80px; /* ボタンの高さを揃える */
+    line-height: 1.4;
+}
+
+.dept-btn:active {
+    transform: scale(0.95);
+}
+/* ---※ステップ６のプルダウン選択をやめたので、この項目は削除した方が良いかも--- */
+/*  ここまで▲▲▲所属選択ボタン (Step 6) のスタイル ▲▲▲ */
+
+/* --- おしゃれな色分け (各ボタンに異なるグラデーション) --- */
+
+/* 1. HR・人材: 信頼のブルー */
+.dept-btn:nth-child(1) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
+/* 2. 住まい: 安心のグリーン */
+.dept-btn:nth-child(2) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+/* 3. 結婚: 幸せのピンク */
+.dept-btn:nth-child(3) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+
+/* 4. 車: アクティブなオレンジ */
+.dept-btn:nth-child(4) { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+
+/* 5. カーセンサー: クールなレッド系 */
+.dept-btn:nth-child(5) { background: linear-gradient(135deg, #ff6b6b 0%, #f06595 100%); }
+
+/* 6. 教育・進路: 知的なインディゴ */
+.dept-btn:nth-child(6) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+/* 7. 旅行・レジャー: 楽しいイエロー・オレンジ */
+.dept-btn:nth-child(7) { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); color: #444; /* 明るい背景なので文字色調整 */ }
+
+/* 8. 飲食: 食欲のオレンジレッド */
+.dept-btn:nth-child(8) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+/* 9. ビューティー: 華やかなパープル */
+.dept-btn:nth-child(9) { background: linear-gradient(135deg, #c471f5 0%, #fa71cd 100%); }
+
+/* 10. その他: シックなグレー・シルバー */
+.dept-btn:nth-child(10) { 
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+    color: #444; 
+    grid-column: 1 / -1; /* これだけ横幅いっぱいに表示 (お好みで削除可) */
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
