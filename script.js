@@ -258,7 +258,6 @@ async function main() {
 async function selectGender(gender) {
     document.getElementById("loader-wrapper").classList.remove('is-hidden'); // ローディング表示
     
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec"; // 貼り付け
     const liffUserId = liff.getContext().userId;
     
     try {
@@ -294,7 +293,6 @@ async function submitName() {
 
     document.getElementById("loader-wrapper").classList.remove('is-hidden');
     
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec"; // 貼り付け
     const liffUserId = liff.getContext().userId;
     
     try {
@@ -360,7 +358,6 @@ async function submitNickname() {
 // --- アカウント連携の処理 ---
 async function syncAccount() {
     // 1. GASのURLと操作するDOM要素を取得
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
     const syncButton = document.getElementById("sync-button");
     const errorMessage = document.getElementById("error-message");
     
