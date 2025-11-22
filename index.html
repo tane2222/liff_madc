@@ -227,74 +227,24 @@
         </div>
 
       <div id="department-input-page" class="page" style="display: none;">
-            <div class="gender-container">
-                <h2>所属領域の選択</h2>
-                <p>あなたが所属する領域を以下から選択してください！</p>
+            <div class="gender-container" style="max-width: 400px;"> <h2>所属領域の選択</h2>
+                <p>あなたが所属する領域を選択してください！</p>
                 
-                <div class="input-group">
-                    <select id="user-department-input" class="registration-select">
-                        <option value="" disabled selected>選択してください</option>
-                        
-                        <optgroup label="HR・人材">
-                            <option value="HR_リクルートエージェント">リクルートエージェント</option>
-                            <option value="HR_リクナビNEXT">リクナビNEXT</option>
-                            <option value="HR_リクナビ">リクナビ</option>
-                            <option value="HR_タウンワーク">タウンワーク</option>
-                            <option value="HR_リクルートダイレクトスカウト">リクルートダイレクトスカウト</option>
-                            <option value="HR_その他">HR・その他</option>
-                        </optgroup>
-
-                        <optgroup label="住まい">
-                            <option value="住まい_SUUMO">SUUMO</option>
-                            <option value="住まい_スーモカウンター注文住宅">スーモカウンター注文住宅</option>
-                            <option value="住まい_スーモカウンター新築マンション">スーモカウンター新築マンション</option>
-                            <option value="住まい_その他">住まい・その他</option>
-                        </optgroup>
-
-                        <optgroup label="結婚">
-                            <option value="結婚_ゼクシィ">ゼクシィ</option>
-                            <option value="結婚_ゼクシィオンライン招待状">ゼクシィオンライン招待状</option>
-                            <option value="結婚_ゼクシィ縁結び">ゼクシィ縁結び</option>
-                        </optgroup>
-
-                        <optgroup label="車">
-                            <option value="車_カーセンサー">カーセンサー</option>
-                        </optgroup>
-
-                        <optgroup label="教育・進路">
-                            <option value="教育_スタディサプリ">スタディサプリ</option>
-                            <option value="教育_スタディサプリENGLISH">スタディサプリENGLISH</option>
-                            <option value="教育_スタディサプリ進路">スタディサプリ進路</option>
-                            <option value="教育_高校生Ring">高校生Ring</option>
-                            <option value="教育_その他">教育・その他</option>
-                        </optgroup>
-
-                        <optgroup label="旅行・レジャー">
-                            <option value="旅行_じゃらん">じゃらん</option>
-                            <option value="旅行_じゃらんコーポレートサービス">じゃらんコーポレートサービス</option>
-                            <option value="旅行_その他">旅行・その他</option>
-                        </optgroup>
-
-                        <optgroup label="飲食">
-                            <option value="飲食_ホットペッパーグルメ">ホットペッパーグルメ</option>
-                            <option value="飲食_その他">飲食・その他</option>
-                        </optgroup>
-
-                        <optgroup label="ビューティー">
-                            <option value="Beauty_ホットペッパービューティー">ホットペッパービューティー</option>
-                            <option value="Beauty_その他">ビューティー・その他</option>
-                        </optgroup>
-
-                        <optgroup label="業務・経営支援">
-                            <option value="業務支援_全般">業務・経営支援</option>
-                        </optgroup>
-                    </select>
+                <div class="department-grid">
+                    <button class="dept-btn" onclick="submitDepartment('HR・人材')">HR・人材</button>
+                    <button class="dept-btn" onclick="submitDepartment('住まい')">住まい</button>
+                    <button class="dept-btn" onclick="submitDepartment('結婚')">結婚</button>
+                    <button class="dept-btn" onclick="submitDepartment('車')">車</button>
+                    <button class="dept-btn" onclick="submitDepartment('カーセンサー')">カーセンサー</button>
+                    <button class="dept-btn" onclick="submitDepartment('教育・進路')">教育・進路</button>
+                    <button class="dept-btn" onclick="submitDepartment('旅行・レジャー')">旅行・レジャー</button>
+                    <button class="dept-btn" onclick="submitDepartment('飲食')">飲食</button>
+                    <button class="dept-btn" onclick="submitDepartment('ビューティー')">ビューティー</button>
+                    <button class="dept-btn" onclick="submitDepartment('その他（業務支援など）')">その他<br><span style="font-size:0.8em">(業務支援など)</span></button>
                 </div>
 
-                <div class="gender-buttons" style="margin-top: 30px;">
-                    <button class="gender-btn next-step" onclick="submitDepartment()">
-                        登録を完了する <i class="fas fa-check-circle" style="font-size: 1rem; margin-left: 5px;"></i>
-                    </button>
+                <div style="margin-top: 20px;">
+                    <small>※ボタンをタップすると登録が完了します</small>
                 </div>
             </div>
         </div>
