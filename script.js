@@ -102,7 +102,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 showPage('employee-id-input-page'); // Step 4 (今回追加)
                 } else if (data.step === "S-5") {
                 showPage('age-input-page');         // Step 5 (今回追加)
-                
+                else if (data.step === "S-6") {
+                showPage('department-input-page');  // Step 6 (Final)
             } else {
             // 完了済み -> マイページへ
             document.getElementById("nickname").innerText = data.nickname || '未設定';
@@ -440,6 +441,47 @@ async function submitAge() {
         
         if (result.success) {
             location.reload(); // 次のステップ(S-6)へ
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+// ▼▼▼▼▼ 所属登録処理 (Step 6 - Final) ▼▼▼▼▼
+async function submitDepartment() {
+    const input = document.getElementById("user-department-input");
+    const department = input.value;
+
+    if (!department) {
+        alert("所属領域を選択してください。");
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'registerUserDepartment', 
+                liffUserId: liffUserId, 
+                department: department 
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            // 登録完了！
+            alert("登録が完了しました！");
+            location.reload(); // リロードすると complete 状態と判定されマイページへ
         } else {
             alert("エラー: " + result.message);
             document.getElementById("loader-wrapper").classList.add('is-hidden');
