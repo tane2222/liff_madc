@@ -187,7 +187,24 @@
 
                 <div class="gender-buttons" style="margin-top: 30px;">
                     <button class="gender-btn next-step" onclick="submitNickname()">
-                        登録して始める <i class="fas fa-check" style="font-size: 1rem; margin-left: 5px;"></i>
+                        次へ進む <i class="fas fa-check" style="font-size: 1rem; margin-left: 5px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+     <div id="employee-id-input-page" class="page" style="display: none;">
+            <div class="gender-container"><h2>従業員番号の登録</h2>
+                <p>次に、従業員番号の送信をお願い致します！<br>
+                   <small>(例)01010011 ※半角英数字のみ入力して下さい。</small>
+                </p>
+                
+                <div class="input-group">
+                    <input type="text" id="user-employee-id-input" class="registration-input" placeholder="従業員番号を入力" pattern="^[a-zA-Z0-9]+$">
+                </div>
+
+                <div class="gender-buttons" style="margin-top: 30px;">
+                    <button class="gender-btn next-step" onclick="submitEmployeeId()">
+                        次へ進む <i class="fas fa-chevron-right" style="font-size: 1rem; margin-left: 5px;"></i>
                     </button>
                 </div>
             </div>
