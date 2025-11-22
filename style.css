@@ -587,3 +587,109 @@ body {
     color: #444; 
     grid-column: 1 / -1; /* 横幅いっぱいに表示 */
 }
+
+/* ... (既存のスタイル) ... */
+
+/* ▼▼▼ 案内ページ (オンボーディング) のスタイル ▼▼▼ */
+#onboarding-page {
+    /* 画面全体を使って中央揃え */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* フッターナビがある場合は調整が必要 */
+    padding-bottom: 80px; /* ボタンエリアの分空ける */
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, #fff 0%, #fdfdfd 100%);
+}
+
+.onboarding-swiper {
+    width: 100%;
+    flex-grow: 1; /* 残りの縦幅いっぱいに広げる */
+}
+
+.onboarding-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.slide-content-wrapper h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.slide-content-wrapper p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* 画像プレースホルダー（実際はimgタグなどに置き換えてください） */
+.slide-image-placeholder {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 20px; /* 角丸の例 */
+}
+
+.photo-tips small {
+    display: block;
+    color: #999;
+    margin-top: 10px;
+}
+
+/* ページネーション（ドット）のカスタマイズ */
+.swiper-pagination.onboarding-pagination {
+    bottom: 20px !important; /* 位置調整 */
+}
+.swiper-pagination.onboarding-pagination .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    opacity: 1;
+}
+.swiper-pagination.onboarding-pagination .swiper-pagination-bullet-active {
+    background: #ff6b6b; /* アクティブなドットの色（ピンク） */
+    width: 12px;
+    height: 12px;
+}
+
+/* 下部固定のアクションボタンエリア */
+.onboarding-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: rgba(255,255,255,0.9);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+/* メインアクションボタン（提供画像のピンクボタン風） */
+.main-action-btn {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: #ff6b6b; /* ピンク色 */
+    border: none;
+    border-radius: 30px; /* 丸み */
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+    transition: background 0.3s, transform 0.1s;
+}
+.main-action-btn:active {
+    transform: scale(0.98);
+    background: #fa5252;
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
