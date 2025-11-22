@@ -100,6 +100,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 showPage('nickname-input-page');   // Step 3 (今回追加)
                 } else if (data.step === "S-4") {
                 showPage('employee-id-input-page'); // Step 4 (今回追加)
+                } else if (data.step === "S-5") {
+                showPage('age-input-page');         // Step 5 (今回追加)
                 
             } else {
             // 完了済み -> マイページへ
@@ -392,6 +394,52 @@ async function submitEmployeeId() {
         
         if (result.success) {
             location.reload(); // 次のステップ(S-5)へ
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+// ▼▼▼▼▼ 年齢登録処理 (Step 5) ▼▼▼▼▼
+async function submitAge() {
+    const input = document.getElementById("user-age-input");
+    // 全角数字を半角に変換する処理を入れると親切ですが、まずはシンプルな実装で
+    const age = input.value.trim();
+
+    if (!age) {
+        alert("年齢を入力してください。");
+        return;
+    }
+
+    // 数値チェック (正規表現: 1〜3桁の数字)
+    if (!/^[0-9]{1,3}$/.test(age)) {
+        alert("年齢は半角数字で入力してください。");
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'registerUserAge', 
+                liffUserId: liffUserId, 
+                age: age 
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            location.reload(); // 次のステップ(S-6)へ
         } else {
             alert("エラー: " + result.message);
             document.getElementById("loader-wrapper").classList.add('is-hidden');
