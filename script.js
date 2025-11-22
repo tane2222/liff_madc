@@ -259,217 +259,148 @@ async function main() {
     main();
 });
 
-
-// --- 性別選択処理 (Step 1)---
-async function selectGender(gender) {
-    document.getElementById("loader-wrapper").classList.remove('is-hidden'); // ローディング表示
-    
+// ▼▼▼【新規追加】裏側でデータを送信する共通関数 ▼▼▼
+function sendDataBackground(action, payload) {
     const liffUserId = liff.getContext().userId;
+    // ペイロードに共通情報を付与
+    const bodyData = {
+        source: 'liff_app',
+        action: action,
+        liffUserId: liffUserId,
+        ...payload
+    };
+
+    // fetchを呼び出すが、awaitで完了を待たずに処理を返す（Fire-and-forget）
+    // エラーが起きてもユーザーの進行を止めない
+    fetch(GAS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(bodyData)
+    }).then(response => {
+        console.log(`${action} sent successfully`);
+    }).catch(error => {
+        console.error(`${action} failed`, error);
+        // 必要であればここでエラーログ保存などの処理
+    });
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+
+// ▼▼▼ Step 1: 性別選択 (即時遷移) ▼▼▼
+function selectGender(gender) {
+    // 1. バリデーション（特になし）
     
-    try {
-        const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ source: 'liff_app', action: 'registerUserGender', liffUserId: liffUserId, gender: gender })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            //alert("登録しました！");
-            location.reload(); // 再読み込みしてマイページへ
-        } else {
-            alert("エラー: " + result.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    } catch (e) {
-        alert("通信エラー: " + e.message);
-        document.getElementById("loader-wrapper").classList.add('is-hidden');
-    }
+    // 2. 即座に次の画面(Step 2: 本名入力)へ切り替え
+    showPage('name-input-page');
+    
+    // 3. 裏でデータを送信
+    sendDataBackground('registerUserGender', { gender: gender });
 }
 
-// ▼▼▼▼▼ 本名登録処理 (Step 2) ▼▼▼▼▼
-async function submitName() {
+
+// ▼▼▼ Step 2: 本名入力 (即時遷移) ▼▼▼
+function submitName() {
     const nameInput = document.getElementById("user-name-input");
     const name = nameInput.value.trim();
 
+    // 1. バリデーション
     if (!name) {
         alert("お名前を入力してください。");
         return;
     }
 
-    document.getElementById("loader-wrapper").classList.remove('is-hidden');
-    
-    const liffUserId = liff.getContext().userId;
-    
-    try {
-        const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ source: 'liff_app', action: 'registerUserName', liffUserId: liffUserId, name: name })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            location.reload(); // リロードして次のステップへ
-        } else {
-            alert("エラー: " + result.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    } catch (e) {
-        alert("通信エラー: " + e.message);
-        document.getElementById("loader-wrapper").classList.add('is-hidden');
-    }
+    // 2. 即座に次の画面(Step 3: ニックネーム)へ切り替え
+    showPage('nickname-input-page');
+
+    // 3. 裏でデータを送信
+    sendDataBackground('registerUserName', { name: name });
 }
 
-// ▼▼▼▼▼ ニックネーム登録処理 (Step 3) ▼▼▼▼▼
-async function submitNickname() {
+
+// ▼▼▼ Step 3: ニックネーム入力 (即時遷移) ▼▼▼
+function submitNickname() {
     const input = document.getElementById("user-nickname-input");
     const nickname = input.value.trim();
 
+    // 1. バリデーション
     if (!nickname) {
         alert("ニックネームを入力してください。");
         return;
     }
 
-    document.getElementById("loader-wrapper").classList.remove('is-hidden');
-    
-    const liffUserId = liff.getContext().userId;
-    
-    try {
-        // グローバルの GAS_API_URL を使用
-        const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ 
-                source: 'liff_app', 
-                action: 'registerUserNickname', // アクション指定
-                liffUserId: liffUserId, 
-                nickname: nickname 
-            })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            location.reload(); // リロードしてマイページ(complete状態)を表示
-        } else {
-            alert("エラー: " + result.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    } catch (e) {
-        alert("通信エラー: " + e.message);
-        document.getElementById("loader-wrapper").classList.add('is-hidden');
-    }
+    // 2. 即座に次の画面(Step 4: 従業員番号)へ切り替え
+    showPage('employee-id-input-page');
+
+    // 3. 裏でデータを送信
+    sendDataBackground('registerUserNickname', { nickname: nickname });
 }
-// ▼▼▼▼▼ 従業員番号登録処理 (Step 4) ▼▼▼▼▼
-async function submitEmployeeId() {
+
+
+// ▼▼▼ Step 4: 従業員番号入力 (即時遷移) ▼▼▼
+function submitEmployeeId() {
     const input = document.getElementById("user-employee-id-input");
     const employeeId = input.value.trim();
 
+    // 1. バリデーション
     if (!employeeId) {
         alert("従業員番号を入力してください。");
         return;
     }
-
-    // 半角英数字チェック (正規表現)
     if (!/^[a-zA-Z0-9]+$/.test(employeeId)) {
         alert("従業員番号は半角英数字のみで入力してください。");
         return;
     }
 
-    document.getElementById("loader-wrapper").classList.remove('is-hidden');
-    
-    const liffUserId = liff.getContext().userId;
-    
-    try {
-        const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ 
-                source: 'liff_app', 
-                action: 'registerUserEmployeeId', 
-                liffUserId: liffUserId, 
-                employeeId: employeeId 
-            })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            location.reload(); // 次のステップ(S-5)へ
-        } else {
-            alert("エラー: " + result.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    } catch (e) {
-        alert("通信エラー: " + e.message);
-        document.getElementById("loader-wrapper").classList.add('is-hidden');
-    }
+    // 2. 即座に次の画面(Step 5: 年齢)へ切り替え
+    showPage('age-input-page');
+
+    // 3. 裏でデータを送信
+    sendDataBackground('registerUserEmployeeId', { employeeId: employeeId });
 }
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-// ▼▼▼▼▼ 年齢登録処理 (Step 5) ▼▼▼▼▼
-async function submitAge() {
+
+
+// ▼▼▼ Step 5: 年齢入力 (即時遷移) ▼▼▼
+function submitAge() {
     const input = document.getElementById("user-age-input");
-    // 全角数字を半角に変換する処理を入れると親切ですが、まずはシンプルな実装で
     const age = input.value.trim();
 
+    // 1. バリデーション
     if (!age) {
         alert("年齢を入力してください。");
         return;
     }
-
-    // 数値チェック (正規表現: 1〜3桁の数字)
     if (!/^[0-9]{1,3}$/.test(age)) {
         alert("年齢は半角数字で入力してください。");
         return;
     }
 
-    document.getElementById("loader-wrapper").classList.remove('is-hidden');
-    
-    const liffUserId = liff.getContext().userId;
-    
-    try {
-        const response = await fetch(GAS_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ 
-                source: 'liff_app', 
-                action: 'registerUserAge', 
-                liffUserId: liffUserId, 
-                age: age 
-            })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            location.reload(); // 次のステップ(S-6)へ
-        } else {
-            alert("エラー: " + result.message);
-            document.getElementById("loader-wrapper").classList.add('is-hidden');
-        }
-    } catch (e) {
-        alert("通信エラー: " + e.message);
-        document.getElementById("loader-wrapper").classList.add('is-hidden');
-    }
+    // 2. 即座に次の画面(Step 6: 所属選択)へ切り替え
+    showPage('department-input-page');
+
+    // 3. 裏でデータを送信
+    sendDataBackground('registerUserAge', { age: age });
 }
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-// ▼▼▼▼▼ 所属登録処理 (Step 6 - Final) ▼▼▼▼▼
+
+
+// ▼▼▼ Step 6: 所属選択 (ここだけは完了を待つ) ▼▼▼
+// ※最後なので、確実にデータ登録完了してからマイページへ行きたい
 async function submitDepartment(selectedDept) {
-    // 引数 selectedDept で部署名を受け取る
     if (!selectedDept) {
         alert("所属領域を選択してください。");
         return;
     }
     
-    // 念のための確認（誤タップ防止）
-    // デザイン性を優先して確認なしにする場合は、このif文を削除してください
     if (!confirm(`「${selectedDept}」で登録しますか？`)) {
         return;
     }
 
+    // ここだけはローディングを表示（最後なのでOK）
     document.getElementById("loader-wrapper").classList.remove('is-hidden');
     
     const liffUserId = liff.getContext().userId;
     
     try {
+        // ここは await して確実に完了を待つ
         const response = await fetch(GAS_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -477,14 +408,14 @@ async function submitDepartment(selectedDept) {
                 source: 'liff_app', 
                 action: 'registerUserDepartment', 
                 liffUserId: liffUserId, 
-                department: selectedDept // ここを変更
+                department: selectedDept 
             })
         });
         const result = await response.json();
         
         if (result.success) {
             alert("登録が完了しました！");
-            location.reload(); 
+            location.reload(); // リロードしてマイページを表示
         } else {
             alert("エラー: " + result.message);
             document.getElementById("loader-wrapper").classList.add('is-hidden');
@@ -493,9 +424,7 @@ async function submitDepartment(selectedDept) {
         alert("通信エラー: " + e.message);
         document.getElementById("loader-wrapper").classList.add('is-hidden');
     }
-}
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
+    
 // --- アカウント連携の処理 ---
 async function syncAccount() {
     // 1. GASのURLと操作するDOM要素を取得
