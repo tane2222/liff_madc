@@ -452,12 +452,16 @@ async function submitAge() {
 }
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 // ▼▼▼▼▼ 所属登録処理 (Step 6 - Final) ▼▼▼▼▼
-async function submitDepartment() {
-    const input = document.getElementById("user-department-input");
-    const department = input.value;
-
-    if (!department) {
+async function submitDepartment(selectedDept) {
+    // 引数 selectedDept で部署名を受け取る
+    if (!selectedDept) {
         alert("所属領域を選択してください。");
+        return;
+    }
+    
+    // 念のための確認（誤タップ防止）
+    // デザイン性を優先して確認なしにする場合は、このif文を削除してください
+    if (!confirm(`「${selectedDept}」で登録しますか？`)) {
         return;
     }
 
@@ -473,15 +477,14 @@ async function submitDepartment() {
                 source: 'liff_app', 
                 action: 'registerUserDepartment', 
                 liffUserId: liffUserId, 
-                department: department 
+                department: selectedDept // ここを変更
             })
         });
         const result = await response.json();
         
         if (result.success) {
-            // 登録完了！
             alert("登録が完了しました！");
-            location.reload(); // リロードすると complete 状態と判定されマイページへ
+            location.reload(); 
         } else {
             alert("エラー: " + result.message);
             document.getElementById("loader-wrapper").classList.add('is-hidden');
