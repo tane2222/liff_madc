@@ -229,32 +229,6 @@ window.addEventListener('DOMContentLoaded', () => {
             },
         });
     }
-
-// ▼▼▼【新規追加】裏側でデータを送信する共通関数 ▼▼▼
-function sendDataBackground(action, payload) {
-    const liffUserId = liff.getContext().userId;
-    // ペイロードに共通情報を付与
-    const bodyData = {
-        source: 'liff_app',
-        action: action,
-        liffUserId: liffUserId,
-        ...payload
-    };
-
-    // fetchを呼び出すが、awaitで完了を待たずに処理を返す（Fire-and-forget）
-    // エラーが起きてもユーザーの進行を止めない
-    fetch(GAS_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(bodyData)
-    }).then(response => {
-        console.log(`${action} sent successfully`);
-    }).catch(error => {
-        console.error(`${action} failed`, error);
-        // 必要であればここでエラーログ保存などの処理
-    });
-}
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     
 // --- LIFFアプリのメイン処理 (変更なし) ---
 async function main() {
@@ -285,6 +259,31 @@ async function main() {
     main();
 });
 
+// ▼▼▼【新規追加】裏側でデータを送信する共通関数 ▼▼▼
+function sendDataBackground(action, payload) {
+    const liffUserId = liff.getContext().userId;
+    // ペイロードに共通情報を付与
+    const bodyData = {
+        source: 'liff_app',
+        action: action,
+        liffUserId: liffUserId,
+        ...payload
+    };
+
+    // fetchを呼び出すが、awaitで完了を待たずに処理を返す（Fire-and-forget）
+    // エラーが起きてもユーザーの進行を止めない
+    fetch(GAS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(bodyData)
+    }).then(response => {
+        console.log(`${action} sent successfully`);
+    }).catch(error => {
+        console.error(`${action} failed`, error);
+        // 必要であればここでエラーログ保存などの処理
+    });
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 // ▼▼▼ Step 1: 性別選択 (即時遷移) ▼▼▼
 function selectGender(gender) {
