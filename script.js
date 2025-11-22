@@ -424,6 +424,7 @@ async function submitDepartment(selectedDept) {
         alert("通信エラー: " + e.message);
         document.getElementById("loader-wrapper").classList.add('is-hidden');
     }
+}
     
 // --- アカウント連携の処理 ---
 async function syncAccount() {
