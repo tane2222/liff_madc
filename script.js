@@ -98,8 +98,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 showPage('name-input-page');// Step 2: 本名入力へ
                 } else if (data.step === "S-3") {
                 showPage('nickname-input-page');   // Step 3 (今回追加)
+                } else if (data.step === "S-4") {
+                showPage('employee-id-input-page'); // Step 4 (今回追加)
                 
             } else {
+            // 完了済み -> マイページへ
             document.getElementById("nickname").innerText = data.nickname || '未設定';
             
             // 理想UIの「28歳・〇〇」を更新 (GASから age, job が返される前提)
@@ -354,6 +357,51 @@ async function submitNickname() {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
     }
 }
+// ▼▼▼▼▼ 従業員番号登録処理 (Step 4) ▼▼▼▼▼
+async function submitEmployeeId() {
+    const input = document.getElementById("user-employee-id-input");
+    const employeeId = input.value.trim();
+
+    if (!employeeId) {
+        alert("従業員番号を入力してください。");
+        return;
+    }
+
+    // 半角英数字チェック (正規表現)
+    if (!/^[a-zA-Z0-9]+$/.test(employeeId)) {
+        alert("従業員番号は半角英数字のみで入力してください。");
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'registerUserEmployeeId', 
+                liffUserId: liffUserId, 
+                employeeId: employeeId 
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            location.reload(); // 次のステップ(S-5)へ
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
