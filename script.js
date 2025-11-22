@@ -121,8 +121,12 @@ async function submitDepartment(selectedDept) {
         const result = await response.json();
         
         if (result.success) {
-            alert("登録が完了しました！");
-            location.reload(); // マイページへ
+           // ★ここを変更★ リロードせず、案内ページを表示
+            // alert("登録が完了しました！"); // アラートも出さずにスムーズに遷移
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+            showPage('onboarding-page');
+            // 案内ページ用のSwiperを初期化
+            initOnboardingSwiper();
         } else {
             alert("エラー: " + result.message);
             document.getElementById("loader-wrapper").classList.add('is-hidden');
@@ -174,6 +178,52 @@ async function syncAccount() {
         syncButton.disabled = false;
     }
 }
+
+// ▼▼▼ 【新規追加】案内ページ用 Swiper のロジック ▼▼▼
+let onboardingSwiperInstance = null;
+
+function initOnboardingSwiper() {
+    const nextBtn = document.getElementById('onboarding-next-btn');
+    
+    // 既にインスタンスがあれば破棄（再表示時用）
+    if (onboardingSwiperInstance) { onboardingSwiperInstance.destroy(true, true); }
+
+    onboardingSwiperInstance = new Swiper('.onboarding-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        pagination: {
+            el: '.onboarding-pagination',
+            clickable: true,
+        },
+        on: {
+            // スライドが変わった時の処理
+            slideChange: function () {
+                // 最後のスライドかどうかでボタンのテキストを変える
+                if (this.isEnd) {
+                    nextBtn.innerText = "始める";
+                } else {
+                    nextBtn.innerText = "次へ";
+                }
+            }
+        }
+    });
+
+    // ボタンクリック時の処理を設定（重複登録を防ぐため一旦解除してから）
+    nextBtn.onclick = null; 
+    nextBtn.onclick = function() {
+        if (onboardingSwiperInstance.isEnd) {
+            // 最後のスライドでボタンを押したら、マイページへ移動（リロードしてデータ更新）
+            location.reload(); 
+        } else {
+            // それ以外は次のスライドへ
+            onboardingSwiperInstance.slideNext();
+        }
+    };
+    
+    // 初期状態のボタンテキスト設定
+    nextBtn.innerText = (onboardingSwiperInstance.isEnd) ? "始める" : "次へ";
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 
 // ▼▼▼ メイン処理 (DOM読み込み後) ▼▼▼
