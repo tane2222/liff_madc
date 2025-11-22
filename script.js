@@ -93,13 +93,13 @@ window.addEventListener('DOMContentLoaded', () => {
             
            // ▼▼▼ ステップによる分岐を追加 ▼▼▼
             if (data.step === "follow-1") {
-                // 初回登録 Step 1: 性別選択へ
-                showPage('gender-selection-page');
+                showPage('gender-selection-page');// 初回登録 Step 1: 性別選択へ
                 } else if (data.step === "S-2") {
-                // Step 2: 本名入力へ
-                showPage('name-input-page');
-           } else {
-            
+                showPage('name-input-page');// Step 2: 本名入力へ
+                } else if (data.step === "S-3") {
+                showPage('nickname-input-page');   // Step 3 (今回追加)
+                
+            } else {
             document.getElementById("nickname").innerText = data.nickname || '未設定';
             
             // 理想UIの「28歳・〇〇」を更新 (GASから age, job が返される前提)
@@ -252,9 +252,9 @@ async function main() {
     }
     main();
 });
-// --- (これ以降の syncAccount 関数などは変更ありません) ---
 
-// --- 性別選択処理 (グローバルスコープ) ---
+
+// --- 性別選択処理 (Step 1)---
 async function selectGender(gender) {
     document.getElementById("loader-wrapper").classList.remove('is-hidden'); // ローディング表示
     
@@ -282,7 +282,7 @@ async function selectGender(gender) {
     }
 }
 
-// ▼▼▼▼▼ 本名登録処理 (グローバルスコープ) ▼▼▼▼▼
+// ▼▼▼▼▼ 本名登録処理 (Step 2) ▼▼▼▼▼
 async function submitName() {
     const nameInput = document.getElementById("user-name-input");
     const name = nameInput.value.trim();
@@ -316,7 +316,46 @@ async function submitName() {
         document.getElementById("loader-wrapper").classList.add('is-hidden');
     }
 }
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+// ▼▼▼▼▼ ニックネーム登録処理 (Step 3) ▼▼▼▼▼
+async function submitNickname() {
+    const input = document.getElementById("user-nickname-input");
+    const nickname = input.value.trim();
+
+    if (!nickname) {
+        alert("ニックネームを入力してください。");
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        // グローバルの GAS_API_URL を使用
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'registerUserNickname', // アクション指定
+                liffUserId: liffUserId, 
+                nickname: nickname 
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            location.reload(); // リロードしてマイページ(complete状態)を表示
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
 
 // --- アカウント連携の処理 ---
 async function syncAccount() {
