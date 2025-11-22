@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 showPage('employee-id-input-page'); // Step 4 (今回追加)
                 } else if (data.step === "S-5") {
                 showPage('age-input-page');         // Step 5 (今回追加)
-                else if (data.step === "S-6") {
+                } else if (data.step === "S-6") {
                 showPage('department-input-page');  // Step 6 (Final)
             } else {
             // 完了済み -> マイページへ
