@@ -46,6 +46,8 @@ function sendDataBackground(action, payload) {
 
 // Step 1: 性別選択 (即時遷移)
 function selectGender(gender) {
+    if (!confirm(`「${gender}」で間違いないですか？`)) { return; }
+    
     showPage('name-input-page'); // 次へ
     sendDataBackground('registerUserGender', { gender: gender }); // 送信
 }
