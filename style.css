@@ -665,7 +665,7 @@ body {
 /* 下部固定のアクションボタンエリア */
 .onboarding-footer {
     position: fixed;
-    bottom: 0;
+    bottom: 20px;/* 元は「0」*/
     left: 0;
     width: 100%;
     padding: 20px;
