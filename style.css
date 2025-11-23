@@ -566,7 +566,7 @@ body {
 .dept-btn:nth-child(3) { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
 
 /* 4. 車: アクティブなオレンジ (カーセンサー色もイメージ) */
-.dept-btn:nth-child(4) { background: linear-gradient(135deg, #ff6b6b 0%, #f06595 100%); }
+.dept-btn:nth-child(4) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);}
 
 /* 5. 教育・進路: 知的なインディゴ */
 .dept-btn:nth-child(5) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
@@ -575,7 +575,7 @@ body {
 .dept-btn:nth-child(6) { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); color: #444; }
 
 /* 7. 飲食: 食欲のオレンジレッド */
-.dept-btn:nth-child(7) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.dept-btn:nth-child(7) { background:　linear-gradient(135deg, #ff6b6b 0%, #f06595 100%);  }
 
 /* 8. ビューティー: 華やかなパープル */
 .dept-btn:nth-child(8) { background: linear-gradient(135deg, #c471f5 0%, #fa71cd 100%); }
