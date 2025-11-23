@@ -575,7 +575,7 @@ body {
 .dept-btn:nth-child(6) { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); color: #444; }
 
 /* 7. 飲食: 食欲のオレンジレッド */
-.dept-btn:nth-child(7) { background:　linear-gradient(135deg, #ff6b6b 0%, #f06595 100%);  }
+.dept-btn:nth-child(7) { background: linear-gradient(135deg, #ff6b6b 0%, #f06595 100%); }
 
 /* 8. ビューティー: 華やかなパープル */
 .dept-btn:nth-child(8) { background: linear-gradient(135deg, #c471f5 0%, #fa71cd 100%); }
