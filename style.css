@@ -693,3 +693,73 @@ body {
     background: #fa5252;
 }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* ▼▼▼ 登録用ヘッダーのデザイン ▼▼▼ */
+#registration-header {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px; /* 下に余白 */
+    padding: 20px 20px 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* ロゴ画像 */
+.reg-logo-container {
+    margin-bottom: 15px;
+}
+.reg-logo {
+    height: 50px; /* ロゴの高さ調整 */
+    width: auto;
+    object-fit: contain;
+}
+
+/* プログレスバーエリア */
+.progress-area {
+    width: 100%;
+}
+
+.progress-label {
+    text-align: right; /* 右寄せ */
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+    font-family: 'Arial', sans-serif;
+}
+
+.step-text {
+    font-weight: bold;
+    font-size: 12px;
+    color: #bbb;
+    margin-right: 5px;
+}
+
+.current-num {
+    font-weight: bold;
+    color: var(--accent-color, #F6178C); /* ピンク色 */
+    font-size: 18px;
+}
+
+.total-num {
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* バーの背景 */
+.progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background-color: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* バーの中身（動く部分） */
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #091F88 0%, #F6178C 100%); /* ロゴ色に合わせたグラデーション */
+    width: 0%;
+    transition: width 0.4s ease; /* なめらかに動く */
+    border-radius: 3px;
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
