@@ -2,6 +2,36 @@
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
 const LIFF_ID = "2008378264-4O97qRYQ";
 
+// ▼▼▼ ステップ定義（順番管理用） ▼▼▼
+const REGISTRATION_STEPS = [
+    'gender-selection-page',   // Step 1
+    'name-input-page',         // Step 2
+    'nickname-input-page',     // Step 3
+    'employee-id-input-page',  // Step 4
+    'age-input-page',          // Step 5
+    'department-input-page'    // Step 6
+];
+
+// ▼▼▼ 戻るボタンの処理関数 (新規追加) ▼▼▼
+function goBackStep() {
+    // 現在表示されているページIDを探す
+    const currentPageId = REGISTRATION_STEPS.find(id => {
+        const el = document.getElementById(id);
+        return el && el.style.display === 'block';
+    });
+
+    if (!currentPageId) return;
+
+    // 現在のインデックスを取得
+    const currentIndex = REGISTRATION_STEPS.indexOf(currentPageId);
+
+    // 最初のページ(0)でなければ、一つ前のページに戻る
+    if (currentIndex > 0) {
+        const prevPageId = REGISTRATION_STEPS[currentIndex - 1];
+        showPage(prevPageId);
+    }
+}
+
 // ▼▼▼ グローバルヘルパー関数 (どこからでも呼べるように外に出しました) ▼▼▼
 
 // ページ切り替え関数
@@ -23,25 +53,35 @@ function updateRegistrationHeader(pageId) {
     const header = document.getElementById('registration-header');
     const stepNumElem = document.getElementById('current-step-num');
     const barFillElem = document.getElementById('progress-bar-fill');
-
-    // ステップごとの設定定義
-    // id: ページID, num: ステップ番号, percent: バーの長さ(%)
+    const backBtn = document.getElementById('reg-back-btn'); // ボタン要素取得
+    
+    // ステップごとの設定
     const steps = {
-        'gender-selection-page':  { num: 1, percent: 16 }, // 1/6
-        'name-input-page':        { num: 2, percent: 33 }, // 2/6
-        'nickname-input-page':    { num: 3, percent: 50 }, // 3/6
-        'employee-id-input-page': { num: 4, percent: 66 }, // 4/6
-        'age-input-page':         { num: 5, percent: 83 }, // 5/6
-        'department-input-page':  { num: 6, percent: 100 } // 6/6
+        'gender-selection-page':  { num: 1, percent: 16 },
+        'name-input-page':        { num: 2, percent: 33 },
+        'nickname-input-page':    { num: 3, percent: 50 },
+        'employee-id-input-page': { num: 4, percent: 66 },
+        'age-input-page':         { num: 5, percent: 83 },
+        'department-input-page':  { num: 6, percent: 100 }
     };
 
     if (steps[pageId]) {
-        // 登録ステップの場合：ヘッダーを表示してバーを更新
+        // --- 登録画面の場合 ---
         header.style.display = 'block';
         stepNumElem.innerText = steps[pageId].num;
         barFillElem.style.width = steps[pageId].percent + '%';
+
+        // ★★★ 戻るボタンの表示制御 ★★★
+        if (steps[pageId].num === 1) {
+            // Step 1 (性別選択) では戻るボタンを隠す
+            backBtn.style.display = 'none';
+        } else {
+            // Step 2以降は表示する
+            backBtn.style.display = 'block';
+        }
+
     } else {
-        // それ以外のページ（マイページや案内ページなど）では非表示
+        // --- それ以外の画面の場合 ---
         header.style.display = 'none';
     }
 }
