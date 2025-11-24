@@ -13,7 +13,39 @@ function showPage(pageId) {
     });
     // スクロールを一番上に戻す
     window.scrollTo(0, 0);
+
+    // ★★★ プログレスバーとロゴの表示制御 ★★★
+    updateRegistrationHeader(pageId);
 }
+
+// ▼▼▼ 新規追加: ヘッダー更新ロジック ▼▼▼
+function updateRegistrationHeader(pageId) {
+    const header = document.getElementById('registration-header');
+    const stepNumElem = document.getElementById('current-step-num');
+    const barFillElem = document.getElementById('progress-bar-fill');
+
+    // ステップごとの設定定義
+    // id: ページID, num: ステップ番号, percent: バーの長さ(%)
+    const steps = {
+        'gender-selection-page':  { num: 1, percent: 16 }, // 1/6
+        'name-input-page':        { num: 2, percent: 33 }, // 2/6
+        'nickname-input-page':    { num: 3, percent: 50 }, // 3/6
+        'employee-id-input-page': { num: 4, percent: 66 }, // 4/6
+        'age-input-page':         { num: 5, percent: 83 }, // 5/6
+        'department-input-page':  { num: 6, percent: 100 } // 6/6
+    };
+
+    if (steps[pageId]) {
+        // 登録ステップの場合：ヘッダーを表示してバーを更新
+        header.style.display = 'block';
+        stepNumElem.innerText = steps[pageId].num;
+        barFillElem.style.width = steps[pageId].percent + '%';
+    } else {
+        // それ以外のページ（マイページや案内ページなど）では非表示
+        header.style.display = 'none';
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 // 裏側でデータを送信する共通関数 (Fire-and-forget)
 function sendDataBackground(action, payload) {
