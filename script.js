@@ -287,7 +287,9 @@ function initOnboardingSwiper() {
     nextBtn.onclick = function() {
         if (onboardingSwiperInstance.isEnd) {
             // 最後のスライドでボタンを押したら、マイページへ移動（リロードしてデータ更新）
-            location.reload(); 
+            //location.reload(); 
+            // ★修正★ 「始める」を押したら、アシスタント選択画面へ遷移
+            showPage('assistant-selection-page');
         } else {
             // それ以外は次のスライドへ
             onboardingSwiperInstance.slideNext();
@@ -299,6 +301,46 @@ function initOnboardingSwiper() {
 }
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+// ▼▼▼ アシスタント選択送信処理 (新規追加) ▼▼▼
+async function submitAssistant(type) {
+    const assistantName = (type === 'butler') ? '執事 真田' : 'メイド ココ';
+    
+    if (!confirm(`「${assistantName}」を選択しますか？\n（LINEに挨拶メッセージが届きます）`)) {
+        return;
+    }
+
+    document.getElementById("loader-wrapper").classList.remove('is-hidden');
+    
+    const liffUserId = liff.getContext().userId;
+    
+    try {
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: 'registerUserAssistant', 
+                liffUserId: liffUserId, 
+                assistantType: type 
+            })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            // 完了したらリロードしてマイページへ
+            // (GAS側でLINEプッシュ通知も送信済み)
+            alert("設定しました！\nLINEのトークルームに挨拶が届いています。");
+            location.reload(); 
+        } else {
+            alert("エラー: " + result.message);
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+        }
+    } catch (e) {
+        alert("通信エラー: " + e.message);
+        document.getElementById("loader-wrapper").classList.add('is-hidden');
+    }
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 // ▼▼▼ メイン処理 (DOM読み込み後) ▼▼▼
 window.addEventListener('DOMContentLoaded', () => {
