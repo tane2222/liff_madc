@@ -773,23 +773,44 @@ body {
     left: 0;
     top: 50%;
     transform: translateY(-50%); /* 上下中央揃え */
-    background: none;
+    
+    /* ボタンとしてのデザイン */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* アイコンと文字の間隔 */
+    
+    background-color: #f0f0f0; /* 薄いグレーの背景 */
     border: none;
-    font-size: 24px; /* アイコンサイズ */
-    color: #888;     /* グレー */
-    padding: 10px;   /* タップ領域を広げる */
+    border-radius: 20px; /* 角丸（カプセル型） */
+    padding: 8px 14px;   /* 内側の余白 */
+    
+    /* 文字のスタイル */
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    
     cursor: pointer;
     z-index: 10;
-    transition: color 0.2s;
+    transition: all 0.2s ease;
+    
+    /* スマホで改行されないようにする */
+    white-space: nowrap;
+}
+.header-back-btn i {
+    font-size: 12px; /* アイコンサイズ微調整 */
 }
 
+/* タップ時のアクション */
 .header-back-btn:active {
-    color: #F6178C; /* タップ時にピンク色 */
+    background-color: #e0e0e0; /* 背景を少し濃く */
+    transform: translateY(-50%) scale(0.95); /* 押した感触 */
 }
 
 /* ロゴコンテナ（微調整） */
+/* ボタンと被らないように少し余白を持たせる場合の保険（通常はabsoluteなので不要ですが念のため） */
 .reg-logo-container {
-    margin-bottom: 0; /* マージンは親要素で管理するため0に */
+    pointer-events: none; /* ロゴがボタンの邪魔をしないように */
 }
 
 /* ロゴサイズ（前回と同じですが確認用） */
