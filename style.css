@@ -704,16 +704,6 @@ body {
     text-align: center;
 }
 
-/* ロゴ画像 */
-.reg-logo-container {
-    margin-bottom: 15px;
-}
-.reg-logo {
-    height: 50px; /* ロゴの高さ調整 */
-    width: auto;
-    object-fit: contain;
-}
-
 /* プログレスバーエリア */
 .progress-area {
     width: 100%;
@@ -761,5 +751,50 @@ body {
     width: 0%;
     transition: width 0.4s ease; /* なめらかに動く */
     border-radius: 3px;
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+
+/* ▼▼▼ ヘッダーのレイアウト修正 (戻るボタン追加用) ▼▼▼ */
+
+/* 上段のコンテナ（ボタンとロゴ） */
+.header-top-row {
+    position: relative; /* 子要素の基準位置にする */
+    display: flex;
+    justify-content: center; /* ロゴを中央揃え */
+    align-items: center;
+    margin-bottom: 15px;
+    height: 50px; /* 高さ確保 */
+}
+
+/* 戻るボタンのスタイル */
+.header-back-btn {
+    position: absolute; /* 絶対配置で左端へ */
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%); /* 上下中央揃え */
+    background: none;
+    border: none;
+    font-size: 24px; /* アイコンサイズ */
+    color: #888;     /* グレー */
+    padding: 10px;   /* タップ領域を広げる */
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.2s;
+}
+
+.header-back-btn:active {
+    color: #F6178C; /* タップ時にピンク色 */
+}
+
+/* ロゴコンテナ（微調整） */
+.reg-logo-container {
+    margin-bottom: 0; /* マージンは親要素で管理するため0に */
+}
+
+/* ロゴサイズ（前回と同じですが確認用） */
+.reg-logo {
+    height: 40px; /* 少し高さを抑えてバランスを取る */
+    width: auto;
 }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
