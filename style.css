@@ -608,25 +608,47 @@ body {
 
 .onboarding-slide {
     display: flex;
+    flex-direction: column; /* 縦並び */
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* 上詰めにする */
     text-align: center;
-    padding: 20px;
+    /* ★修正: 親要素のパディングを削除（画像を画面いっぱいにするため） */
+    padding: 0; 
+    box-sizing: border-box;
+    /* スクロール可能にする（画像が縦長の場合の保険） */
+    overflow-y: auto; 
+    padding-bottom: 60px; /* フッターボタンの裏に隠れないように */
+}
+/* ★新規: 画像のスタイル */
+.onboarding-image {
+    width: 100%;       /* 横幅いっぱい */
+    height: auto;      /* 高さは比率を保って自動調整 */
+    display: block;    /* 余計な隙間を消す */
+    margin: 20px 0;    /* 上下の余白（お好みで調整） */
+    object-fit: cover; /* 枠にフィットさせる */
+}
+
+/* ★新規: テキストエリアのスタイル（文字部分だけに余白を持たせる） */
+.slide-text-area {
+    width: 100%;
+    padding: 0 20px; /* 横に20pxずつの余白 */
     box-sizing: border-box;
 }
-
-.slide-content-wrapper h2 {
-    font-size: 22px;
+/* 既存のタイトル・本文スタイル調整 */
+.slide-text-area h2 {
+    font-size: 20px;
     color: #333;
-    margin-bottom: 20px;
+    margin-top: 30px; /* 上の余白 */
+    margin-bottom: 15px;
     line-height: 1.4;
+    font-weight: bold;
 }
 
-.slide-content-wrapper p {
+.slide-text-area p {
     font-size: 15px;
     color: #666;
     line-height: 1.6;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 /* 画像プレースホルダー（実際はimgタグなどに置き換えてください） */
