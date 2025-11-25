@@ -454,7 +454,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
                      promoSection.style.display = 'block';
                 } else {
-                     promoSection.style.display = 'none';
+                     promoSection.style.display = 'block';
                 }
                 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
