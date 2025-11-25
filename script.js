@@ -48,6 +48,17 @@ function showPage(pageId) {
     updateRegistrationHeader(pageId);
 }
 
+// ▼▼▼ サイドメニュー開閉ロジック (新規追加) ▼▼▼
+function toggleSideMenu() {
+    const menu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    
+    // クラスの付け外しで表示/非表示を切り替え
+    menu.classList.toggle('is-active');
+    overlay.classList.toggle('is-active');
+}
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
 // ▼▼▼ 新規追加: ヘッダー更新ロジック ▼▼▼
 function updateRegistrationHeader(pageId) {
     const header = document.getElementById('registration-header');
