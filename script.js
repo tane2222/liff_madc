@@ -449,7 +449,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
                 // ※正規表現でチェック
-                const defaultImgPattern = 'https://drive.google.com/thumbnail?id=19TYKEgpS-EKBzyioGfqM7xZJRjQb67tk'; 
+                const defaultImgPattern = /placehold\.jp|default\.png|no_image|https:\/\/tanes\.jp\/wp-content\/uploads\/2025\/11\/ex_profile\.png/; 
                 
                 if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
                      promoSection.style.display = 'block';
