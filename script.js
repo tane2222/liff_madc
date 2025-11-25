@@ -311,7 +311,7 @@ function initOnboardingSwiper() {
 
 // ▼▼▼ アシスタント選択送信処理 (新規追加) ▼▼▼
 async function submitAssistant(type) {
-    const assistantName = (type === 'butler') ? '執事 真田' : 'メイド ココ';
+    const assistantName = (type === 'butler') ? '執事 真田くん' : 'メイド ココちゃん';
     
     if (!confirm(`「${assistantName}」を選択しますか？\n（LINEに挨拶メッセージが届きます）`)) {
         return;
@@ -449,7 +449,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
                 // ※正規表現でチェック
-                const defaultImgPattern = /placehold\.jp|default\.png|no_image|https:\/\/tanes\.jp\/wp-content\/uploads\/2025\/11\/ex_profile\.png/; 
+                const defaultImgPattern = 'https://drive.google.com/thumbnail?id=12DqJms_8Fr8BTYzCaGlFFW82Nmf3B4Q0'; 
                 
                 if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
                      promoSection.style.display = 'block';
