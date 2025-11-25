@@ -206,8 +206,7 @@ async function submitDepartment(selectedDept) {
         const result = await response.json();
         
         if (result.success) {
-           // ★ここを変更★ リロードせず、案内ページを表示
-            // alert("登録が完了しました！"); // アラートも出さずにスムーズに遷移
+           // リロードせず、案内ページを表示
             document.getElementById("loader-wrapper").classList.add('is-hidden');
             showPage('onboarding-page');
             // 案内ページ用のSwiperを初期化
@@ -297,9 +296,7 @@ function initOnboardingSwiper() {
     nextBtn.onclick = null; 
     nextBtn.onclick = function() {
         if (onboardingSwiperInstance.isEnd) {
-            // 最後のスライドでボタンを押したら、マイページへ移動（リロードしてデータ更新）
-            //location.reload(); 
-            // ★修正★ 「始める」を押したら、アシスタント選択画面へ遷移
+            // 最後のスライドでボタンを押したら、アシスタント選択画面へ遷移
             showPage('assistant-selection-page');
         } else {
             // それ以外は次のスライドへ
@@ -438,10 +435,28 @@ window.addEventListener('DOMContentLoaded', () => {
                 // 完了済み -> マイページへ
                 document.getElementById("nickname").innerText = data.nickname || '未設定';
                 document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.job || '未設定'}`;
-                document.getElementById("profile-image").src = data.profileImageUrl;
+                
+                const profileImgElem = document.getElementById("profile-image");
+                profileImgElem.src = data.profileImageUrl || 'https://placehold.jp/150x150.png'; // 画像がない場合のフォールバック
+
                 document.getElementById("kyun-points").innerText = data.totalKyun;
                 const progressPercent = Math.round((data.diagnosisProgress / 6) * 100);
                 document.getElementById("diagnosis-progress").innerText = `${progressPercent}%`;
+                
+                // ▼▼▼ 【修正】プロフィール画像登録促進エリアの表示制御 ▼▼▼
+                const promoSection = document.getElementById('photo-upload-promo');
+                const currentImgUrl = data.profileImageUrl || "";
+                
+                // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
+                // ※正規表現でチェック
+                const defaultImgPattern = /placehold\.jp|default\.png|no_image|https:\/\/tanes\.jp\/wp-content\/uploads\/2025\/11\/ex_profile\.png/; 
+                
+                if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
+                     promoSection.style.display = 'block';
+                } else {
+                     promoSection.style.display = 'none';
+                }
+                // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
                 document.getElementById("app").style.display = 'block';
                 document.getElementById("loader-wrapper").classList.add('is-hidden');
@@ -533,6 +548,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
             
+            // showProfile内で画像チェックなども行うように修正済み
             if (profileData.success) {
                 showProfile(profileData);
             } else {
