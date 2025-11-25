@@ -26,14 +26,48 @@
 
     <div id="app" style="display: none;">
         
-        <div id="my-page" class="page">
+        <div id="my-page" class="page" style="display: none;">
+            <button id="menu-toggle-btn" class="menu-icon-btn" onclick="toggleSideMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
             
             <header class="profile-header">
+                <div class="profile-image-container">
                 <img id="profile-image" src="https://placehold.jp/150x150.png" alt="プロフィール画像">
+                </div>
                 <h2 id="nickname">読み込み中...</h2>
                 <p id="user-details">--歳・--</p>
             </header>
 
+            <div id="menu-overlay" onclick="toggleSideMenu()"></div>
+
+           <div id="side-menu">
+            <div class="menu-header">
+                <h3>設定・編集</h3>
+                <button class="menu-close-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="menu-list">
+                <li onclick="alert('基本情報の編集機能は準備中です')">
+                    <i class="fas fa-user-edit"></i> 基本情報の変更
+                </li>
+                <li onclick="alert('写真の変更機能は準備中です')">
+                    <i class="fas fa-camera"></i> プロフィール写真の変更
+                </li>
+                <li onclick="alert('通知設定機能は準備中です')">
+                    <i class="fas fa-bell"></i> 通知設定
+                </li>
+                <hr>
+                <li onclick="alert('ヘルプ機能は準備中です')">
+                    <i class="fas fa-question-circle"></i> ヘルプ・お問い合わせ
+                </li>
+                <li onclick="liff.closeWindow();">
+                    <i class="fas fa-sign-out-alt"></i> アプリを閉じる
+                </li>
+            </ul>
+        </div>
+            
             <main class="main-content">
                 <section class="metrics">
                     <div class="metric-card">
