@@ -449,7 +449,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
                 // ※正規表現でチェック
-                const defaultImgPattern = 'https://drive.google.com/thumbnail?id=12DqJms_8Fr8BTYzCaGlFFW82Nmf3B4Q0'; 
+                const defaultImgPattern = 'https://drive.google.com/thumbnail?id=19TYKEgpS-EKBzyioGfqM7xZJRjQb67tk'; 
                 
                 if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
                      promoSection.style.display = 'block';
