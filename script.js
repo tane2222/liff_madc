@@ -446,15 +446,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 // ▼▼▼ 【修正】プロフィール画像登録促進エリアの表示制御 ▼▼▼
                 const promoSection = document.getElementById('photo-upload-promo');
                 const currentImgUrl = data.profileImageUrl || "";
-                
-                // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
+                 // 画像が未設定、または placehold.jp などのデフォルト画像の場合に表示
                 // ※正規表現でチェック
-                const defaultImgPattern = /placehold\.jp|default\.png|no_image|https:\/\/tanes\.jp\/wp-content\/uploads\/2025\/11\/ex_profile\.png/; 
+                const defaultImageUrls = [
+                    'https://drive.google.com/thumbnail?id=12DqJms_8Fr8BTYzCaGlFFW82Nmf3B4Q0',
+                    'https://drive.google.com/thumbnail?id=1_4VVriM9WPIj6j8nKyQhE9HJ6hl_QsX8',
+                    'https://placehold.jp/150x150.png?text=?'
+                ];
+
+                const isDefault = !currentImgUrl || 
+                                  defaultImageUrls.includes(currentImgUrl) || 
+                                  currentImgUrl.includes('placehold.jp');
                 
-                if (!currentImgUrl || defaultImgPattern.test(currentImgUrl)) {
+                if (isDefault) {
                      promoSection.style.display = 'block';
                 } else {
-                     promoSection.style.display = 'block';
+                     promoSection.style.display = 'none';
                 }
                 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
