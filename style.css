@@ -205,8 +205,7 @@ body {
     margin-left: auto; /* 右寄せ */
 }
 
-
-/* 理想UIのフッターナビゲーション */
+/* 旧フッター
 .footer-nav {
     display: flex;
     justify-content: space-around;
@@ -216,11 +215,11 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    height: var(--footer-height); /* 変数を使用 */
+    height: var(--footer-height); 
     background-color: var(--card-color-light);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     border-top: 1px solid #f0f0f0;
-    padding-bottom: 10px; /* iPhoneのホームバー避け */
+    padding-bottom: 10px; 
     box-sizing: border-box; 
     z-index: 100;
 }
@@ -233,8 +232,8 @@ body {
     color: var(--secondary-text);
     font-size: 10px;
     gap: 2px;
-    flex: 1; /* 均等割り付け */
-    padding-top: 5px; /* アイコンとテキストの配置調整 */
+    flex: 1; 
+    padding-top: 5px; 
 }
 .footer-nav .nav-item i {
     font-size: 20px;
@@ -242,6 +241,104 @@ body {
 .footer-nav .nav-item.active {
     color: var(--theme-color-pink);
 }
+*/
+
+/* ▼▼▼ フッターメニューのスタイル修正 ▼▼▼ */
+
+.footer-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around; /* 均等配置 */
+    align-items: flex-end; /* 下揃え */
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    z-index: 100;
+    height: 60px; /*高さを固定*/
+    box-sizing: border-box;
+    overflow: visible; /* 飛び出す要素を表示 */
+}
+
+/* 通常のメニューアイテム */
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #aaa;
+    font-size: 10px;
+    flex: 1; /* 幅を均等に */
+    padding-bottom: 5px;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.nav-item.active {
+    color: #F6178C; /* アクティブカラー */
+}
+
+/* 真ん中の強調ボタンのラッパー */
+.nav-center-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: -15px; /* 上にずらす */
+}
+
+/* 真ん中の円形ボタン */
+.nav-item-center {
+    width: 56px;
+    height: 56px;
+    background: #091F88; /* ロゴの青色を背景に */
+    border-radius: 50%; /* 円形に */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.2); /* 上向きの影 */
+    border: 4px solid #fff; /* 背景と同化する白い枠線 */
+    text-decoration: none;
+    transition: transform 0.1s;
+}
+
+.nav-item-center:active {
+    transform: scale(0.95);
+}
+
+/* 真ん中のロゴ画像 */
+.footer-logo {
+    width: 30px; /* ロゴのサイズ調整 */
+    height: auto;
+}
+
+/* 真ん中のラベルテキスト */
+.nav-center-label {
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* 真ん中がアクティブな時のスタイル */
+.nav-item-center.active {
+    background: #F6178C; /* アクティブ時はピンクに */
+}
+.nav-center-label.active {
+    color: #F6178C;
+}
+
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+
+
 
 
 /* 既存の .actions は 理想UI では使わないため非表示 */
