@@ -259,7 +259,7 @@ body {
 .nav-item-center {
     width: 56px;
     height: 56px;
-    background: #091F88; /* ロゴの青色を背景に */
+    background: #b8e0f9; /* ロゴの青色を背景に0a1f88 */
     border-radius: 50%; /* 円形に */
     display: flex;
     justify-content: center;
@@ -276,7 +276,7 @@ body {
 
 /* 真ん中のロゴ画像 */
 .footer-logo {
-    width: 30px; /* ロゴのサイズ調整 */
+    width: 45px; /* ロゴのサイズ調整 */
     height: auto;
 }
 
@@ -290,7 +290,7 @@ body {
 
 /* 真ん中がアクティブな時のスタイル */
 .nav-item-center.active {
-    background: #F6178C; /* アクティブ時はピンクに */
+    background: #f7cfe3; /* アクティブ時はピンクに #F6178C*/
 }
 .nav-center-label.active {
     color: #F6178C;
