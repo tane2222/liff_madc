@@ -205,7 +205,7 @@ body {
     margin-left: auto; /* 右寄せ */
 }
 
-/* 旧フッター
+/* 旧フッター*/
 .footer-nav {
     display: flex;
     justify-content: space-around;
@@ -241,48 +241,9 @@ body {
 .footer-nav .nav-item.active {
     color: var(--theme-color-pink);
 }
-*/
 
 /* ▼▼▼ フッターメニューのスタイル修正 ▼▼▼ */
 
-.footer-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-around; /* 均等配置 */
-    align-items: flex-end; /* 下揃え */
-    padding: 10px 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    z-index: 100;
-    height: 60px; /*高さを固定*/
-    box-sizing: border-box;
-    overflow: visible; /* 飛び出す要素を表示 */
-}
-
-/* 通常のメニューアイテム */
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #aaa;
-    font-size: 10px;
-    flex: 1; /* 幅を均等に */
-    padding-bottom: 5px;
-}
-
-.nav-item i {
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-.nav-item.active {
-    color: #F6178C; /* アクティブカラー */
-}
 
 /* 真ん中の強調ボタンのラッパー */
 .nav-center-wrapper {
