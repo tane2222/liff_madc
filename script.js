@@ -103,12 +103,15 @@ function openKyunDetailModal() {
     const modal = document.getElementById('kyun-detail-modal');
     
     // 現在表示されているポイント数を取得してモーダルに反映（見た目の同期）
-    const currentPoints = document.getElementById('kyun-points').innerText;
-    document.getElementById('modal-kyun-total').innerText = currentPoints;
-
-    // ★もし将来的にGASから詳細データ(失効予定など)を取得する場合は
-    // ここで fetch を行い、.point-details-list の中身を書き換えます。
+    const currentPointsElem = document.getElementById('kyun-points');
+    const modalTotalElem = document.getElementById('modal-kyun-total');
     
+    // 要素が存在する場合のみ値をコピー
+    if (currentPointsElem && modalTotalElem) {
+        modalTotalElem.innerText = currentPointsElem.innerText;
+    }
+
+    // クラスを付与して表示
     modal.classList.add('is-open');
 }
 
