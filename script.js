@@ -98,6 +98,35 @@ function updateRegistrationHeader(pageId) {
 }
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+// ▼▼▼ キュン詳細モーダル制御 (新規追加) ▼▼▼
+function openKyunDetailModal() {
+    const modal = document.getElementById('kyun-detail-modal');
+    
+    // 現在表示されているポイント数を取得してモーダルに反映（見た目の同期）
+    const currentPoints = document.getElementById('kyun-points').innerText;
+    document.getElementById('modal-kyun-total').innerText = currentPoints;
+
+    // ★もし将来的にGASから詳細データ(失効予定など)を取得する場合は
+    // ここで fetch を行い、.point-details-list の中身を書き換えます。
+    
+    modal.classList.add('is-open');
+}
+
+function closeKyunDetailModal() {
+    const modal = document.getElementById('kyun-detail-modal');
+    modal.classList.remove('is-open');
+}
+
+// モーダルの背景（黒い部分）をタップしても閉じるようにする
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('kyun-detail-modal');
+    if (e.target === modal) {
+        closeKyunDetailModal();
+    }
+});
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+
 // 裏側でデータを送信する共通関数 (Fire-and-forget)
 function sendDataBackground(action, payload) {
     if (!liff.isLoggedIn()) {
