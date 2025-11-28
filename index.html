@@ -79,6 +79,49 @@
                         <span class="metric-value" id="diagnosis-progress">--%</span>
                     </div>
                 </section>
+                
+             <div id="kyun-detail-modal" class="modal-overlay">
+            <div class="modal-content-box">
+                <div class="modal-header">
+                    <h3>キュンポイント詳細</h3>
+                    <button class="modal-close-btn" onclick="closeKyunDetailModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="point-summary">
+                        <span class="label">現在の保有数</span>
+                        <span class="value" id="modal-kyun-total">--</span>
+                        <span class="unit">キュン</span>
+                    </div>
+
+                    <div class="point-details-list">
+                        <div class="detail-item">
+                            <span class="detail-label">有効期限 (無期限)</span>
+                            <span class="detail-value">10pt</span>
+                        </div>
+                        <div class="detail-item alert">
+                            <span class="detail-label">今月末で失効</span>
+                            <span class="detail-value">5pt</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">来月末で失効</span>
+                            <span class="detail-value">0pt</span>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+                    
+                    <p class="modal-note">
+                        <small>※ポイントは付与された日から180日間有効です。<br>期限が切れると自動的に失効します。</small>
+                    </p>
+
+                    <button class="modal-action-btn" onclick="closeKyunDetailModal()">閉じる</button>
+                </div>
+            </div>
+        </div>
+
                 <section class="pickup-section">
                     <h3>今日のピックアップ</h3>
                 </section>
