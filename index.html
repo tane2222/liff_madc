@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>マダココ LIFF App</title>
-
+　　<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -74,7 +74,7 @@
                         <span class="metric-label">保有キュン</span>
                         <span class="metric-value" id="kyun-points">--</span>
                     </div>
-                    <div class="metric-card">
+                    <div class="metric-card" onclick="openDiagnosisModal()">
                         <span class="metric-label">診断達成率</span>
                         <span class="metric-value" id="diagnosis-progress">--%</span>
                     </div>
@@ -118,6 +118,34 @@
                     </p>
 
                     <button class="modal-action-btn" onclick="closeKyunDetailModal()">閉じる</button>
+                </div>
+            </div>
+          </div>
+
+            <div id="diagnosis-modal" class="modal-overlay">
+            <div class="modal-content-box">
+                <div class="modal-header">
+                    <h3>診断ステータス</h3>
+                    <button class="modal-close-btn" onclick="closeDiagnosisModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <p class="chart-instruction">
+                        あなたの恋愛傾向分析結果です。<br>
+                        <small>※未診断の項目は「0」と表示されます。</small>
+                    </p>
+
+                    <div class="chart-container" style="position: relative; height:300px; width:100%">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+
+                    <div class="incomplete-alert" id="diagnosis-alert" style="display:none;">
+                        <i class="fas fa-exclamation-circle"></i> 未完了の診断があります
+                    </div>
+
+                    <button class="modal-action-btn" onclick="closeDiagnosisModal()">閉じる</button>
                 </div>
             </div>
         </div>
