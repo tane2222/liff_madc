@@ -1290,3 +1290,30 @@ body {
     cursor: pointer;
 }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* ... (既存のスタイル) ... */
+
+/* ▼▼▼ 診断チャート用スタイル ▼▼▼ */
+.chart-instruction {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.incomplete-alert {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ffeeba;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
