@@ -345,13 +345,12 @@ body {
 
 
 /* ▼▼▼▼▼ 新しいカードスワイプUIのスタイル ▼▼▼▼▼ */
+/* === ユーザー画面（スワイプページ）のデザイン修正 === */
 
-/* --- ページ全体 --- */
 #user-swipe-page {
-    /* ★★★ スワイプページ自体の padding-bottom をリセット ★★★ */
-    /* .app-container が 100vh を占めるため、page側は不要 */
     padding-bottom: 0; 
 }
+
 #user-swipe-page .app-container {
     display: flex;
     flex-direction: column;
@@ -359,11 +358,10 @@ body {
     max-width: 420px;
     margin: 0 auto;
     background-color: #FCEFF1;
-    /* ★★★ フッターの高さ分、コンテナの下部にパディングを追加 ★★★ */
-    /* これにより、フッターがメインコンテンツに重なりません */
     padding-bottom: var(--footer-height);
-    box-sizing: border-box; /* paddingを含めて 100vh に */
+    box-sizing: border-box;
 }
+
 #user-swipe-page .app-header {
     display: flex; justify-content: space-between; align-items: center;
     padding: 15px 20px; background-color: white;
@@ -372,59 +370,112 @@ body {
 #user-swipe-page .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
 #user-swipe-page .icon-btn { background: none; border: none; font-size: 1.2rem; color: var(--secondary-text); cursor: pointer; }
 #user-swipe-page .back-button { color: var(--secondary-text); text-decoration: none; }
+
 #user-swipe-page .main-content {
     flex-grow: 1; position: relative; display: flex;
     align-items: center; justify-content: center;
 }
+
 #user-swipe-page .swiper {
-    width: calc(100% - 50px); height: 85%; max-height: 600px;
+    width: calc(100% - 40px); /* 左右の余白を少し調整 */
+    height: 85%; 
+    max-height: 600px;
     overflow: visible; 
 }
-#user-swipe-page .swiper-slide { background-color: transparent; box-shadow: none; }
-#user-swipe-page .profile-card {
-    width: 100%; height: 100%; background: white;
-    border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden; display: flex; flex-direction: column;
+
+#user-swipe-page .swiper-slide { 
+    background-color: transparent; 
+    box-shadow: none; 
 }
-#user-swipe-page .profile-image { position: relative; width: 100%; flex-grow: 1; }
+
+/* ▼▼▼▼▼ ここから主要な変更点 ▼▼▼▼▼ */
+
+/* 1. 白い台紙部分 */
+#user-swipe-page .profile-card {
+    width: 100%; 
+    height: 100%; 
+    background: white;
+    border-radius: 20px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* 全体のふわっとした影 */
+    /* overflow: hidden; ← 削除（写真をカード内に収めつつ影を出すため） */
+    display: flex; 
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* 2. 写真エリア（白い台紙より少し小さく、浮いているように） */
+#user-swipe-page .profile-image { 
+    position: relative; 
+    
+    /* モデル画像風の調整 */
+    width: 92%; /* カード幅より狭く */
+    height: 68%; /* 高さを固定（flex-growではなく指定） */
+    margin: 15px auto 0; /* 上に余白、左右中央揃え */
+    border-radius: 25px; /* 写真独自の強い角丸 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 写真を浮かせる影 */
+    overflow: hidden; /* 画像を角丸で切り抜く */
+    
+    flex-shrink: 0; /* 高さが潰れないように固定 */
+    background: #f0f0f0; 
+}
+
+/* グラデーションも写真エリアの形に合わせる */
 #user-swipe-page .profile-image::after {
     content: ''; position: absolute; top: 0; left: 0; right: 0;
     height: 100px; background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
     pointer-events: none;
 }
+
 #user-swipe-page .profile-image img {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     object-fit: cover;
 }
+
+/* 年齢タグ（写真エリアの左上） */
 #user-swipe-page .age-tags {
-    position: absolute; top: 15px; left: 20px; z-index: 5;
-    display: flex; gap: 10px;
+    position: absolute; top: 15px; left: 15px; z-index: 5;
+    display: flex; gap: 8px;
 }
 #user-swipe-page .age-tags span {
-    background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);
-    color: var(--primary-text-light); font-size: 0.8rem; font-weight: 500;
-    padding: 5px 10px; border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px);
+    color: #333; font-size: 0.75rem; font-weight: bold;
+    padding: 5px 12px; border-radius: 12px;
 }
+
+/* Moreボタン（写真エリアの右下、グラデーションに変更） */
 #user-swipe-page .more-btn {
-    position: absolute; bottom: 20px; right: 20px;
-    background-color: #F5AAB9; color: white; border: none; border-radius: 20px;
-    padding: 8px 16px; font-size: 0.9rem; font-weight: 600;
-    box-shadow: 0 4px 15px rgba(245, 170, 185, 0.5);
+    position: absolute; bottom: 15px; right: 15px;
+    background: linear-gradient(135deg, #FF9A9E, #F6416C); /* ピンクのグラデーション */
+    color: white; border: none; border-radius: 20px;
+    padding: 8px 18px; font-size: 0.85rem; font-weight: bold;
+    box-shadow: 0 4px 10px rgba(246, 65, 108, 0.4);
     cursor: pointer; z-index: 5;
 }
-#user-swipe-page .profile-info { padding: 15px 20px; flex-shrink: 0; }
-#user-swipe-page .profile-info h2 { margin: 0 0 5px 0; font-size: 1.5rem; }
+
+/* 3. プロフィール情報（写真の下） */
+#user-swipe-page .profile-info { 
+    padding: 15px 25px 5px; /* 左右の余白を写真に合わせる */
+    flex-shrink: 0; 
+    text-align: left;
+}
+#user-swipe-page .profile-info h2 { margin: 0 0 5px 0; font-size: 1.4rem; color: #333; }
 #user-swipe-page .profile-info p { margin: 0; color: var(--secondary-text); font-size: 0.9rem; }
 #user-swipe-page .profile-info p .fas { margin-right: 5px; }
+
+/* 4. アイコンエリア */
 #user-swipe-page .interest-icons {
-    display: flex; justify-content: space-around; padding: 15px 20px;
-    border-top: 1px solid #f0f0f0; flex-shrink: 0;
+    display: flex; justify-content: flex-start; /* 左寄せに変更（モデル画像風） */
+    gap: 15px; /* アイコン間の余白 */
+    padding: 10px 25px 20px;
+    border-top: none; /* 線を消してすっきりさせる */
+    flex-shrink: 0;
 }
 #user-swipe-page .icon-circle {
-    width: 44px; height: 44px; border-radius: 50%;
-    background-color: #f7f7f7; display: flex;
+    width: 40px; height: 40px; border-radius: 50%;
+    background-color: #f8f9fa; display: flex;
     justify-content: center; align-items: center;
-    font-size: 1.2rem; color: var(--secondary-text);
+    font-size: 1rem; color: #aaa;
+    border: 1px solid #eee; /* 薄い枠線を追加 */
 }
 
 
