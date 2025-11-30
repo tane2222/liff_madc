@@ -232,10 +232,20 @@
         <div id="user-swipe-page" class="page" style="display: none;">
             <div class="app-container">
                 <header class="app-header">
-                    <button class="icon-btn back-button" data-target="my-page"><i class="fas fa-chevron-left"></i></button>
-                    <h1>MADC</h1>
-                    <button class="icon-btn"><i class="fas fa-sliders-h"></i></button>
-                </header>
+                <button class="icon-btn back-button" data-target="my-page">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="header-center-action">
+                    <button class="view-toggle-btn active" id="switch-to-grid-view">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </div>
+
+                <button class="icon-btn menu-btn" onclick="toggleSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            　　</header>
                 <main class="main-content">
                     <div class="swiper">
                         <div class="swiper-wrapper" id="swipe-deck">
