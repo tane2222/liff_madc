@@ -537,6 +537,20 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ▼▼▼ 表示切り替えボタン（スワイプ → グリッド）の処理 ▼▼▼
+    const btnSwitchToGrid = document.getElementById('switch-to-grid-view');
+    if (btnSwitchToGrid) {
+        btnSwitchToGrid.addEventListener('click', (e) => {
+            e.preventDefault();
+            // グリッドページ（旧ユーザー画面）を表示
+            // ※ user-grid-page というIDのdivが存在し、データをロードする関数がある前提です
+            showPage('user-grid-page'); 
+            
+            // もしグリッドページ用のデータロードが必要ならここで呼び出します
+            // loadUserGridPage(); 
+        });
+    }
+
     // --- データ表示ロジック ---
     function showProfile(data) {
         if (data.success) {
