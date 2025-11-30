@@ -365,10 +365,10 @@ body {
     padding-bottom: var(--footer-height);
     box-sizing: border-box;
 }
-
-#user-swipe-page .app-header {
+/* === （修正前）ヘッダーのレイアウト修正 === */
+/*#user-swipe-page .app-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; background-color: rgba(255,255,255,0.9); /* 少し透過 */
+    padding: 15px 20px; background-color: rgba(255,255,255,0.9); 
     border-bottom: 1px solid #f0f0f0; z-index: 10; flex-shrink: 0;
 }
 #user-swipe-page .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
@@ -379,6 +379,63 @@ body {
     flex-grow: 1; position: relative; display: flex;
     align-items: center; justify-content: center;
 }
+ */
+
+/* === ヘッダーのレイアウト修正 === */
+#user-swipe-page .app-header {
+    position: relative; /* 中央配置のために必要 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid #f0f0f0;
+    height: 50px; /* 高さを固定 */
+}
+
+/* 左右のボタンのスタイル（既存維持＋微調整） */
+#user-swipe-page .icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #999; /* グレーの色味 */
+    cursor: pointer;
+    padding: 5px;
+    width: 40px; /* タップしやすい大きさ */
+}
+
+/* ▼▼▼ 中央のタイルボタンのデザイン ▼▼▼ */
+.header-center-action {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.view-toggle-btn {
+    background-color: #333; /* 画像のような濃いグレー/黒 */
+    color: white;
+    border: none;
+    border-radius: 6px; /* 角丸の四角形 */
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.1s;
+}
+
+.view-toggle-btn:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+
+
 
 #user-swipe-page .swiper {
     width: calc(100% - 30px); /* 横幅を少し広めに確保 */
