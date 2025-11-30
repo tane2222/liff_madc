@@ -634,32 +634,56 @@ window.addEventListener('DOMContentLoaded', () => {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
             if (result.success && result.users.length > 0) {
                 swipeDeck.innerHTML = '';
-                result.users.forEach(user => {
-                    const cardSlide = `
-                        <div class="swiper-slide">
-                            <div class="profile-card">
-                                <div class="profile-image">
-                                    <img src="${user.profileImageUrl || 'https://picsum.photos/400/500'}" alt="${user.nickname}">
-                                    <div class="age-tags">
-                                        <span>8 m.</span>
-                                        <span>2 y.</span>
-                                    </div>
-                                    <button class="more-btn">More</button>
+           result.users.forEach(user => {
+                // ランダムな場所を生成（デモ用）
+                const locations = ['東京', '神奈川', '大阪', '北海道'];
+                const randomLoc = locations[Math.floor(Math.random() * locations.length)];
+
+                // カードのHTMLテンプレート（モデル画像風デザイン）
+                const cardSlide = `
+                    <div class="swiper-slide">
+                        <div class="profile-card">
+                            <div class="profile-image">
+                                <img src="${user.profileImageUrl || 'https://picsum.photos/400/500'}" alt="${user.nickname}">
+                                
+                                <div class="age-tags">
+                                    <span><i class="fas fa-leaf"></i> 本日入会</span>
                                 </div>
-                                <div class="profile-info">
-                                    <h2>${user.nickname || 'ななしさん'}, ${user.age || '?'}</h2>
-                                    <p><i class="fas fa-briefcase"></i> ${user.job || '未設定'}</p>
-                                </div>
-                                <div class="interest-icons">
-                                    <div class="icon-circle"><i class="fas fa-baby"></i></div>
-                                    <div class="icon-circle"><i class="fas fa-wine-glass-alt"></i></div>
-                                    <div class="icon-circle"><i class="fas fa-camera"></i></div>
-                                    <div class="icon-circle"><i class="fas fa-futbol"></i></div>
-                                </div>
+
+                                <button class="more-btn">
+                                    <i class="fas fa-heart"></i> いいね!
+                                </button>
                             </div>
-                        </div>`;
-                    swipeDeck.innerHTML += cardSlide;
-                });
+
+                            <div class="profile-info">
+                                <div class="name-row">
+                                    <h2>${user.nickname || 'No Name'}</h2>
+                                    <span class="age-text">${user.age || '20'}歳</span>
+                                    <span class="location-text">${randomLoc}</span>
+                                </div>
+
+                                <div class="status-row">
+                                    <span class="status-dot"></span>
+                                    <span>オンライン</span>
+                                </div>
+
+                                <p class="bio-text">
+                                    ${user.job ? user.job + 'をしています。' : ''}
+                                    休日はカフェ巡りをしたり、映画を見たりして過ごすのが好きです☕️
+                                </p>
+                            </div>
+
+                            <div class="interest-icons">
+                                <span class="common-points-label">共通点 5個</span>
+                                <div class="icon-circle"><i class="fas fa-camera"></i></div>
+                                <div class="icon-circle"><i class="fas fa-utensils"></i></div>
+                                <div class="icon-circle"><i class="fas fa-plane"></i></div>
+                            </div>
+                        </div>
+                    </div>`;
+                
+                swipeDeck.innerHTML += cardSlide;
+            });
                 initializeSwiper();
             } else { swipeDeck.innerHTML = '<p>表示できるユーザーがいません。</p>'; }
         } catch (error) { swipeDeck.innerHTML = `<p style="color: red;">エラー: ${error.message}</p>`; }
