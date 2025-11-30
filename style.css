@@ -403,6 +403,24 @@ body {
     flex-direction: column;
     position: relative;      /* 疑似要素の基準点 */
 }
+/* ★新規追加: [影専用レイヤー] (z-index: 0)
+   画像の真後ろに配置し、影を担当します。
+   白いカード(z-index: 1)より後ろにあるため、カードと重なる部分の影は隠れます。
+*/
+#user-swipe-page .profile-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%); /* 中央寄せ */
+    width: 92%;  /* 画像と同じ幅 */
+    height: 65%; /* 画像と同じ高さ */
+    border-radius: 20px;
+    
+    /* ここに影を設定 */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+    z-index: 0; /* 一番奥 */
+}
 
 /* 2. 白い枠（下半分の情報エリア）を疑似要素で作る */
 #user-swipe-page .profile-card::before {
@@ -415,7 +433,7 @@ body {
     background: #fff;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* 白枠の影 */
-    z-index: 0; /* 一番後ろ */
+    z-index: 1; /* ★重要: 影レイヤーより手前、画像より奥 */
 }
 
 /* 3. 画像エリア（上に浮いているように見せる） */
@@ -424,14 +442,15 @@ body {
     width: 92%;  /* 白枠より少し幅を狭く */
     height: 65%; /* 高さの割合 */
     margin: 0 auto; /* 中央揃え */
-    
     border-radius: 20px;
     /* ★重要: 画像自体に強い影をつけて、浮遊感を出す */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+   /* box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); */ 
+    /* ★修正: ここにあった box-shadow を削除 */
+    box-shadow: none;
     
     overflow: hidden;
     flex-shrink: 0;
-    z-index: 1; /* ★重要: 白枠(z-index:0)より手前に表示 */
+    z-index: 2; /* ★重要: 一番手前 */
     background: #f0f0f0;
 }
 
