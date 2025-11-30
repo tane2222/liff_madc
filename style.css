@@ -374,11 +374,6 @@ body {
 #user-swipe-page .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
 #user-swipe-page .icon-btn { background: none; border: none; font-size: 1.2rem; color: var(--secondary-text); cursor: pointer; }
 #user-swipe-page .back-button { color: var(--secondary-text); text-decoration: none; }
-
-#user-swipe-page .main-content {
-    flex-grow: 1; position: relative; display: flex;
-    align-items: center; justify-content: center;
-}
  */
 
 /* === ヘッダーのレイアウト修正 === */
@@ -435,7 +430,10 @@ body {
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
 
 
-
+#user-swipe-page .main-content {
+    flex-grow: 1; position: relative; display: flex;
+    align-items: center; justify-content: center;
+}
 
 #user-swipe-page .swiper {
     width: calc(100% - 30px); /* 横幅を少し広めに確保 */
