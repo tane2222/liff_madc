@@ -164,7 +164,7 @@ function openDiagnosisModal() {
         else if (typeof currentUser.diagnosisScores === 'object') {
             // 例: キーの並び順がラベルと一致している必要があります
             // もしキー名が決まっているなら以下のようにマッピングしてください
-            /dataValues = [
+            dataValues = [
                  currentUser.diagnosisScores.honest || 0,
                  currentUser.diagnosisScores.imagin || 0,
                  currentUser.diagnosisScores.logic || 0,
