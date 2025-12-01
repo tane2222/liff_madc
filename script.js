@@ -146,11 +146,37 @@ function openDiagnosisModal() {
         myRadarChart.destroy();
     }
 
-    // ★★★ 仮データ設定 ★★★ 
-    // ※後でGASから取得した実際の値(data.diagnosisScoresなど)に置き換えてください
-    // 0 の項目は「未診断」扱いとなります
+   // ★★★ 実データの設定 ★★★
+    // ラベル定義
     const labels = ['素直さ', '想像力', '論理思考', '独占欲', '競争心', '愛情'];
-    const dataValues = [80, 65, 0, 90, 0, 75]; // 0が入っている箇所が未完了
+    
+    // デフォルト値（データがない場合は全て0＝未完了扱い）
+    let dataValues = [0, 0, 0, 0, 0, 0];
+
+    // currentUser（ログインユーザー情報）から診断スコアを取得
+    // ※ fetchUserData()などで currentUser にデータがセットされている前提です
+    if (typeof currentUser !== 'undefined' && currentUser && currentUser.diagnosisScores) {
+        // データが配列の場合
+        if (Array.isArray(currentUser.diagnosisScores)) {
+            dataValues = currentUser.diagnosisScores;
+        } 
+        // データがオブジェクトの場合の変換例（キー名は適宜サーバー側に合わせてください）
+        else if (typeof currentUser.diagnosisScores === 'object') {
+            // 例: キーの並び順がラベルと一致している必要があります
+            // もしキー名が決まっているなら以下のようにマッピングしてください
+            /dataValues = [
+                 currentUser.diagnosisScores.honest || 0,
+                 currentUser.diagnosisScores.imagin || 0,
+                 currentUser.diagnosisScores.logic || 0,
+                 currentUser.diagnosisScores.possessive || 0,
+                 currentUser.diagnosisScores.battle || 0,
+                 currentUser.diagnosisScores.love || 0
+             ];
+            
+            // 簡易的にオブジェクトの値を取り出す場合
+            dataValues = Object.values(currentUser.diagnosisScores);
+        }
+    }
 
     // 未完了があるかチェックしてアラートを表示
     const hasIncomplete = dataValues.some(val => val === 0);
