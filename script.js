@@ -507,10 +507,24 @@ async function submitAssistant(type) {
 
 // ▼▼▼ メイン処理 (DOM読み込み後) ▼▼▼
 window.addEventListener('DOMContentLoaded', () => {
-    
-    // --- 内部ヘルパー関数 ---
+
+    // --- 内部ヘルパー関数（修正版） ---
     async function callGasApi(action, payload) {
-        const response = await fetch(GAS_API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ source: 'liff_app', action: action, ...payload }) });
+        // ★修正: 送信者のLIFF IDを自動で取得してセットする
+        // (payloadの中に既に liffUserId があればそれを優先、なければ liff.getContext().userId を使う)
+        const currentLiffId = (payload && payload.liffUserId) ? payload.liffUserId : liff.getContext().userId;
+
+        const response = await fetch(GAS_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+            body: JSON.stringify({ 
+                source: 'liff_app', 
+                action: action, 
+                liffUserId: currentLiffId, // ★ここで確実にIDを送る！
+                ...payload 
+            }) 
+        });
+        
         if (!response.ok) throw new Error('APIサーバーとの通信に失敗しました。');
         return response.json();
     }
