@@ -151,11 +151,20 @@ function openDiagnosisModal() {
     const labels = ['素直さ', '想像力', '論理思考', '独占欲', '競争心', '愛情'];
     
     // --- データ設定 ---
-    let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルトは全て0
+    let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルト
 
-    // currentUser（ログインユーザー情報）から各スコアを取得して配列化
+    // デバッグ：currentUserの中身を確認
+    console.log("▼▼▼ デバッグ: currentUser の中身 ▼▼▼", currentUser);
+
     if (typeof currentUser !== 'undefined' && currentUser) {
+        
+        // 値が取れているか個別にチェック（コンソールに出力）
+        console.log("素直さ(honest):", currentUser.honest);
+        console.log("想像力(imagin):", currentUser.imagin);
+        console.log("論理(logic):", currentUser.logic);
+        
         // main.gs の getMyProfileData が返すプロパティ名とマッピング
+        // ※ Number() で囲んで確実に数値化します
         dataValues = [
             Number(currentUser.honest) || 0,      // 素直さ
             Number(currentUser.imagin) || 0,      // 想像力
@@ -164,6 +173,10 @@ function openDiagnosisModal() {
             Number(currentUser.battle) || 0,      // 競争心
             Number(currentUser.love) || 0         // 愛情
         ];
+    } else {
+        console.error("★エラー: currentUser が定義されていません、または空です。");
+        // 開発中に気づきやすくするためアラートを出す（解決したら消してください）
+        alert("データ読み込みエラー：currentUserが空です。ページを再読み込みしてください。");
     }
 
     // 未完了（0の項目）があるかチェック
