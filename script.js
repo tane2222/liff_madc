@@ -743,9 +743,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     async function loadNewUserListPage() {
         const swipeDeck = document.getElementById('swipe-deck');
-          swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
+        //swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
         // ▼ 修正: 文字を出さずに空にする（これで背景のロゴが見えます） ▼
         //swipeDeck.innerHTML = '';
+        
 
         try {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
