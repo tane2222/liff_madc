@@ -424,7 +424,7 @@ body {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
 }
 .view-toggle-btn {
-    background-color: #333; color: white; border: none; border-radius: 6px;
+    background-color: #888; color: white; border: none; border-radius: 6px;
     width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;
     font-size: 1rem; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: transform 0.1s;
@@ -453,16 +453,16 @@ body {
     /* ▼▼▼ 位置修正のポイント ▼▼▼ */
     /* ヘッダーの圧迫感を消すため、少し下にずらすためのパディング */
     padding-top: 20px; 
-    padding-bottom: 20px;
+    padding-bottom: 1px;/* 元は20px */
     box-sizing: border-box;
 }
 
 #search-page .swiper {
-    width: calc(100% - 30px); 
+    width: calc(95% - 30px); 
     
     /* ▼▼▼ 高さ調整のポイント ▼▼▼ */
     /* 画面いっぱいではなく、少し高さを抑えることで真ん中感を出す */
-    height: 80%; 
+    height: 87%; 
     max-height: 580px; 
     overflow: visible;
 }
