@@ -501,12 +501,6 @@ window.addEventListener('DOMContentLoaded', () => {
         showPage('user-swipe-page'); 
     }
 
-    // ▼▼▼ 修正: 中央の「さがす」ボタン用の処理を追加 ▼▼▼
-    //const btnCenterSearchHome = document.getElementById('go-to-swipe-from-home-center');
-    //if(btnCenterSearchHome) {
-        //btnCenterSearchHome.addEventListener('click', goToSwipePage);
-    //}
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     const btnSwipeHome = document.getElementById('go-to-swipe-from-home');
     if(btnSwipeHome) btnSwipeHome.addEventListener('click', goToSwipePage);
 
@@ -523,11 +517,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const btnHomeHome = document.getElementById('go-to-home-from-home');
     if(btnHomeHome) btnHomeHome.addEventListener('click', (e) => { e.preventDefault(); });
 
-    //const btnMypageHome = document.getElementById('go-to-mypage-from-home');
-    //if(btnMypageHome) btnMypageHome.addEventListener('click', goToHomePage);
-
-    //const btnMypageSwipe = document.getElementById('go-to-mypage-from-swipe');
-    //if(btnMypageSwipe) btnMypageSwipe.addEventListener('click', goToHomePage);
 
     // ダミーボタン
     function showNotImplemented(e) {
@@ -565,11 +554,10 @@ window.addEventListener('DOMContentLoaded', () => {
         btnSwitchToGrid.addEventListener('click', (e) => {
             e.preventDefault();
             // グリッドページ（旧ユーザー画面）を表示
-            // ※ user-grid-page というIDのdivが存在し、データをロードする関数がある前提です
             showPage('user-grid-page'); 
             
-            // もしグリッドページ用のデータロードが必要ならここで呼び出します
-            // loadUserGridPage(); 
+            // ★データをロードする関数を実行！
+            loadUserGridPage();
         });
     }
 
@@ -646,6 +634,46 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById("error-message").innerHTML = `${errorMessageText}<br><span style="font-size: 10px; color: #888;">(デバッグ情報: ${liffUserId})</span>`;
         document.getElementById("sync-button-container").style.display = "block";
     }
+
+    // ▼▼▼ 【新規追加】グリッド画面読み込み関数 ▼▼▼
+    async function loadUserGridPage() {
+        const gridContainer = document.getElementById('user-grid-container');
+        // ローディング表示
+        gridContainer.innerHTML = '<p style="text-align:center; width:100%; margin-top:20px;">読み込み中...</p>';
+        
+        try {
+            // スワイプ画面と同じAPIを使ってユーザーリストを取得
+            const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
+            
+            if (result.success && result.users.length > 0) {
+                gridContainer.innerHTML = ''; // ローディング表示を消す
+                
+                result.users.forEach(user => {
+                    // ランダムな場所（デモ用）
+                    const locations = ['東京', '神奈川', '大阪', '北海道'];
+                    const randomLoc = locations[Math.floor(Math.random() * locations.length)];
+
+                    // グリッド用のカードHTMLを作成
+                    // ※style.cssで .grid-user-card 等のスタイル定義が必要です
+                    const cardHtml = `
+                        <div class="grid-user-card">
+                            <img src="${user.profileImageUrl || 'https://placehold.jp/150x150.png'}" class="grid-user-image" alt="${user.nickname}">
+                            <div class="grid-user-info-overlay">
+                                <p class="grid-user-name">${user.nickname || 'No Name'} (${user.age || '?'})</p>
+                                <p class="grid-user-meta">${user.job || '未設定'}・${randomLoc}</p>
+                            </div>
+                        </div>
+                    `;
+                    gridContainer.innerHTML += cardHtml;
+                });
+            } else {
+                gridContainer.innerHTML = '<p style="text-align:center; width:100%;">表示できるユーザーがいません。</p>';
+            }
+        } catch (error) {
+            gridContainer.innerHTML = `<p style="color: red; text-align:center;">エラー: ${error.message}</p>`;
+        }
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     // --- スワイプ画面ロジック ---
     let swiperInstance = null;
