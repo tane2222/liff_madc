@@ -133,50 +133,70 @@ window.addEventListener('click', function(e) {
 
 // ... (既存のコード) ...
 
-// ▼▼▼ 診断チャートモーダル制御（GASデータ連動版） ▼▼▼
-let myRadarChart = null; // チャートインスタンス
+// ▼▼▼ 診断チャートモーダル制御（自分・他人 兼用版） ▼▼▼
+let myRadarChart = null; 
 
-function openDiagnosisModal() {
+// ★新規追加: スワイプ画面のボタンから呼ばれる関数
+function openOtherUserDiagnosis(index) {
+    // 保存しておいたユーザーリストからデータを取得
+    const targetUser = loadedSwipeUsers[index];
+    if (!targetUser) return;
+
+    // データを使ってモーダルを開く（第2引数にユーザー情報を渡す）
+    openDiagnosisModal(targetUser);
+}
+
+// 既存の関数を修正: user 引数を受け取れるように変更
+// 引数がない場合は、自分のデータ(currentUser)を使用
+function openDiagnosisModal(targetUser = null) {
     const modal = document.getElementById('diagnosis-modal');
     modal.classList.add('is-open');
 
+    // 表示対象のデータを決定（引数がなければ自分）
+    const isMe = !targetUser;
+    const userData = targetUser || currentUser;
+    
+    // タイトルの変更（誰のデータかわかるように）
+    const headerTitle = modal.querySelector('.modal-header h3');
+    if (headerTitle) {
+        headerTitle.innerText = isMe ? '診断ステータス' : `${userData.nickname || '相手'}の診断`;
+    }
+
     const ctx = document.getElementById('radarChart').getContext('2d');
 
-    // 既にチャートがある場合は破棄（再描画のため）
     if (myRadarChart) {
         myRadarChart.destroy();
     }
 
-    // --- ラベル定義 ---
     const labels = ['素直さ', '想像力', '論理思考', '独占欲', '競争心', '愛情'];
-    
-    // --- データ設定 ---
-    let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルトは全て0
+    let dataValues = [0, 0, 0, 0, 0, 0]; 
 
-    // currentUser（ログインユーザー情報）から各スコアを取得して配列化
-    if (typeof currentUser !== 'undefined' && currentUser) {
-        // main.gs の getMyProfileData が返すプロパティ名とマッピング
-        dataValues = [
-            Number(currentUser.honest) || 0,      // 素直さ
-            Number(currentUser.imagin) || 0,      // 想像力
-            Number(currentUser.logic) || 0,       // 論理思考
-            Number(currentUser.possessive) || 0,  // 独占欲
-            Number(currentUser.battle) || 0,      // 競争心
-            Number(currentUser.love) || 0         // 愛情
-        ];
-    }
-
-    // 未完了（0の項目）があるかチェック
-    const hasIncomplete = dataValues.some(val => val === 0);
-    const alertBox = document.getElementById('diagnosis-alert');
-    
-    if(alertBox) {
-        alertBox.style.display = hasIncomplete ? 'flex' : 'none';
-        if(hasIncomplete) {
-            // 未完了の項目名を抽出して表示
-            const incompleteItems = labels.filter((_, i) => dataValues[i] === 0);
-            const itemText = incompleteItems.join('・');
-            alertBox.innerHTML = `<i class="fas fa-exclamation-circle"></i> 未診断：${itemText}<br>診断を続けましょう！`;
+    if (userData) {
+        // ※注意: GASの `getUsersForLiff` が診断スコアを返していない場合、
+        // スワイプ画面のユーザーデータには honest 等が含まれていません。
+        // その場合は、デモ用にランダムな値を生成して表示します。
+        
+        if (userData.honest !== undefined) {
+            // データが存在する場合（自分のデータなど）
+            dataValues = [
+                Number(userData.honest) || 0,
+                Number(userData.imagin) || 0,
+                Number(userData.logic) || 0,
+                Number(userData.possessive) || 0,
+                Number(userData.battle) || 0,
+                Number(userData.love) || 0
+            ];
+        } else {
+            // データがない場合（他人のデータでAPI未実装の場合）→ デモ表示
+            // ★本番環境ではAPI修正後にここを削除してください
+            dataValues = [
+                Math.floor(Math.random() * 60) + 40,
+                Math.floor(Math.random() * 60) + 40,
+                Math.floor(Math.random() * 60) + 40,
+                Math.floor(Math.random() * 60) + 40,
+                Math.floor(Math.random() * 60) + 40,
+                Math.floor(Math.random() * 60) + 40
+            ];
         }
     }
 
@@ -186,10 +206,11 @@ function openDiagnosisModal() {
         data: {
             labels: labels,
             datasets: [{
-                label: 'あなたのステータス',
+                label: 'ステータス',
                 data: dataValues,
-                backgroundColor: 'rgba(246, 23, 140, 0.2)', // ピンク背景
-                borderColor: 'rgba(246, 23, 140, 1)',       // ピンク線
+                // 他人の場合は色を少し変える（青っぽく）か、同じにするか。今回は同じにします。
+                backgroundColor: 'rgba(246, 23, 140, 0.2)',
+                borderColor: 'rgba(246, 23, 140, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: 'rgba(246, 23, 140, 1)',
                 pointRadius: 3
@@ -201,7 +222,7 @@ function openDiagnosisModal() {
             scales: {
                 r: {
                     min: 0,
-                    max: 100, // 最大値（診断ロジックに合わせて調整してください）
+                    max: 100,
                     ticks: { stepSize: 20, display: false },
                     pointLabels: {
                         font: { size: 12, family: "'Helvetica Neue', 'Arial', sans-serif" },
@@ -716,67 +737,82 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-    // --- スワイプ画面ロジック ---
+// --- スワイプ画面ロジック ---
     let swiperInstance = null;
+    let loadedSwipeUsers = []; // ★新規追加: 読み込んだユーザーデータを保存する変数
+
     async function loadNewUserListPage() {
         const swipeDeck = document.getElementById('swipe-deck');
-        swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
+          swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
         // ▼ 修正: 文字を出さずに空にする（これで背景のロゴが見えます） ▼
         //swipeDeck.innerHTML = '';
+
         try {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
             if (result.success && result.users.length > 0) {
-                swipeDeck.innerHTML = '';
-           result.users.forEach(user => {
-                // ランダムな場所を生成（デモ用）
-                const locations = ['東京', '神奈川', '大阪', '北海道'];
-                const randomLoc = locations[Math.floor(Math.random() * locations.length)];
-
-                // カードのHTMLテンプレート（モデル画像風デザイン）
-                const cardSlide = `
-                    <div class="swiper-slide">
-                        <div class="profile-card">
-                            <div class="profile-image">
-                                <img src="${user.profileImageUrl || 'https://picsum.photos/400/500'}" alt="${user.nickname}">
-                                
-                                <div class="age-tags">
-                                    <span><i class="fas fa-leaf"></i> 本日入会</span>
-                                </div>
-
-                                <button class="more-btn">
-                                    <i class="fas fa-heart"></i> キュンを送る
-                                </button>
-                            </div>
-
-                            <div class="profile-info">
-                                <div class="name-row">
-                                    <h2>${user.nickname || 'No Name'}</h2>
-                                    <span class="age-text">${user.age || '20'}歳</span>
-                                    <span class="location-text">${randomLoc}</span>
-                                </div>
-
-                                <div class="status-row">
-                                    <span class="status-dot"></span>
-                                    <span>オンライン</span>
-                                </div>
-
-                                <p class="bio-text">
-                                    ${user.job ? user.job + 'をしています。' : ''}
-                                    休日はカフェ巡りをしたり、映画を見たりして過ごすのが好きです☕️
-                                </p>
-                            </div>
-
-                            <div class="interest-icons">
-                                <span class="common-points-label">共通点 5個</span>
-                                <div class="icon-circle"><i class="fas fa-camera"></i></div>
-                                <div class="icon-circle"><i class="fas fa-utensils"></i></div>
-                                <div class="icon-circle"><i class="fas fa-plane"></i></div>
-                            </div>
-                        </div>
-                    </div>`;
                 
-                swipeDeck.innerHTML += cardSlide;
-            });
+                loadedSwipeUsers = result.users; // ★データを保存
+                
+                // ユーザーごとにループ処理（indexを利用）
+                result.users.forEach((user, index) => {
+                    const locations = ['東京', '神奈川', '大阪', '北海道'];
+                    const randomLoc = locations[Math.floor(Math.random() * locations.length)];
+
+                    // 画像URLの決定
+                    let displayImgUrl = user.profileImageUrl;
+                    const isDefault = !displayImgUrl || displayImgUrl.includes('thumbnail'); 
+                    // ※前回AI画像の実装を見送ったため、ここは元のロジック（またはデフォルト画像）のままでOKです
+                    if (!displayImgUrl) {
+                        displayImgUrl = 'https://placehold.jp/400x500.png?text=No+Image';
+                    }
+
+                    const cardSlide = `
+                        <div class="swiper-slide">
+                            <div class="profile-card">
+                                <div class="profile-image">
+                                    <img src="${displayImgUrl}" alt="${user.nickname}">
+                                    
+                                    <div class="age-tags">
+                                        <span><i class="fas fa-leaf"></i> 本日入会</span>
+                                    </div>
+
+                                    <button class="profile-detail-btn" onclick="openOtherUserDiagnosis(${index})">
+                                        <i class="fas fa-id-card"></i> プロフィール
+                                    </button>
+                                    <button class="more-btn">
+                                        <i class="fas fa-heart"></i> キュンを送る
+                                    </button>
+                                </div>
+
+                                <div class="profile-info">
+                                    <div class="name-row">
+                                        <h2>${user.nickname || 'No Name'}</h2>
+                                        <span class="age-text">${user.age || '20'}歳</span>
+                                        <span class="location-text">${randomLoc}</span>
+                                    </div>
+
+                                    <div class="status-row">
+                                        <span class="status-dot"></span>
+                                        <span>オンライン</span>
+                                    </div>
+
+                                    <p class="bio-text">
+                                        ${user.job ? user.job + 'をしています。' : ''}
+                                        休日はカフェ巡りをしたり、映画を見たりして過ごすのが好きです☕️
+                                    </p>
+                                </div>
+
+                                <div class="interest-icons">
+                                    <span class="common-points-label">共通点 5個</span>
+                                    <div class="icon-circle"><i class="fas fa-camera"></i></div>
+                                    <div class="icon-circle"><i class="fas fa-utensils"></i></div>
+                                    <div class="icon-circle"><i class="fas fa-plane"></i></div>
+                                </div>
+                            </div>
+                        </div>`;
+                    
+                    swipeDeck.innerHTML += cardSlide;
+                });
                 initializeSwiper();
             } else { swipeDeck.innerHTML = '<p>表示できるユーザーがいません。</p>'; }
         } catch (error) { swipeDeck.innerHTML = `<p style="color: red;">エラー: ${error.message}</p>`; }
