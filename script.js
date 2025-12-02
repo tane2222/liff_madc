@@ -909,13 +909,50 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- メイン実行 ---
+// --- メイン実行 (修正版) ---
     async function main() {
         let liffUserId = 'ID取得前';
         try {
             await liff.init({ liffId: LIFF_ID });
             if (!liff.isLoggedIn()) { liff.login(); return; }
 
+            // URLパラメータのチェック (マッチング演出用)
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+            const partnerLiffId = urlParams.get('partnerLiffId');
+
+            // ▼▼▼ マッチング成立モードの場合 ▼▼▼
+            if (mode === 'match_success' && partnerLiffId) {
+                // ローディング消去
+                document.getElementById("loader-wrapper").classList.add('is-hidden');
+                document.getElementById("app").style.display = 'block';
+                
+                // マッチング画面を表示
+                showPage('match-success-page');
+                
+                // 1. 自分のプロフィール取得
+                const myProfile = await liff.getProfile();
+                document.getElementById('match-my-img').src = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
+
+                // 2. 相手のプロフィール取得 (GAS経由)
+                // ※getMyProfileDataを流用して相手のデータを取ります
+                const partnerData = await callGasApi('getMyProfileData', { liffUserId: partnerLiffId });
+                
+                if (partnerData.success) {
+                    document.getElementById('match-partner-img').src = partnerData.profileImageUrl || 'https://placehold.jp/150x150.png';
+                    document.getElementById('match-partner-name').innerText = partnerData.nickname || '相手';
+                }
+
+                // 3. アニメーション開始（クラス付与）
+                setTimeout(() => {
+                    document.querySelector('.match-animation-area').classList.add('animate');
+                }, 500);
+
+                return; // ここで処理終了（マイページには行かない）
+            }
+            // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+            // --- 以下、通常起動時の処理 ---
             const profile = await liff.getProfile();
             liffUserId = profile.userId; 
 
@@ -923,11 +960,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const profileData = await callGasApi('getMyProfileData', { liffUserId: liffUserId });
             
-            // showProfile内で画像チェックなども行うように修正済み
             if (profileData.success) {
-                // ★★★ ここでデータをグローバル変数に保存します！ ★★★
                 currentUser = profileData;
-                
                 showProfile(profileData);
             } else {
                 showError(profileData, liffUserId);
@@ -936,5 +970,3 @@ window.addEventListener('DOMContentLoaded', () => {
             showError(error, liffUserId); 
         }
     }
-    main();
-});
