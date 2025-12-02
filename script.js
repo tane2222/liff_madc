@@ -744,7 +744,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 </div>
 
                                 <button class="more-btn">
-                                    <i class="fas fa-heart"></i> いいね!
+                                    <i class="fas fa-heart"></i> キュンを送る
                                 </button>
                             </div>
 
