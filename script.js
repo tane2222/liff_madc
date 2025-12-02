@@ -908,8 +908,7 @@ window.addEventListener('DOMContentLoaded', () => {
             },
         });
     }
-
-// --- メイン実行 (修正版) ---
+    // --- メイン実行 (修正版) ---
     async function main() {
         let liffUserId = 'ID取得前';
         try {
