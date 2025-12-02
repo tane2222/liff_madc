@@ -332,7 +332,7 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
 
-/* --- 旧ユーザー画面 (変更なし) --- */
+/* --- 旧ユーザー画面 (停止中) 
 #user-grid-page .page-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; background-color: var(--card-color-light); }
 #user-grid-page .page-header h1 { margin: 0; font-size: 18px; position: absolute; left: 50%; transform: translateX(-50%); }
 #user-grid-page .back-button { color: var(--primary-text-light); text-decoration: none; font-size: 14px; }
@@ -342,6 +342,48 @@ body {
 .user-info { padding: 12px; }
 .user-name { font-weight: 600; font-size: 15px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-details { font-size: 12px; color: var(--secondary-text); display: block; }
+--- */
+/* === グリッド表示画面のデザイン === */
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2列表示 */
+    gap: 15px;
+    padding: 15px;
+    padding-bottom: 80px; /* フッター被り防止 */
+    overflow-y: auto;
+}
+.grid-user-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    position: relative;
+    aspect-ratio: 3/4; /* 縦長カード */
+}
+.grid-user-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.grid-user-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    padding: 20px 10px 10px;
+    box-sizing: border-box;
+    color: white;
+}
+.grid-user-name {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin: 0;
+}
+.grid-user-meta {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
 
 
 /* ▼▼▼▼▼ 新しいカードスワイプUIのスタイル ▼▼▼▼▼ */
