@@ -152,15 +152,15 @@ function openDiagnosisModal() {
     let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルトは全て0
 
     // currentUser（ログインユーザー情報）から各スコアを取得して配列化
-    if (typeof currentUser !== 'undefined' && currentUser) {
+    if (typeof data !== 'undefined' && data) {
         // main.gs の getMyProfileData が返すプロパティ名とマッピング
         dataValues = [
-            Number(currentUser.honest) || 0,      // 素直さ
-            Number(currentUser.imagin) || 0,      // 想像力
-            Number(currentUser.logic) || 0,       // 論理思考
-            Number(currentUser.possessive) || 0,  // 独占欲
-            Number(currentUser.battle) || 0,      // 競争心
-            Number(currentUser.love) || 0         // 愛情
+            Number(data.honest) || 0,      // 素直さ
+            Number(data.imagin) || 0,      // 想像力
+            Number(data.logic) || 0,       // 論理思考
+            Number(data.possessive) || 0,  // 独占欲
+            Number(data.battle) || 0,      // 競争心
+            Number(data.love) || 0         // 愛情
         ];
     }
 
