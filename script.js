@@ -155,12 +155,12 @@ function openDiagnosisModal() {
     if (typeof data !== 'undefined' && data) {
         // main.gs の getMyProfileData が返すプロパティ名とマッピング
         dataValues = [
-            Number(data.honest) || 0,      // 素直さ
-            Number(data.imagin) || 0,      // 想像力
-            Number(data.logic) || 0,       // 論理思考
-            Number(data.possessive) || 0,  // 独占欲
-            Number(data.battle) || 0,      // 競争心
-            Number(data.love) || 0         // 愛情
+            data.honest || 0,      // 素直さ
+            data.imagin || 0,      // 想像力
+            data.logic || 0,       // 論理思考
+            data.possessive || 0,  // 独占欲
+            data.battle || 0,      // 競争心
+            data.love || 0         // 愛情
         ];
     }
 
