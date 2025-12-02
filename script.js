@@ -534,20 +534,20 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         alert('この機能は現在準備中です。');
     }
-    const btnMaeeHome = document.getElementById('go-to-diagnosis-from-home');
-    if(btnMaeeHome) btnMaeeHome.addEventListener('click', showNotImplemented);
-    const btnMaeeSwipe = document.getElementById('go-to-diagnosis-from-swipe');
-    if(btnMaeeSwipe) btnMaeeSwipe.addEventListener('click', showNotImplemented);
+    const btnDgsHome = document.getElementById('go-to-diagnosis-from-home');
+    if(btnDgsHome) btnMaeeHome.addEventListener('click', showNotImplemented);
+    const btnDgsSwipe = document.getElementById('go-to-diagnosis-from-swipe');
+    if(btnDgsSwipe) btnMaeeSwipe.addEventListener('click', showNotImplemented);
     
     const btnMsgHome = document.getElementById('go-to-messages-from-home');
     if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
     const btnMsgSwipe = document.getElementById('go-to-messages-from-swipe');
     if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
 
-    const btnMsgHome = document.getElementById('go-to-assistant-from-home');
-    if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
-    const btnMsgSwipe = document.getElementById('go-to-assistant-from-swipe');
-    if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
+    const btnAstHome = document.getElementById('go-to-assistant-from-home');
+    if(btnAstHome) btnMsgHome.addEventListener('click', showNotImplemented);
+    const btnAstSwipe = document.getElementById('go-to-assistant-from-swipe');
+    if(btnAstSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
 
 
     // 戻るボタン
