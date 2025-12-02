@@ -737,22 +737,36 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-// --- スワイプ画面ロジック ---
+// ▼▼▼ 【修正】変数を外に出してグローバル化 ▼▼▼
+    // ※これらは window.addEventListener の中ではなく、script.jsのトップレベル（一番上など）に書くのが理想ですが、
+    // 既存のコードを崩さないよう、windowオブジェクトに紐付ける形で解決します。
+
+    window.loadedSwipeUsers = []; // windowオブジェクトに保存してどこからでもアクセス可能に
+
+    window.openOtherUserDiagnosis = function(index) {
+        const targetUser = window.loadedSwipeUsers[index];
+        if (!targetUser) {
+            console.error("User not found at index:", index);
+            return;
+        }
+        openDiagnosisModal(targetUser);
+    };
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    // --- スワイプ画面ロジック ---
     let swiperInstance = null;
-    let loadedSwipeUsers = []; // ★新規追加: 読み込んだユーザーデータを保存する変数
+    // let loadedSwipeUsers = []; // ←【削除】ここは削除（window.loadedSwipeUsersを使います）
 
     async function loadNewUserListPage() {
         const swipeDeck = document.getElementById('swipe-deck');
-        //swipeDeck.innerHTML = '<p>ユーザーを探しています...</p>';
-        // ▼ 修正: 文字を出さずに空にする（これで背景のロゴが見えます） ▼
-        //swipeDeck.innerHTML = '';
+        // ▼ 修正: 文字を出さずに空にする
+        swipeDeck.innerHTML = '';
         
-
         try {
             const result = await callGasApi('getUsersForLiff', { liffUserId: liff.getContext().userId });
             if (result.success && result.users.length > 0) {
                 
-                loadedSwipeUsers = result.users; // ★データを保存
+                window.loadedSwipeUsers = result.users; // ★【修正】windowオブジェクトに保存
                 
                 // ユーザーごとにループ処理（indexを利用）
                 result.users.forEach((user, index) => {
@@ -762,7 +776,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     // 画像URLの決定
                     let displayImgUrl = user.profileImageUrl;
                     const isDefault = !displayImgUrl || displayImgUrl.includes('thumbnail'); 
-                    // ※前回AI画像の実装を見送ったため、ここは元のロジック（またはデフォルト画像）のままでOKです
                     if (!displayImgUrl) {
                         displayImgUrl = 'https://placehold.jp/400x500.png?text=No+Image';
                     }
@@ -777,11 +790,11 @@ window.addEventListener('DOMContentLoaded', () => {
                                         <span><i class="fas fa-leaf"></i> 本日入会</span>
                                     </div>
 
-                                    <button class="profile-detail-btn" onclick="openOtherUserDiagnosis(${index})">
+                                    <button class="profile-detail-btn" onclick="window.openOtherUserDiagnosis(${index})">
                                         <i class="fas fa-id-card"></i> プロフィール
                                     </button>
                                     <button class="more-btn">
-                                        <i class="fas fa-heart"></i> キュンを送る
+                                        <i class="fas fa-heart"></i> いいね!
                                     </button>
                                 </div>
 
