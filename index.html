@@ -522,6 +522,48 @@
             </div>
         </div>
         <!-- レーダーチャートポップアップここまで-->
+
+        <!-- マッチング（キュンキュン）演出です-->
+        <div id="match-success-page" class="page" style="display: none;">
+            <div class="match-container">
+                <div class="match-title">
+                    <span class="title-star">★</span>
+                    <span>キュン★キュン</span>
+                    <span class="title-star">★</span>
+                    <br>成 立 ！！
+                </div>
+                
+                <div class="match-animation-area">
+                    <div class="match-user left">
+                        <img id="match-my-img" src="" alt="Me">
+                    </div>
+                    
+                    <div class="match-heart">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    
+                    <div class="match-user right">
+                        <img id="match-partner-img" src="" alt="Partner">
+                    </div>
+                </div>
+
+                <div class="match-message-box">
+                    <p><strong id="match-partner-name">〇〇</strong>さんと<br>マッチングしました！</p>
+                    <p class="match-sub-text">これから二人の秘密のトークが始まります...</p>
+                </div>
+
+                <button class="match-action-btn" onclick="liff.closeWindow()">
+                    LINEトークに戻る
+                </button>
+            </div>
+            
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+        </div>
+        <!-- マッチング（キュンキュン）演出ここまで-->
         
 </div><!-- 27行目<div id="app" style="display: none;">の閉じタグ-->
 
