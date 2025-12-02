@@ -500,6 +500,13 @@ window.addEventListener('DOMContentLoaded', () => {
         loadNewUserListPage(); 
         showPage('user-swipe-page'); 
     }
+
+    // ▼▼▼ 修正: 中央の「さがす」ボタン用の処理を追加 ▼▼▼
+    const btnCenterSearchHome = document.getElementById('go-to-swipe-from-home-center');
+    if(btnCenterSearchHome) {
+        btnCenterSearchHome.addEventListener('click', goToSwipePage);
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     const btnSwipeHome = document.getElementById('go-to-swipe-from-home');
     if(btnSwipeHome) btnSwipeHome.addEventListener('click', goToSwipePage);
 
