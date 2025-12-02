@@ -753,6 +753,53 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+    // ▼▼▼ 【新規追加】キュン送信関数 ▼▼▼
+    window.sendKyun = async function(index) {
+        // 1. 対象ユーザーのデータを取得
+        const targetUser = window.loadedSwipeUsers[index];
+        if (!targetUser) return;
+
+        // 2. 確認ダイアログ
+        if (!confirm(`${targetUser.nickname}さんに「キュン」を送りますか？`)) {
+            return;
+        }
+
+        // 3. ローディング表示
+        document.getElementById("loader-wrapper").classList.remove('is-hidden');
+
+        try {
+            // 4. GASへ送信
+            // users配列には liffUserId が含まれている前提です (getUsersForLiffの返り値)
+            const result = await callGasApi('sendKyun', { 
+                targetLiffUserId: targetUser.liffUserId 
+            });
+
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+
+            if (result.success) {
+                // 5. 成功時の演出
+                alert(`「キュン」を送りました！\n相手に通知が届きます。`);
+                
+                // (オプション) 送信済みのカードをスワイプさせる、またはボタンを無効化するなど
+                // 今回はシンプルにボタンの見た目を変えます
+                const btn = document.getElementById(`kyun-btn-${index}`);
+                if(btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-check"></i> 送信済';
+                    btn.style.background = "#ccc";
+                    btn.style.boxShadow = "none";
+                }
+            } else {
+                alert("送信エラー: " + result.message);
+            }
+        } catch (error) {
+            document.getElementById("loader-wrapper").classList.add('is-hidden');
+            alert("通信エラーが発生しました。");
+            console.error(error);
+        }
+    };
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     // --- スワイプ画面ロジック ---
     let swiperInstance = null;
     // let loadedSwipeUsers = []; // ←【削除】ここは削除（window.loadedSwipeUsersを使います）
@@ -793,7 +840,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                     <button class="profile-detail-btn" onclick="window.openOtherUserDiagnosis(${index})">
                                         <i class="fas fa-id-card"></i> プロフィール
                                     </button>
-                                    <button class="more-btn">
+                                    <button id="kyun-btn-${index}" class="more-btn" onclick="window.sendKyun(${index})">
                                         <i class="fas fa-heart"></i> キュンする
                                     </button>
                                 </div>
