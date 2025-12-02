@@ -539,12 +539,33 @@ body {
     display: flex; align-items: center; gap: 4px;
 }
 #search-page .more-btn {
-    position: absolute; bottom: 15px; right: 15px;
+    /*position: absolute; bottom: 15px; right: 15px;
     background: linear-gradient(135deg, #FF5E62, #FF9966);
     color: white; border: none; border-radius: 50px;
     padding: 8px 20px; font-size: 0.9rem; font-weight: bold;
     box-shadow: 0 4px 15px rgba(255, 94, 98, 0.5);
+    cursor: pointer; z-index: 5; display: flex; align-items: center; gap: 5px;*/
+    position: absolute; bottom: 15px; right: 15px;
+    /* マイページヘッダーと同じ 紫(#9B27AF) -> 濃いピンク(#E03C7E) */
+    background: linear-gradient(135deg, #9B27AF 0%, #E03C7E 100%);
+    color: white; border: none; border-radius: 50px;
+    padding: 8px 20px; font-size: 0.9rem; font-weight: bold;
+    box-shadow: 0 4px 15px rgba(224, 60, 126, 0.4); /* 影もピンク寄りに */
     cursor: pointer; z-index: 5; display: flex; align-items: center; gap: 5px;
+}
+/* 新規追加: 職種（job）タグのデザイン */
+.job-tag {
+    background-color: #6c5ce7; /* 少し落ち着いた紫（またはお好みの色） */
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: normal;
+    padding: 3px 10px;
+    border-radius: 12px; /* 丸みのある長方形 */
+    margin-left: 8px; /* 名前との距離 */
+    white-space: nowrap; /* 折り返し防止 */
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* プロフィール情報テキスト */
