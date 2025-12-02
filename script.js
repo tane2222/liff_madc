@@ -2,6 +2,8 @@
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec";
 const LIFF_ID = "2008378264-4O97qRYQ";
 
+let currentUser = null; // グローバル変数として定義
+
 // ▼▼▼ ステップ定義（順番管理用） ▼▼▼
 const REGISTRATION_STEPS = [
     'gender-selection-page',   // Step 1
@@ -152,15 +154,15 @@ function openDiagnosisModal() {
     let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルトは全て0
 
     // currentUser（ログインユーザー情報）から各スコアを取得して配列化
-    if (typeof data !== 'undefined' && data) {
+    if (typeof currentUser !== 'undefined' && currentUser) {
         // main.gs の getMyProfileData が返すプロパティ名とマッピング
         dataValues = [
-            data.honest || 0,      // 素直さ
-            data.imagin || 0,      // 想像力
-            data.logic || 0,       // 論理思考
-            data.possessive || 0,  // 独占欲
-            data.battle || 0,      // 競争心
-            data.love || 0         // 愛情
+            Number(currentUser.honest) || 0,      // 素直さ
+            Number(currentUser.imagin) || 0,      // 想像力
+            Number(currentUser.logic) || 0,       // 論理思考
+            Number(currentUser.possessive) || 0,  // 独占欲
+            Number(currentUser.battle) || 0,      // 競争心
+            Number(currentUser.love) || 0         // 愛情
         ];
     }
 
