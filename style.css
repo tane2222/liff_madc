@@ -386,231 +386,200 @@ body {
 }
 
 
-/* ▼▼▼▼▼ 新しいカードスワイプUIのスタイル ▼▼▼▼▼ */
-/* === ユーザー画面（スワイプページ）のデザイン修正 === */
-/* === ユーザー画面（スワイプページ）のデザイン修正 (浮き出し画像版) === */
+/* =========================================
+   さがすページ（スワイプ＆グリッド統合版）
+   ========================================= */
 
-#user-swipe-page {
+/* ページ全体のコンテナ設定 */
+#search-page {
     padding-bottom: 0;
 }
 
-#user-swipe-page .app-container {
+#search-page .app-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
     max-width: 420px;
     margin: 0 auto;
-    
-    /* 背景：モデル画像のような淡いブルー〜ピンクのグラデーション */
+    /* 背景：淡いブルー〜ピンクのグラデーション */
     background: linear-gradient(180deg, #E0F7FA 0%, #FCE4EC 100%);
-    
     padding-bottom: var(--footer-height);
     box-sizing: border-box;
 }
-/* === （修正前）ヘッダーのレイアウト修正 === */
-/*#user-swipe-page .app-header {
+
+/* ヘッダー */
+#search-page .app-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; background-color: rgba(255,255,255,0.9); 
-    border-bottom: 1px solid #f0f0f0; z-index: 10; flex-shrink: 0;
+    padding: 15px 20px; background-color: rgba(255,255,255,0.95);
+    border-bottom: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    z-index: 10; flex-shrink: 0; height: 50px;
+    position: relative;
 }
-#user-swipe-page .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
-#user-swipe-page .icon-btn { background: none; border: none; font-size: 1.2rem; color: var(--secondary-text); cursor: pointer; }
-#user-swipe-page .back-button { color: var(--secondary-text); text-decoration: none; }
- */
+#search-page .icon-btn { background: none; border: none; font-size: 1.2rem; color: #999; cursor: pointer; padding: 5px; width: 40px; }
+#search-page .back-button { color: #999; text-decoration: none; }
 
-/* === ヘッダーのレイアウト修正 === */
-#user-swipe-page .app-header {
-    position: relative; /* 中央配置のために必要 */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.95);
-    /* border-bottom: 1px solid #f0f0f0;*/
-    border-bottom: none; /* 線を消してスッキリさせる */
-    height: 50px; /* 高さを固定 */
-}
-
-/* 左右のボタンのスタイル（既存維持＋微調整） */
-#user-swipe-page .icon-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: #999; /* グレーの色味 */
-    cursor: pointer;
-    padding: 5px;
-    width: 40px; /* タップしやすい大きさ */
-}
-
-/* ▼▼▼ 中央のタイルボタンのデザイン ▼▼▼ */
+/* 中央の表示切り替えボタン */
 .header-center-action {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
 }
-
 .view-toggle-btn {
-    background-color: #888; /* 薄いグレー/黒 */
-    color: white;
-    border: none;
-    border-radius: 6px; /* 角丸の四角形 */
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    background-color: #333; color: white; border: none; border-radius: 6px;
+    width: 36px; height: 36px; display: flex; justify-content: center; align-items: center;
+    font-size: 1rem; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: transform 0.1s;
 }
+.view-toggle-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 
-.view-toggle-btn:active {
-    transform: translate(-50%, -50%) scale(0.95);
-}
-/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
-
-
-#user-swipe-page .main-content {
-    flex-grow: 1; position: relative; display: flex;
-    align-items: center; justify-content: center;
-}
-
-#user-swipe-page .swiper {
-    width: calc(100% - 30px); /* 横幅を少し広めに確保 */
-    height: 85%; max-height: 600px;
-    overflow: visible; /* カードからはみ出る影や要素を表示 */
+/* メインコンテンツエリア */
+#search-page .main-content {
+    flex-grow: 1; position: relative; 
+    /* 上下中央揃え（スワイプ用）と上揃え（グリッド用）を両立するため flex設定は個別に */
+    display: block; 
+    width: 100%; height: 100%;
+    overflow: hidden; /* はみ出し防止 */
 }
 
-#user-swipe-page .swiper-slide { 
-    background-color: transparent; 
-    box-shadow: none; 
+/* -----------------------------------------
+   ① スワイプ表示エリアのデザイン
+   ----------------------------------------- */
+#swipe-view-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; width: 100%;
 }
 
-/* ▼▼▼ カードデザイン（構造は維持、装飾を変更） ▼▼▼ */
+#search-page .swiper {
+    width: calc(100% - 30px); height: 85%; max-height: 600px; overflow: visible;
+}
+#search-page .swiper-slide { background-color: transparent; box-shadow: none; }
 
-/* 1. カード全体のラッパー */
-#user-swipe-page .profile-card {
+/* カードデザイン（浮き出し画像スタイル） */
+#search-page .profile-card {
     width: 100%; height: 100%; background: transparent; box-shadow: none;
     border-radius: 0; display: flex; flex-direction: column; position: relative;
 }
 
-/* 影レイヤー（維持） */
-#user-swipe-page .profile-card::after {
+/* 影レイヤー */
+#search-page .profile-card::after {
     content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
     width: 92%; height: 65%; border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); /* 影を少し柔らかく */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     z-index: 0;
 }
 
-/* 2. 白いカードレイヤー（情報エリア） */
-#user-swipe-page .profile-card::before {
+/* 下部の白い情報エリア */
+#search-page .profile-card::before {
     content: ""; position: absolute; bottom: 0; left: 0;
-    width: 100%; height: 68%;
-    background: #fff;
-    border-radius: 25px; /* 角丸を少し強くして可愛らしく */
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05); /* 上方向への薄い影 */
+    width: 100%; height: 38%;
+    background: #fff; border-radius: 25px;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
     z-index: 1;
 }
 
-/* 3. 画像エリア（維持） */
-#user-swipe-page .profile-image {
+/* 画像エリア */
+#search-page .profile-image {
     position: relative; width: 92%; height: 65%; margin: 0 auto;
     border-radius: 20px; box-shadow: none; overflow: hidden;
     flex-shrink: 0; background: #f0f0f0; z-index: 2;
 }
-#user-swipe-page .profile-image::after {
+#search-page .profile-image img {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+#search-page .profile-image::after {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent); pointer-events: none;
 }
-#user-swipe-page .profile-image img {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-}
 
-/* ▼▼▼ 情報・装飾の変更点（モデル画像風） ▼▼▼ */
-
-/* タグ：左上の「年齢」タグを、モデル画像の緑色の「本日入会」風タグに変更 */
-#user-swipe-page .age-tags {
+/* タグとボタン */
+#search-page .age-tags {
     position: absolute; top: 15px; left: 15px; z-index: 5; display: flex; gap: 8px;
 }
-#user-swipe-page .age-tags span {
-    background-color: #2ECC71; /* 鮮やかなグリーン */
-    color: #fff;
-    font-size: 0.7rem; font-weight: bold;
-    padding: 6px 12px; border-radius: 20px; /* 完全な角丸（ピル型） */
-    box-shadow: 0 2px 5px rgba(46, 204, 113, 0.4);
+#search-page .age-tags span {
+    background-color: #2ECC71; color: #fff; font-size: 0.7rem; font-weight: bold;
+    padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(46, 204, 113, 0.4);
     display: flex; align-items: center; gap: 4px;
 }
-
-/* ボタン：右下の「More」ボタンを、モデル画像の「いいね！」風の赤ピンクに変更 */
-#user-swipe-page .more-btn {
+#search-page .more-btn {
     position: absolute; bottom: 15px; right: 15px;
-    background: linear-gradient(135deg, #FF5E62, #FF9966); /* 赤〜オレンジのグラデーション */
-    color: white; border: none; border-radius: 50px; /* ピル型 */
+    background: linear-gradient(135deg, #FF5E62, #FF9966);
+    color: white; border: none; border-radius: 50px;
     padding: 8px 20px; font-size: 0.9rem; font-weight: bold;
     box-shadow: 0 4px 15px rgba(255, 94, 98, 0.5);
-    cursor: pointer; z-index: 5;
-    display: flex; align-items: center; gap: 5px;
-}
-#user-swipe-page .more-btn i { font-size: 1rem; }
-
-/* 情報エリア：レイアウトを整理 */
-#user-swipe-page .profile-info {
-    position: relative; z-index: 2;
-    padding: 20px 25px 0; /* 上の余白を少し増やす */
-    flex-shrink: 0; text-align: left;
-    margin-top: 5px;
+    cursor: pointer; z-index: 5; display: flex; align-items: center; gap: 5px;
 }
 
-/* 名前と年齢を横並びに */
-.name-row {
-    display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;
+/* プロフィール情報テキスト */
+#search-page .profile-info {
+    position: relative; z-index: 2; padding: 20px 25px 0;
+    flex-shrink: 0; text-align: left; margin-top: 5px;
 }
-#user-swipe-page .profile-info h2 {
-    margin: 0; font-size: 1.4rem; color: #333; font-weight: 700;
-}
-.age-text {
-    font-size: 1rem; color: #666; font-weight: normal;
-}
-.location-text {
-    font-size: 0.9rem; color: #888; margin-left: auto; /* 右寄せ */
-}
-
-/* オンラインステータス */
-.status-row {
-    display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
-    font-size: 0.8rem; color: #2ECC71; font-weight: bold;
-}
-.status-dot {
-    width: 8px; height: 8px; background-color: #2ECC71; border-radius: 50%;
-}
-
-/* 一言コメント */
+.name-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+#search-page .profile-info h2 { margin: 0; font-size: 1.4rem; color: #333; font-weight: 700; }
+.age-text { font-size: 1rem; color: #666; font-weight: normal; }
+.location-text { font-size: 0.9rem; color: #888; margin-left: auto; }
+.status-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 0.8rem; color: #2ECC71; font-weight: bold; }
+.status-dot { width: 8px; height: 8px; background-color: #2ECC71; border-radius: 50%; }
 .bio-text {
     font-size: 0.85rem; color: #666; line-height: 1.4;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     margin: 0 0 10px 0;
 }
 
-/* 共通点・アイコンエリア */
-#user-swipe-page .interest-icons {
-    position: relative; z-index: 2;
-    display: flex; justify-content: flex-start; align-items: center;
-    gap: 10px; padding: 0 25px 20px;
-    flex-shrink: 0;
+/* アイコンエリア */
+#search-page .interest-icons {
+    position: relative; z-index: 2; display: flex; justify-content: flex-start; align-items: center;
+    gap: 10px; padding: 0 25px 20px; flex-shrink: 0;
 }
-.common-points-label {
-    font-size: 0.75rem; color: #FF5E62; font-weight: bold; margin-right: 5px;
-}
-#user-swipe-page .icon-circle {
-    width: 32px; height: 32px; border-radius: 8px; /* 丸から角丸四角に変更 */
-    background-color: #fff0f5; /* 薄いピンク背景 */
+.common-points-label { font-size: 0.75rem; color: #FF5E62; font-weight: bold; margin-right: 5px; }
+#search-page .icon-circle {
+    width: 32px; height: 32px; border-radius: 8px; background-color: #fff0f5;
     display: flex; justify-content: center; align-items: center;
-    font-size: 0.9rem; color: #FF5E62; /* アイコン色をピンクに */
-    border: none;
+    font-size: 0.9rem; color: #FF5E62; border: none;
 }
+
+/* -----------------------------------------
+   ② グリッド表示エリアのデザイン
+   ----------------------------------------- */
+#grid-view-area {
+    padding-top: 10px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2列表示 */
+    gap: 15px;
+    padding: 15px;
+    padding-bottom: 80px;
+    overflow-y: auto;
+    height: 100%; /* スクロール領域確保 */
+    box-sizing: border-box;
+}
+
+.grid-user-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    position: relative;
+    aspect-ratio: 3/4; /* 縦長カード */
+}
+
+.grid-user-image {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+.grid-user-info-overlay {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    padding: 20px 10px 10px; box-sizing: border-box; color: white;
+}
+
+.grid-user-name { font-size: 0.9rem; font-weight: bold; margin: 0; }
+.grid-user-meta { font-size: 0.75rem; opacity: 0.9; margin: 2px 0 0; }
 
 /* --- 登録/連携画面のスタイル (変更なし) --- */
 #sync-button-container {
