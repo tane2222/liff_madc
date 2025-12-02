@@ -502,10 +502,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // ▼▼▼ 修正: 中央の「さがす」ボタン用の処理を追加 ▼▼▼
-    const btnCenterSearchHome = document.getElementById('go-to-swipe-from-home-center');
-    if(btnCenterSearchHome) {
-        btnCenterSearchHome.addEventListener('click', goToSwipePage);
-    }
+    //const btnCenterSearchHome = document.getElementById('go-to-swipe-from-home-center');
+    //if(btnCenterSearchHome) {
+        //btnCenterSearchHome.addEventListener('click', goToSwipePage);
+    //}
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     const btnSwipeHome = document.getElementById('go-to-swipe-from-home');
     if(btnSwipeHome) btnSwipeHome.addEventListener('click', goToSwipePage);
@@ -523,26 +523,32 @@ window.addEventListener('DOMContentLoaded', () => {
     const btnHomeHome = document.getElementById('go-to-home-from-home');
     if(btnHomeHome) btnHomeHome.addEventListener('click', (e) => { e.preventDefault(); });
 
-    const btnMypageHome = document.getElementById('go-to-mypage-from-home');
-    if(btnMypageHome) btnMypageHome.addEventListener('click', goToHomePage);
+    //const btnMypageHome = document.getElementById('go-to-mypage-from-home');
+    //if(btnMypageHome) btnMypageHome.addEventListener('click', goToHomePage);
 
-    const btnMypageSwipe = document.getElementById('go-to-mypage-from-swipe');
-    if(btnMypageSwipe) btnMypageSwipe.addEventListener('click', goToHomePage);
+    //const btnMypageSwipe = document.getElementById('go-to-mypage-from-swipe');
+    //if(btnMypageSwipe) btnMypageSwipe.addEventListener('click', goToHomePage);
 
     // ダミーボタン
     function showNotImplemented(e) {
         e.preventDefault();
         alert('この機能は現在準備中です。');
     }
-    const btnMaeeHome = document.getElementById('go-to-maee-from-home');
+    const btnMaeeHome = document.getElementById('go-to-diagnosis-from-home');
     if(btnMaeeHome) btnMaeeHome.addEventListener('click', showNotImplemented);
-    const btnMaeeSwipe = document.getElementById('go-to-maee-from-swipe');
+    const btnMaeeSwipe = document.getElementById('go-to-diagnosis-from-swipe');
     if(btnMaeeSwipe) btnMaeeSwipe.addEventListener('click', showNotImplemented);
     
     const btnMsgHome = document.getElementById('go-to-messages-from-home');
     if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
     const btnMsgSwipe = document.getElementById('go-to-messages-from-swipe');
     if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
+
+    const btnMsgHome = document.getElementById('go-to-assistant-from-home');
+    if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
+    const btnMsgSwipe = document.getElementById('go-to-assistant-from-swipe');
+    if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
+
 
     // 戻るボタン
     document.querySelectorAll('.back-button').forEach(btn => {
