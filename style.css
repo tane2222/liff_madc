@@ -410,7 +410,7 @@ body {
 }
 
 .view-toggle-btn {
-    background-color: #333; /* 画像のような濃いグレー/黒 */
+    background-color: #888; /* 薄いグレー/黒 */
     color: white;
     border: none;
     border-radius: 6px; /* 角丸の四角形 */
