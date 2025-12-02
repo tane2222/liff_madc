@@ -494,52 +494,105 @@ window.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
-    // --- ページ遷移 (フッター等) ---
-    function goToSwipePage(e) {
+    // ▼▼▼ 【修正版】さがすページ（スワイプ/グリッド）制御ロジック ▼▼▼
+
+    // 1. さがすページへ移動する関数（初期表示はスワイプ）
+    function goToSearchPage(e) {
         if (e) e.preventDefault();
+        
+        // 統合されたページを表示
+        showPage('search-page');
+
+        // 強制的にスワイプモードにリセットする
+        const swipeArea = document.getElementById('swipe-view-area');
+        const gridArea = document.getElementById('grid-view-area');
+        if(swipeArea) swipeArea.style.display = 'block';
+        if(gridArea) gridArea.style.display = 'none';
+        
+        // アイコンをグリッド用にセット（「次はグリッドにできるよ」という意味）
+        const icon = document.getElementById('toggle-view-icon');
+        if(icon) icon.className = 'fas fa-th-large';
+
+        // スワイプデータをロード
         loadNewUserListPage(); 
-        showPage('user-swipe-page'); 
     }
 
-    const btnSwipeHome = document.getElementById('go-to-swipe-from-home');
-    if(btnSwipeHome) btnSwipeHome.addEventListener('click', goToSwipePage);
+    // 2. 表示モード切り替えボタンの処理（スワイプ ⇔ グリッド）
+    const toggleViewBtn = document.getElementById('toggle-view-mode-btn');
+    if (toggleViewBtn) {
+        toggleViewBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const swipeArea = document.getElementById('swipe-view-area');
+            const gridArea = document.getElementById('grid-view-area');
+            const icon = document.getElementById('toggle-view-icon');
 
-    const btnSwipeSwipe = document.getElementById('go-to-swipe-from-swipe');
-    if(btnSwipeSwipe) btnSwipeSwipe.addEventListener('click', goToSwipePage);
+            // 現在スワイプが表示されている場合 -> グリッドへ切り替え
+            if (swipeArea.style.display !== 'none') {
+                swipeArea.style.display = 'none';
+                gridArea.style.display = 'grid'; // CSSに合わせて grid か block
+                
+                // アイコンを「戻る（重なり）」に変更
+                icon.className = 'fas fa-layer-group';
+                
+                // グリッドデータをロード（ここに追加した loadUserGridPage を呼び出し）
+                loadUserGridPage();
+            } 
+            // 現在グリッドが表示されている場合 -> スワイプへ切り替え
+            else {
+                swipeArea.style.display = 'block';
+                gridArea.style.display = 'none';
+                
+                // アイコンを「グリッド」に変更
+                icon.className = 'fas fa-th-large';
+            }
+        });
+    }
 
+    // 3. イベントリスナーの設定
+
+    // ホーム画面から「さがす（診断）」への遷移
+    const btnSwipeHome = document.getElementById('go-to-swipe-from-home'); 
+    if(btnSwipeHome) btnSwipeHome.addEventListener('click', goToSearchPage);
+
+    // さがすページ内のフッター：中央ボタン（リロードまたはスワイプへ戻す）
+    const btnSearchRefresh = document.getElementById('go-to-search-refresh');
+    if(btnSearchRefresh) btnSearchRefresh.addEventListener('click', goToSearchPage);
+
+    // さがすページ内のフッター：ホームへ
+    const btnHomeSearch = document.getElementById('go-to-home-from-search');
+    if(btnHomeSearch) btnHomeSearch.addEventListener('click', goToHomePage);
+
+    // ホーム画面への遷移（既存）
     function goToHomePage(e) {
         if (e) e.preventDefault();
         showPage('my-page'); 
     }
-    const btnHomeSwipe = document.getElementById('go-to-home-from-swipe');
-    if(btnHomeSwipe) btnHomeSwipe.addEventListener('click', goToHomePage);
-    
     const btnHomeHome = document.getElementById('go-to-home-from-home');
     if(btnHomeHome) btnHomeHome.addEventListener('click', (e) => { e.preventDefault(); });
 
 
-    // ダミーボタン
+    // ダミーボタン類（実装準備中）
+    const dummyIds = [
+        'go-to-diagnosis-from-home', 
+        'go-to-diagnosis-from-search', 
+        'go-to-messages-from-home', 
+        'go-to-messages-from-search', 
+        'go-to-assistant-from-home',
+        'go-to-assistant-from-search'
+    ];
+    dummyIds.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', showNotImplemented);
+    });
+
+    // ダミーボタンのアラート関数
     function showNotImplemented(e) {
         e.preventDefault();
         alert('この機能は現在準備中です。');
     }
-    const btnDgsHome = document.getElementById('go-to-diagnosis-from-home');
-    if(btnDgsHome) btnDgsHome.addEventListener('click', showNotImplemented);
-    const btnDgsSwipe = document.getElementById('go-to-diagnosis-from-swipe');
-    if(btnDgsSwipe) btnDgsHome.addEventListener('click', showNotImplemented);
-    
-    const btnMsgHome = document.getElementById('go-to-messages-from-home');
-    if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
-    const btnMsgSwipe = document.getElementById('go-to-messages-from-swipe');
-    if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
 
-    const btnAstHome = document.getElementById('go-to-assistant-from-home');
-    if(btnAstHome) btnAstHome.addEventListener('click', showNotImplemented);
-    const btnAstSwipe = document.getElementById('go-to-assistant-from-swipe');
-    if(btnAstSwipe) btnAstHome.addEventListener('click', showNotImplemented);
-
-
-    // 戻るボタン
+    // 共通：戻るボタン
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', (e) => { 
             e.preventDefault(); 
@@ -547,19 +600,7 @@ window.addEventListener('DOMContentLoaded', () => {
             showPage(targetPage); 
         });
     });
-
-    // ▼▼▼ 表示切り替えボタン（スワイプ → グリッド）の処理 ▼▼▼
-    const btnSwitchToGrid = document.getElementById('switch-to-grid-view');
-    if (btnSwitchToGrid) {
-        btnSwitchToGrid.addEventListener('click', (e) => {
-            e.preventDefault();
-            // グリッドページ（旧ユーザー画面）を表示
-            showPage('user-grid-page'); 
-            
-            // ★データをロードする関数を実行！
-            loadUserGridPage();
-        });
-    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     // --- データ表示ロジック ---
     function showProfile(data) {
