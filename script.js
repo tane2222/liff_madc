@@ -131,14 +131,13 @@ window.addEventListener('click', function(e) {
 
 // ... (既存のコード) ...
 
-// ▼▼▼ 診断チャートモーダル制御 ▼▼▼
-let myRadarChart = null; // チャートインスタンスを保持する変数
+// ▼▼▼ 診断チャートモーダル制御（GASデータ連動版） ▼▼▼
+let myRadarChart = null; // チャートインスタンス
 
 function openDiagnosisModal() {
     const modal = document.getElementById('diagnosis-modal');
     modal.classList.add('is-open');
 
-    // --- チャートの描画処理 ---
     const ctx = document.getElementById('radarChart').getContext('2d');
 
     // 既にチャートがある場合は破棄（再描画のため）
@@ -146,45 +145,36 @@ function openDiagnosisModal() {
         myRadarChart.destroy();
     }
 
-   // ★★★ 実データの設定 ★★★
-    // ラベル定義
+    // --- ラベル定義 ---
     const labels = ['素直さ', '想像力', '論理思考', '独占欲', '競争心', '愛情'];
     
-    // デフォルト値（データがない場合は全て0＝未完了扱い）
-    let dataValues = [0, 0, 0, 0, 0, 0];
+    // --- データ設定 ---
+    let dataValues = [0, 0, 0, 0, 0, 0]; // デフォルトは全て0
 
-    // currentUser（ログインユーザー情報）から診断スコアを取得
-    // ※ fetchUserData()などで currentUser にデータがセットされている前提です
-    if (typeof currentUser !== 'undefined' && currentUser && currentUser.diagnosisScores) {
-        // データが配列の場合
-        if (Array.isArray(currentUser.diagnosisScores)) {
-            dataValues = currentUser.diagnosisScores;
-        } 
-        // データがオブジェクトの場合の変換例（キー名は適宜サーバー側に合わせてください）
-        else if (typeof currentUser.diagnosisScores === 'object') {
-            // 例: キーの並び順がラベルと一致している必要があります
-            // もしキー名が決まっているなら以下のようにマッピングしてください
-            dataValues = [
-                 currentUser.diagnosisScores.honest || 0,
-                 currentUser.diagnosisScores.imagin || 0,
-                 currentUser.diagnosisScores.logic || 0,
-                 currentUser.diagnosisScores.possessive || 0,
-                 currentUser.diagnosisScores.battle || 0,
-                 currentUser.diagnosisScores.love || 0
-             ];
-            
-            // 簡易的にオブジェクトの値を取り出す場合
-            dataValues = Object.values(currentUser.diagnosisScores);
-        }
+    // currentUser（ログインユーザー情報）から各スコアを取得して配列化
+    if (typeof currentUser !== 'undefined' && currentUser) {
+        // main.gs の getMyProfileData が返すプロパティ名とマッピング
+        dataValues = [
+            Number(currentUser.honest) || 0,      // 素直さ
+            Number(currentUser.imagin) || 0,      // 想像力
+            Number(currentUser.logic) || 0,       // 論理思考
+            Number(currentUser.possessive) || 0,  // 独占欲
+            Number(currentUser.battle) || 0,      // 競争心
+            Number(currentUser.love) || 0         // 愛情
+        ];
     }
 
-    // 未完了があるかチェックしてアラートを表示
+    // 未完了（0の項目）があるかチェック
     const hasIncomplete = dataValues.some(val => val === 0);
     const alertBox = document.getElementById('diagnosis-alert');
+    
     if(alertBox) {
         alertBox.style.display = hasIncomplete ? 'flex' : 'none';
         if(hasIncomplete) {
-            alertBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> 未診断の項目があります。<br>診断を続けましょう！';
+            // 未完了の項目名を抽出して表示
+            const incompleteItems = labels.filter((_, i) => dataValues[i] === 0);
+            const itemText = incompleteItems.join('・');
+            alertBox.innerHTML = `<i class="fas fa-exclamation-circle"></i> 未診断：${itemText}<br>診断を続けましょう！`;
         }
     }
 
@@ -196,8 +186,8 @@ function openDiagnosisModal() {
             datasets: [{
                 label: 'あなたのステータス',
                 data: dataValues,
-                backgroundColor: 'rgba(246, 23, 140, 0.2)', // ピンクの薄い背景
-                borderColor: 'rgba(246, 23, 140, 1)',       // ピンクの線
+                backgroundColor: 'rgba(246, 23, 140, 0.2)', // ピンク背景
+                borderColor: 'rgba(246, 23, 140, 1)',       // ピンク線
                 borderWidth: 2,
                 pointBackgroundColor: 'rgba(246, 23, 140, 1)',
                 pointRadius: 3
@@ -209,27 +199,18 @@ function openDiagnosisModal() {
             scales: {
                 r: {
                     min: 0,
-                    max: 100, // 最大値
-                    ticks: {
-                        stepSize: 20,
-                        display: false // 目盛りの数字を消すんですっきりさせる
-                    },
+                    max: 100, // 最大値（診断ロジックに合わせて調整してください）
+                    ticks: { stepSize: 20, display: false },
                     pointLabels: {
                         font: { size: 12, family: "'Helvetica Neue', 'Arial', sans-serif" },
-                        color: '#666' // ラベルの色
+                        color: '#666'
                     },
-                    grid: {
-                        color: '#eee' // 網目の色
-                    },
-                    angleLines: {
-                        color: '#eee' // 放射線の色
-                    }
+                    grid: { color: '#eee' },
+                    angleLines: { color: '#eee' }
                 }
             },
             plugins: {
-                legend: {
-                    display: false // 凡例を非表示
-                }
+                legend: { display: false }
             }
         }
     });
