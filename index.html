@@ -200,29 +200,18 @@
     <!-------------- ---------------------------------------- -->
     
         <!-------------- ---------------------------------------- -->
-        <!-------------- グリッドユーザー画面ここからです-------------- -->
-        <div id="user-grid-page" class="page" style="display: none;">
-            <header class="page-header">
-                <a href="#" class="back-button" data-target="my-page">＜ マイページへ</a>
-                <h1>旧ユーザー画面</h1>
-            </header>
-            <main id="user-grid-container" class="user-grid"></main>
-        </div>
-        <!-------------- グリッドユーザー画面ここまで-------------- -->
-        <!-------------- ---------------------------------------- -->
-        
-        <!-------------- ---------------------------------------- -->
-        <!-------------- スワイプユーザー画面ここからです-------------- -->
-        <div id="user-swipe-page" class="page" style="display: none;">
-            <div class="app-container">
-                <header class="app-header">
+        <!-------------- グリッド・スワイプユーザー画面ここからです-------------- -->
+        <div id="search-page" class="page" style="display: none;">
+        <div class="app-container">
+            
+            <header class="app-header">
                 <button class="icon-btn back-button" data-target="my-page">
                     <i class="fas fa-chevron-left"></i>
                 </button>
 
                 <div class="header-center-action">
-                    <button class="view-toggle-btn active" id="switch-to-grid-view">
-                        <i class="fas fa-th-large"></i>
+                    <button class="view-toggle-btn active" id="toggle-view-mode-btn">
+                        <i class="fas fa-th-large" id="toggle-view-icon"></i>
                     </button>
                 </div>
 
@@ -230,42 +219,50 @@
                     <i class="fas fa-bars"></i>
                 </button>
             </header>
-                <main class="main-content">
+
+            <main class="main-content" style="position: relative;">
+                
+                <div id="swipe-view-area" style="width: 100%; height: 100%;">
                     <div class="swiper">
                         <div class="swiper-wrapper" id="swipe-deck">
                             </div>
                     </div>
-                </main>
-                <!-------------- ユーザースワイプ画面のフッターです-------------------- -->
-                <nav class="footer-nav">
-                    <a href="#" class="nav-item" id="go-to-home-from-swipe">
-                        <i class="fas fa-home"></i>
-                        <span>ホーム</span>
+                </div>
+
+                <div id="grid-view-area" class="user-grid" style="display: none; width: 100%; height: 100%;">
+                    <div id="user-grid-container">
+                        </div>
+                </div>
+
+            </main>
+
+            <nav class="footer-nav">
+                <a href="#" class="nav-item" id="go-to-home-from-search">
+                    <i class="fas fa-home"></i>
+                    <span>ホーム</span>
+                </a>
+                <a href="#" class="nav-item" id="go-to-diagnosis-from-search">
+                    <i class="fas fa-search"></i>
+                    <span>診断</span>
+                </a>
+                <div class="nav-center-wrapper">
+                    <a href="#" class="nav-item-center active" id="go-to-search-refresh">
+                        <img src="img/logo.png" alt="さがす" class="footer-logo">
                     </a>
-                    <a href="#" class="nav-item" id="go-to-diagnosis-from-swipe">
-                        <i class="fas fa-search"></i>
-                        <span>診断</span>
-                    </a>
-                    <div class="nav-center-wrapper">
-                        <a href="#" class="nav-item-center active" id="go-to-swipe-from-swipe">
-                            <img src="img/logo.png" alt="さがす" class="footer-logo">
-                        </a>
-                        <span class="nav-center-label active">さがす</span>
-                    </div>
-                    
-                    <a href="#" class="nav-item" id="go-to-messages-from-swipe">
-                        <i class="fas fa-comments"></i>
-                        <span>メッセージ</span>
-                    </a>
-                    <a href="#" class="nav-item" id="go-to-assistant-from-swipe">
-                        <i class="fas fa-user"></i>
-                        <span>アシスタント</span>
-                    </a>
-                </nav>
-                 <!-------------- ユーザースワイプ画面のフッターここまで-------------------- -->
-            </div>
+                    <span class="nav-center-label active">さがす</span>
+                </div>
+                <a href="#" class="nav-item" id="go-to-messages-from-search">
+                    <i class="fas fa-comments"></i>
+                    <span>メッセージ</span>
+                </a>
+                <a href="#" class="nav-item" id="go-to-assistant-from-search">
+                    <i class="fas fa-user"></i>
+                    <span>アシスタント</span>
+                </a>
+            </nav>
         </div>
-        <!-------------- スワイプユーザー画面ここまで---------------- -->
+      </div>
+        <!-------------- グリッド・スワイプユーザー画面ここまで---------------- -->
         <!-------------- ---------------------------------------- -->
         
     <!-------------- ---------------------------------------- -->
