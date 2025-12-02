@@ -455,6 +455,30 @@ body {
     padding-top: 20px; 
     padding-bottom: 1px;/* 元は20px */
     box-sizing: border-box;
+
+    /* ▼▼▼ ロゴ背景の設定 ▼▼▼ */
+    background-image: url('img/logo.png'); /* ロゴ画像のパス */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100px auto; /* ロゴの大きさ（適宜調整） */
+    
+    /* 読み込み中っぽくロゴをゆっくり点滅させる */
+    animation: logoPulse 2s infinite ease-in-out;
+}
+/* 点滅アニメーション定義 */
+@keyframes logoPulse {
+    0% { background-color: transparent; opacity: 0.6; }
+    50% { background-color: transparent; opacity: 1; }
+    100% { background-color: transparent; opacity: 0.6; }
+}
+
+#search-page .swiper {
+    width: calc(100% - 30px); 
+    height: 80%; 
+    max-height: 580px; 
+    overflow: visible;
+    /* カードが重なるとき、Swiper自体は不透明にせず背景を見せる */
+    z-index: 5; 
 }
 
 #search-page .swiper {
@@ -462,7 +486,7 @@ body {
     
     /* ▼▼▼ 高さ調整のポイント ▼▼▼ */
     /* 画面いっぱいではなく、少し高さを抑えることで真ん中感を出す */
-    height: 87%; 
+    height: 88%; 
     max-height: 580px; 
     overflow: visible;
 }
