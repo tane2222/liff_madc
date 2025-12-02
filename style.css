@@ -466,11 +466,11 @@ body {
     animation: logoPulse 2s infinite ease-in-out;
 }
 /* 点滅アニメーション定義 */
-@keyframes logoPulse {
+/*@keyframes logoPulse {
     0% { background-color: transparent; opacity: 0.6; }
     50% { background-color: transparent; opacity: 1; }
     100% { background-color: transparent; opacity: 0.6; }
-}
+}*/
 
 #search-page .swiper {
     width: calc(100% - 30px); 
