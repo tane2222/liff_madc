@@ -623,7 +623,48 @@ body {
 .grid-user-name { font-size: 0.9rem; font-weight: bold; margin: 0; }
 .grid-user-meta { font-size: 0.75rem; opacity: 0.9; margin: 2px 0 0; }
 
+/* --- ユーザーグリッドページここまで--- */
 
+/* ▼▼▼ カード内「プロフィール」ボタンのデザイン ▼▼▼ */
+#search-page .profile-detail-btn {
+    position: absolute; 
+    bottom: 15px; 
+    left: 15px; /* 画像の左下に配置 */
+    
+    /* デザイン設定（白ベースで見やすく） */
+    background: rgba(255, 255, 255, 0.95);
+    color: #333; 
+    border: none; 
+    border-radius: 20px;
+    padding: 8px 16px; 
+    font-size: 0.8rem; 
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer; 
+    z-index: 5; 
+    display: flex; 
+    align-items: center; 
+    gap: 5px;
+    transition: transform 0.1s;
+}
+
+#search-page .profile-detail-btn:active {
+    transform: scale(0.95);
+    background: #f0f0f0;
+}
+
+#search-page .profile-detail-btn i {
+    color: #EC027E; /* アイコンをテーマカラーに */
+}
+/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* ---------------------------------  --- */
+
+
+
+
+
+/* ---------------------------------  --- */
 /* --- 登録/連携画面のスタイル (変更なし) --- */
 #sync-button-container {
     position: fixed; top: 0; left: 0; width: 100%;
