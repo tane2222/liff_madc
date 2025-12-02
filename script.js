@@ -794,7 +794,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         <i class="fas fa-id-card"></i> プロフィール
                                     </button>
                                     <button class="more-btn">
-                                        <i class="fas fa-heart"></i> いいね!
+                                        <i class="fas fa-heart"></i> キュンする
                                     </button>
                                 </div>
 
@@ -802,6 +802,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                     <div class="name-row">
                                         <h2>${user.nickname || 'No Name'}</h2>
                                         <span class="age-text">${user.age || '20'}歳</span>
+                                        <span class="job-tag">${user.job || '未設定'}</span>
                                         <span class="location-text">${randomLoc}</span>
                                     </div>
 
