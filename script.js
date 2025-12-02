@@ -535,9 +535,9 @@ window.addEventListener('DOMContentLoaded', () => {
         alert('この機能は現在準備中です。');
     }
     const btnDgsHome = document.getElementById('go-to-diagnosis-from-home');
-    if(btnDgsHome) btnMaeeHome.addEventListener('click', showNotImplemented);
+    if(btnDgsHome) btnDgsHome.addEventListener('click', showNotImplemented);
     const btnDgsSwipe = document.getElementById('go-to-diagnosis-from-swipe');
-    if(btnDgsSwipe) btnMaeeSwipe.addEventListener('click', showNotImplemented);
+    if(btnDgsSwipe) btnDgsHome.addEventListener('click', showNotImplemented);
     
     const btnMsgHome = document.getElementById('go-to-messages-from-home');
     if(btnMsgHome) btnMsgHome.addEventListener('click', showNotImplemented);
@@ -545,9 +545,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if(btnMsgSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
 
     const btnAstHome = document.getElementById('go-to-assistant-from-home');
-    if(btnAstHome) btnMsgHome.addEventListener('click', showNotImplemented);
+    if(btnAstHome) btnAstHome.addEventListener('click', showNotImplemented);
     const btnAstSwipe = document.getElementById('go-to-assistant-from-swipe');
-    if(btnAstSwipe) btnMsgSwipe.addEventListener('click', showNotImplemented);
+    if(btnAstSwipe) btnAstHome.addEventListener('click', showNotImplemented);
 
 
     // 戻るボタン
