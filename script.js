@@ -595,7 +595,7 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 // 完了済み -> マイページへ
                 document.getElementById("nickname").innerText = data.nickname || '未設定';
-                document.getElementById("user-details").innerText = `${data.age || '--'}歳・${data.job || '未設定'}`;
+                document.getElementById("user-details").innerText = `${data.age || '--'}歳・${{data.job}領域 || '未設定'}`;
                 
                 const profileImgElem = document.getElementById("profile-image");
                 profileImgElem.src = data.profileImageUrl || 'https://placehold.jp/150x150.png'; // 画像がない場合のフォールバック
