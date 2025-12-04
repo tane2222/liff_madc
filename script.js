@@ -767,23 +767,18 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-    // ▼▼▼ 【新規追加】キュン送信関数 ▼▼▼
+    // ▼▼▼ 【修正版】キュン送信関数（マッチング自動遷移付き） ▼▼▼
     window.sendKyun = async function(index) {
-        // 1. 対象ユーザーのデータを取得
         const targetUser = window.loadedSwipeUsers[index];
         if (!targetUser) return;
 
-        // 2. 確認ダイアログ
         if (!confirm(`${targetUser.nickname}さんに「キュン」を送りますか？`)) {
             return;
         }
 
-        // 3. ローディング表示
         document.getElementById("loader-wrapper").classList.remove('is-hidden');
 
         try {
-            // 4. GASへ送信
-            // users配列には liffUserId が含まれている前提です (getUsersForLiffの返り値)
             const result = await callGasApi('sendKyun', { 
                 targetLiffUserId: targetUser.liffUserId 
             });
@@ -791,18 +786,45 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("loader-wrapper").classList.add('is-hidden');
 
             if (result.success) {
-                // 5. 成功時の演出
-                alert(`「キュン」を送りました！\n相手に通知が届きます。`);
                 
-                // (オプション) 送信済みのカードをスワイプさせる、またはボタンを無効化するなど
-                // 今回はシンプルにボタンの見た目を変えます
-                const btn = document.getElementById(`kyun-btn-${index}`);
-                if(btn) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-check"></i> 送信済';
-                    btn.style.background = "#ccc";
-                    btn.style.boxShadow = "none";
+                // ★★★ ここで分岐：マッチング成立なら演出画面へ！ ★★★
+                if (result.isMatch) {
+                    
+                    // 1. マッチング画面を表示
+                    showPage('match-success-page');
+                    // showPageの強制blockを解除してflexに戻す（中央揃え用）
+                    document.getElementById('match-success-page').style.display = 'flex';
+
+                    // 2. 画像セット
+                    // 自分の画像
+                    const myProfile = await liff.getProfile();
+                    document.getElementById('match-my-img').src = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
+                    
+                    // 相手の画像と名前
+                    let partnerImg = targetUser.profileImageUrl;
+                    if (!partnerImg || partnerImg.includes('thumbnail')) partnerImg = 'https://placehold.jp/150x150.png';
+                    
+                    document.getElementById('match-partner-img').src = partnerImg;
+                    document.getElementById('match-partner-name').innerText = targetUser.nickname;
+
+                    // 3. アニメーション開始
+                    setTimeout(() => {
+                        document.querySelector('.match-animation-area').classList.add('animate');
+                    }, 500);
+
+                } else {
+                    // 通常の成功時（片思い）
+                    alert(`「キュン」を送りました！\n相手に通知が届きます。`);
+                    
+                    const btn = document.getElementById(`kyun-btn-${index}`);
+                    if(btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-check"></i> 送信済';
+                        btn.style.background = "#ccc";
+                        btn.style.boxShadow = "none";
+                    }
                 }
+
             } else {
                 alert("送信エラー: " + result.message);
             }
@@ -812,8 +834,8 @@ window.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         }
     };
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+    
     // --- スワイプ画面ロジック ---
     let swiperInstance = null;
     // let loadedSwipeUsers = []; // ←【削除】ここは削除（window.loadedSwipeUsersを使います）
