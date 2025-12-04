@@ -929,6 +929,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // マッチング画面を表示
                 showPage('match-success-page');
+
+                // ★★★ 修正: showPage関数が強制的に block にしてしまうため、flex に戻して中央揃えを有効にする ★★★
+                document.getElementById('match-success-page').style.display = 'flex';
                 
                 // 1. 自分のプロフィール取得
                 const myProfile = await liff.getProfile();
