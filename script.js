@@ -50,6 +50,59 @@ function showPage(pageId) {
     updateRegistrationHeader(pageId);
 }
 
+// ▼▼▼ 画像プリロードとアニメーション制御関数 ▼▼▼
+function startMatchSequence(myImgUrl, partnerImgUrl, partnerName) {
+    // 1. 画面要素の初期化
+    showPage('match-success-page');
+    document.getElementById('match-success-page').style.display = 'flex'; // 中央寄せ維持
+    
+    // 要素取得
+    const loader = document.getElementById('heartbeat-loader');
+    const animationArea = document.querySelector('.match-animation-area');
+    const myImg = document.getElementById('match-my-img');
+    const partnerImg = document.getElementById('match-partner-img');
+    const partnerNameElem = document.getElementById('match-partner-name');
+
+    // リセット
+    animationArea.classList.remove('animate');
+    loader.style.display = 'block'; // 心電図表示
+    myImg.parentElement.style.opacity = '0'; // アイコン隠す
+    partnerImg.parentElement.style.opacity = '0';
+
+    // 名前セット
+    partnerNameElem.innerText = partnerName;
+
+    // 2. 画像の先読み込み処理
+    const loadImg = (url) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => resolve(url);
+            img.onerror = () => resolve('https://placehold.jp/150x150.png'); // エラー時はダミー
+        });
+    };
+
+    // 2枚とも読み込み終わるのを待つ
+    Promise.all([loadImg(myImgUrl), loadImg(partnerImgUrl)]).then((urls) => {
+        // 画像セット
+        myImg.src = urls[0];
+        partnerImg.src = urls[1];
+
+        // 少しだけ「溜め」を作る（心電図を見せるため）
+        setTimeout(() => {
+            // 3. アニメーション開始
+            loader.style.display = 'none'; // 心電図消す
+            
+            // アイコンを表示してアニメーション開始
+            // CSSの transition が効くように少しタイムラグを入れる
+            requestAnimationFrame(() => {
+                animationArea.classList.add('animate');
+            });
+
+        }, 1500); // 1.5秒間は心電図を見せる
+    });
+}
+
 // ▼▼▼ サイドメニュー開閉ロジック (新規追加) ▼▼▼
 function toggleSideMenu() {
     const menu = document.getElementById('side-menu');
@@ -803,6 +856,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     // 相手の画像と名前
                     let partnerImg = targetUser.profileImageUrl;
                     if (!partnerImg || partnerImg.includes('thumbnail')) partnerImg = 'https://placehold.jp/150x150.png';
+
+                    // ★★★ 新しい関数を呼び出すだけ！ ★★★
+                    startMatchSequence(myImg, partnerImg, targetUser.nickname);
                     
                     document.getElementById('match-partner-img').src = partnerImg;
                     document.getElementById('match-partner-name').innerText = targetUser.nickname;
@@ -967,6 +1023,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('match-partner-img').src = partnerData.profileImageUrl || 'https://placehold.jp/150x150.png';
                     document.getElementById('match-partner-name').innerText = partnerData.nickname || '相手';
                 }
+                // ★★★ 新しい関数を呼び出す ★★★
+                startMatchSequence(myImg, partnerImg, partnerName);
 
                 // 3. アニメーション開始（クラス付与）
                 setTimeout(() => {
