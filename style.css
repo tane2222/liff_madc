@@ -1728,3 +1728,53 @@ body {
     height: auto;
 }
 /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+
+/* === 既存の修正: テキストボックスのデザイン === */
+.match-sub-text-box {
+    background: #fff;       /* 背景を白に */
+    color: #D65A5A;         /* 文字色を背景色と同じテラコッタに */
+    padding: 10px 25px;     /* 内側の余白 */
+    border-radius: 30px;    /* 角丸 */
+    display: inline-block;  /* 文字の長さに合わせる */
+    font-weight: 700;       /* 太字 */
+    font-size: 14px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+/* 以前の .match-sub-text は削除または上書きしてください */
+
+
+/* === 追加: 心電図（ハートビート）ローダーのアニメーション === */
+#heartbeat-loader {
+    position: absolute;
+    width: 200px;
+    height: 60px;
+    z-index: 20;
+    display: none; /* JSで制御 */
+}
+
+.heartbeat-path {
+    fill: none;
+    stroke: #fff;          /* 白色の線 */
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: flatline 2s infinite linear;
+}
+
+@keyframes flatline {
+    0% { stroke-dashoffset: 300; opacity: 0; }
+    10% { opacity: 1; }
+    90% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* 画像読み込み前はアイコンを隠しておく */
+.match-user {
+    opacity: 0; /* 初期状態は非表示 */
+}
+/* アニメーション用クラスがついたら表示 */
+.match-animation-area.animate .match-user {
+    /* opacityはtransformと一緒にtransitionで制御されます */
+}
