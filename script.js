@@ -50,24 +50,26 @@ function showPage(pageId) {
     updateRegistrationHeader(pageId);
 }
 
-// ▼▼▼ 画像プリロードとアニメーション制御関数 ▼▼▼
+// ▼▼▼ 画像プリロードとアニメーション制御関数（修正版） ▼▼▼
 function startMatchSequence(myImgUrl, partnerImgUrl, partnerName) {
     // 1. 画面要素の初期化
     showPage('match-success-page');
     document.getElementById('match-success-page').style.display = 'flex'; // 中央寄せ維持
     
-    // 要素取得
+    // 要素取得（変数名を明確に変更）
     const loader = document.getElementById('heartbeat-loader');
     const animationArea = document.querySelector('.match-animation-area');
-    const myImg = document.getElementById('match-my-img');
-    const partnerImg = document.getElementById('match-partner-img');
+    const myImgElement = document.getElementById('match-my-img');      // ←ここを修正
+    const partnerImgElement = document.getElementById('match-partner-img'); // ←ここを修正
     const partnerNameElem = document.getElementById('match-partner-name');
 
     // リセット
     animationArea.classList.remove('animate');
     loader.style.display = 'block'; // 心電図表示
-    myImg.parentElement.style.opacity = '0'; // アイコン隠す
-    partnerImg.parentElement.style.opacity = '0';
+    
+    // 親要素(match-user)を透明にする（画像読み込みまで隠す）
+    if(myImgElement.parentElement) myImgElement.parentElement.style.opacity = '0';
+    if(partnerImgElement.parentElement) partnerImgElement.parentElement.style.opacity = '0';
 
     // 名前セット
     partnerNameElem.innerText = partnerName;
@@ -84,16 +86,15 @@ function startMatchSequence(myImgUrl, partnerImgUrl, partnerName) {
 
     // 2枚とも読み込み終わるのを待つ
     Promise.all([loadImg(myImgUrl), loadImg(partnerImgUrl)]).then((urls) => {
-        // 画像セット
-        myImg.src = urls[0];
-        partnerImg.src = urls[1];
+        // 画像セット（DOM要素のsrcに反映）
+        myImgElement.src = urls[0];
+        partnerImgElement.src = urls[1];
 
         // 少しだけ「溜め」を作る（心電図を見せるため）
         setTimeout(() => {
             // 3. アニメーション開始
             loader.style.display = 'none'; // 心電図消す
             
-            // アイコンを表示してアニメーション開始
             // CSSの transition が効くように少しタイムラグを入れる
             requestAnimationFrame(() => {
                 animationArea.classList.add('animate');
@@ -849,16 +850,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('match-success-page').style.display = 'flex';
 
                     // 2. 画像セット
-                    // 自分の画像
+                    // 1. 自分のプロフィール画像URLを取得（変数名を myImgUrl に変更）
                     const myProfile = await liff.getProfile();
-                    document.getElementById('match-my-img').src = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
+                    const myImgUrl = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
                     
-                    // 相手の画像と名前
-                    let partnerImg = targetUser.profileImageUrl;
-                    if (!partnerImg || partnerImg.includes('thumbnail')) partnerImg = 'https://placehold.jp/150x150.png';
-
-                    // ★★★ 新しい関数を呼び出すだけ！ ★★★
-                    startMatchSequence(myImg, partnerImg, targetUser.nickname);
+                    // 2. 相手の画像URL
+                    let partnerImgUrl = targetUser.profileImageUrl;
+                    if (!partnerImgUrl || partnerImgUrl.includes('thumbnail')) {
+                        partnerImgUrl = 'https://placehold.jp/150x150.png';
+                    }
+                    
+                    // ★★★ 関数呼び出し（定義した変数を渡す） ★★★
+                    startMatchSequence(myImgUrl, partnerImgUrl, targetUser.nickname);
                     
                     document.getElementById('match-partner-img').src = partnerImg;
                     document.getElementById('match-partner-name').innerText = targetUser.nickname;
@@ -1011,20 +1014,21 @@ window.addEventListener('DOMContentLoaded', () => {
                 // ★★★ 修正: showPage関数が強制的に block にしてしまうため、flex に戻して中央揃えを有効にする ★★★
                 document.getElementById('match-success-page').style.display = 'flex';
                 
-                // 1. 自分のプロフィール取得
+               // 1. 自分のプロフィール画像URLを取得
                 const myProfile = await liff.getProfile();
-                document.getElementById('match-my-img').src = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
+                const myImgUrl = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
 
-                // 2. 相手のプロフィール取得 (GAS経由)
-                // ※getMyProfileDataを流用して相手のデータを取ります
+                // 2. 相手のプロフィール取得
                 const partnerData = await callGasApi('getMyProfileData', { liffUserId: partnerLiffId });
+                const partnerImgUrl = (partnerData.success && partnerData.profileImageUrl) ? partnerData.profileImageUrl : 'https://placehold.jp/150x150.png';
+                const partnerName = (partnerData.success) ? partnerData.nickname : '相手';
                 
                 if (partnerData.success) {
                     document.getElementById('match-partner-img').src = partnerData.profileImageUrl || 'https://placehold.jp/150x150.png';
                     document.getElementById('match-partner-name').innerText = partnerData.nickname || '相手';
                 }
-                // ★★★ 新しい関数を呼び出す ★★★
-                startMatchSequence(myImg, partnerImg, partnerName);
+                  // ★★★ 関数呼び出し ★★★
+                startMatchSequence(myImgUrl, partnerImgUrl, partnerName);
 
                 // 3. アニメーション開始（クラス付与）
                 setTimeout(() => {
