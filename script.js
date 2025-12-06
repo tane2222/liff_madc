@@ -94,6 +94,11 @@ function startMatchSequence(myImgUrl, partnerImgUrl, partnerName) {
         setTimeout(() => {
             // 3. アニメーション開始
             loader.style.display = 'none'; // 心電図消す
+
+            // ★★★ 修正箇所：インラインスタイルの opacity: 0 を解除して見えるようにする ★★★
+            // これがないと、CSSクラスをつけても opacity:0 のままになってしまいます
+            if(myImgElement.parentElement) myImgElement.parentElement.style.opacity = '1';
+            if(partnerImgElement.parentElement) partnerImgElement.parentElement.style.opacity = '1';
             
             // CSSの transition が効くように少しタイムラグを入れる
             requestAnimationFrame(() => {
