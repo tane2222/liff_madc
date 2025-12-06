@@ -56,11 +56,11 @@ function startMatchSequence(myImgUrl, partnerImgUrl, partnerName) {
     showPage('match-success-page');
     document.getElementById('match-success-page').style.display = 'flex'; // 中央寄せ維持
     
-    // 要素取得（変数名を明確に変更）
+    // 要素取得
     const loader = document.getElementById('heartbeat-loader');
     const animationArea = document.querySelector('.match-animation-area');
-    const myImgElement = document.getElementById('match-my-img');      // ←ここを修正
-    const partnerImgElement = document.getElementById('match-partner-img'); // ←ここを修正
+    const myImgElement = document.getElementById('match-my-img');
+    const partnerImgElement = document.getElementById('match-partner-img');
     const partnerNameElem = document.getElementById('match-partner-name');
 
     // リセット
@@ -415,7 +415,7 @@ async function submitDepartment(selectedDept) {
         const result = await response.json();
         
         if (result.success) {
-           // リロードせず、案内ページを表示
+            // リロードせず、案内ページを表示
             document.getElementById("loader-wrapper").classList.add('is-hidden');
             showPage('onboarding-page');
             // 案内ページ用のSwiperを初期化
@@ -738,9 +738,9 @@ window.addEventListener('DOMContentLoaded', () => {
                                   currentImgUrl.includes('placehold.jp');
                 
                 if (isDefault) {
-                     promoSection.style.display = 'block';
+                      promoSection.style.display = 'block';
                 } else {
-                     promoSection.style.display = 'none';
+                      promoSection.style.display = 'none';
                 }
                 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -805,7 +805,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-// ▼▼▼ 【修正】変数を外に出してグローバル化 ▼▼▼
+    // ▼▼▼ 【修正】変数を外に出してグローバル化 ▼▼▼
     // ※これらは window.addEventListener の中ではなく、script.jsのトップレベル（一番上など）に書くのが理想ですが、
     // 既存のコードを崩さないよう、windowオブジェクトに紐付ける形で解決します。
 
@@ -844,13 +844,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // ★★★ ここで分岐：マッチング成立なら演出画面へ！ ★★★
                 if (result.isMatch) {
                     
-                    // 1. マッチング画面を表示
-                    showPage('match-success-page');
-                    // showPageの強制blockを解除してflexに戻す（中央揃え用）
-                    document.getElementById('match-success-page').style.display = 'flex';
-
-                    // 2. 画像セット
-                    // 1. 自分のプロフィール画像URLを取得（変数名を myImgUrl に変更）
+                    // 1. 自分のプロフィール画像URLを取得
                     const myProfile = await liff.getProfile();
                     const myImgUrl = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
                     
@@ -860,16 +854,8 @@ window.addEventListener('DOMContentLoaded', () => {
                         partnerImgUrl = 'https://placehold.jp/150x150.png';
                     }
                     
-                    // ★★★ 関数呼び出し（定義した変数を渡す） ★★★
+                    // ★★★ 関数呼び出し（重複処理を削除） ★★★
                     startMatchSequence(myImgUrl, partnerImgUrl, targetUser.nickname);
-                    
-                    document.getElementById('match-partner-img').src = partnerImg;
-                    document.getElementById('match-partner-name').innerText = targetUser.nickname;
-
-                    // 3. アニメーション開始
-                    setTimeout(() => {
-                        document.querySelector('.match-animation-area').classList.add('animate');
-                    }, 500);
 
                 } else {
                     // 通常の成功時（片思い）
@@ -1008,13 +994,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 document.getElementById("loader-wrapper").classList.add('is-hidden');
                 document.getElementById("app").style.display = 'block';
                 
-                // マッチング画面を表示
-                showPage('match-success-page');
-
-                // ★★★ 修正: showPage関数が強制的に block にしてしまうため、flex に戻して中央揃えを有効にする ★★★
-                document.getElementById('match-success-page').style.display = 'flex';
-                
-               // 1. 自分のプロフィール画像URLを取得
+                // 1. 自分のプロフィール取得
                 const myProfile = await liff.getProfile();
                 const myImgUrl = myProfile.pictureUrl || 'https://placehold.jp/150x150.png';
 
@@ -1023,17 +1003,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 const partnerImgUrl = (partnerData.success && partnerData.profileImageUrl) ? partnerData.profileImageUrl : 'https://placehold.jp/150x150.png';
                 const partnerName = (partnerData.success) ? partnerData.nickname : '相手';
                 
-                if (partnerData.success) {
-                    document.getElementById('match-partner-img').src = partnerData.profileImageUrl || 'https://placehold.jp/150x150.png';
-                    document.getElementById('match-partner-name').innerText = partnerData.nickname || '相手';
-                }
-                  // ★★★ 関数呼び出し ★★★
+                // ★★★ 関数呼び出し（重複処理を削除） ★★★
                 startMatchSequence(myImgUrl, partnerImgUrl, partnerName);
-
-                // 3. アニメーション開始（クラス付与）
-                setTimeout(() => {
-                    document.querySelector('.match-animation-area').classList.add('animate');
-                }, 500);
 
                 return; // ここで処理終了（マイページには行かない）
             }
