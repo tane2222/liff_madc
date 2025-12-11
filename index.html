@@ -565,6 +565,44 @@
             </div>
         
         <!-- マッチング（キュンキュン）演出ここまで-->
+
+        <!-- ヒミツの質問画面-->
+        <div v-if="currentView === 'match-question'" class="step-container">
+      <h2 class="step-title">ヒミツの質問を設定</h2>
+      <p class="step-description">
+        お相手に聞きたいことを2つ選んで、<br>具体的な質問を入力してください。
+      </p>
+
+      <div class="topic-list">
+        <div v-for="(topic, index) in secretTopics" :key="index" class="topic-item">
+          <button 
+            class="btn topic-btn" 
+            :class="{ 'selected': isTopicSelected(topic) }"
+            @click="toggleTopic(topic)"
+            :disabled="!isTopicSelected(topic) && selectedTopics.length >= 2"
+          >
+            {{ topic }}
+          </button>
+
+          <div v-if="isTopicSelected(topic)" class="question-input-area">
+            <p class="input-label">具体的な質問内容：</p>
+            <input 
+              type="text" 
+              v-model="questionInputs[topic]" 
+              placeholder="例：休日は何をして過ごすのが好き？"
+              class="input-text"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="action-area">
+        <button class="btn btn-submit" @click="submitSecretQuestions" :disabled="!isFormValid">
+          これで決定する
+        </button>
+      </div>
+    </div>
+    <!-- ヒミツの質問画面ここまで-->
         
 </div><!-- 27行目<div id="app" style="display: none;">の閉じタグ-->
 
