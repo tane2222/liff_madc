@@ -1778,3 +1778,77 @@ body {
 .match-animation-area.animate .match-user {
     /* opacityはtransformと一緒にtransitionで制御されます */
 }
+
+
+/* ヒミツの質問画面用スタイル */
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.topic-wrapper {
+  background: #f9f9f9;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.topic-btn {
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-weight: bold;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 選択された時のスタイル */
+.topic-btn.selected {
+  background: #fff0f5; /* 薄いピンク */
+  border-color: #ff69b4; /* 濃いピンク */
+  color: #ff69b4;
+}
+
+/* 選択不可（他が2つ選択済み）の時 */
+.topic-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 質問入力エリアのアニメーションとスタイル */
+.input-slide-down {
+  padding: 10px 15px 15px;
+  background: #fff0f5;
+  animation: slideDown 0.3s ease-out;
+}
+
+.question-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ffb6c1;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.check-mark {
+  font-size: 1.2em;
+}
+
+.alert-text {
+  color: #ff69b4;
+  font-size: 0.9em;
+  text-align: center;
+  margin-bottom: 10px;
+}
