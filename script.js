@@ -1035,3 +1035,116 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     main();
 });
+
+
+// ▼▼▼ script.js の一番最後に追加してください ▼▼▼
+
+// Vue.jsの初期化
+var vueApp = new Vue({
+  el: '#app', // index.htmlの <div id="app"> を制御範囲にする
+  data: {
+    currentView: '', // Vueで表示制御する画面名
+    
+    // ヒミツの質問用データ
+    secretTopics: [
+      '仕事の価値観', '恋愛のスタンス', 'お金の使い方', 
+      '休日の過ごし方', '食の好み', '譲れないコト', 'その他'
+    ],
+    selectedTopics: [],   // 選択されたトピック
+    questionInputs: {},   // 質問文の入力内容
+    
+    // マッチングIDなどの保持用
+    currentMatchId: null 
+  },
+  computed: {
+    // 2つ選択され、かつ両方にテキストが入力されているかチェック
+    isFormValid: function() {
+      if (this.selectedTopics.length !== 2) return false;
+      var self = this;
+      return this.selectedTopics.every(function(topic) {
+        var text = self.questionInputs[topic];
+        return text && text.trim().length > 0;
+      });
+    }
+  },
+  methods: {
+    // トピックボタンが押された時の処理
+    toggleTopic: function(topic) {
+      var idx = this.selectedTopics.indexOf(topic);
+      if (idx >= 0) {
+        // 選択解除
+        this.selectedTopics.splice(idx, 1);
+      } else {
+        // 追加（2つ未満の場合のみ）
+        if (this.selectedTopics.length < 2) {
+          this.selectedTopics.push(topic);
+          // 入力欄初期化（Vue2の書き方）
+          if (!this.questionInputs[topic]) {
+            this.$set(this.questionInputs, topic, '');
+          }
+        }
+      }
+    },
+    
+    // 選択状態かどうか
+    isTopicSelected: function(topic) {
+      return this.selectedTopics.indexOf(topic) !== -1;
+    },
+
+    // マッチング画面から質問画面へ遷移する処理
+    goToSecretQuestionPhase: function() {
+      // 既存のVanilla JS（jQuery等）で表示されている画面を隠す
+      var matchPage = document.getElementById('match-success-page');
+      if (matchPage) matchPage.style.display = 'none';
+
+      // Vueの画面を表示する
+      this.currentView = 'match-question';
+      
+      // 必要であればここで currentMatchId をセット
+      // this.currentMatchId = "ここでIDを取得してセット";
+    },
+
+    // GASへ送信する処理
+    submitSecretQuestions: function() {
+      var self = this;
+      
+      // LIFFからLINEユーザーIDを取得
+      var liffUserId = null;
+      if (typeof liff !== 'undefined' && liff.getDecodedIDToken()) {
+          liffUserId = liff.getDecodedIDToken().sub;
+      }
+
+      var payload = {
+        action: 'submitSecretQuestions',
+        liffUserId: liffUserId, 
+        matchId: this.currentMatchId, 
+        questions: this.selectedTopics.map(function(topic) {
+          return {
+            topic: topic,
+            text: self.questionInputs[topic]
+          };
+        })
+      };
+
+      // ★★★注意：以下のURLはあなたのGASデプロイURLに書き換えてください★★★
+      var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbx.../exec'; 
+
+      fetch(GAS_API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        if (data.success) {
+          alert("質問を送信しました！トーク画面に戻って結果をお待ちください。");
+          liff.closeWindow(); 
+        } else {
+          alert("送信エラー: " + (data.message || "不明なエラー"));
+        }
+      })
+      .catch(function(error) {
+        alert("通信エラーが発生しました: " + error);
+      });
+    }
+  }
+});
