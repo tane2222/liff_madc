@@ -1780,75 +1780,194 @@ body {
 }
 
 
-/* ヒミツの質問画面用スタイル */
+/* ▼▼▼ ヒミツの質問設定画面 (match-question) のリニューアルデザイン ▼▼▼ */
+
+/* 画面全体のコンテナ */
+.step-container {
+    padding: 20px 20px 100px; /* 下部にボタン用の余白 */
+    background-color: var(--bg-color-light);
+    min-height: 100vh;
+    box-sizing: border-box;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* タイトルエリア */
+.step-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin: 10px 0 10px;
+}
+
+.step-description {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* トピックリストのレイアウト */
 .topic-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
+/* 各トピックのカード */
 .topic-wrapper {
-  background: #f9f9f9;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: all 0.3s;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid transparent; /* 枠線のちらつき防止 */
 }
 
+/* 選択された時のカード全体 */
+.topic-wrapper.active {
+    box-shadow: 0 8px 20px rgba(236, 2, 126, 0.15); /* ピンクの影 */
+    border-color: rgba(236, 2, 126, 0.3);
+}
+
+/* トピックボタン本体 */
 .topic-btn {
-  width: 100%;
-  padding: 15px;
-  text-align: left;
-  background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  font-weight: bold;
-  color: #555;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    width: 100%;
+    padding: 18px 20px;
+    background: white;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-/* 選択された時のスタイル */
+/* 選択時・選択不可時のボタン装飾 */
 .topic-btn.selected {
-  background: #fff0f5; /* 薄いピンク */
-  border-color: #ff69b4; /* 濃いピンク */
-  color: #ff69b4;
+    color: var(--theme-color-pink); /* ピンク色 */
+    background: #fff; /* 背景は白のまま */
 }
 
-/* 選択不可（他が2つ選択済み）の時 */
 .topic-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f9f9f9;
 }
 
-/* 質問入力エリアのアニメーションとスタイル */
+/* チェックマークのデザイン */
+.check-mark {
+    width: 24px;
+    height: 24px;
+    background: var(--theme-color-pink);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+/* 質問入力エリア（スライドダウン） */
 .input-slide-down {
-  padding: 10px 15px 15px;
-  background: #fff0f5;
-  animation: slideDown 0.3s ease-out;
-}
-
-.question-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ffb6c1;
-  border-radius: 5px;
-  margin-top: 5px;
+    background: #fff5f8; /* 非常に薄いピンク背景 */
+    padding: 0 20px 20px;
+    animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-10px); max-height: 0; }
+    to { opacity: 1; transform: translateY(0); max-height: 200px; }
 }
 
-.check-mark {
-  font-size: 1.2em;
+.input-label {
+    font-size: 12px;
+    color: var(--theme-color-pink);
+    font-weight: bold;
+    margin: 0 0 8px;
+    display: block;
+}
+
+/* テキスト入力フォーム */
+.question-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ffcce0; /* 薄いピンクの枠線 */
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.question-input:focus {
+    border-color: var(--theme-color-pink);
+    box-shadow: 0 0 0 3px rgba(236, 2, 126, 0.1);
+}
+
+.question-input::placeholder {
+    color: #ccc;
+}
+
+/* 下部固定のアクションエリア */
+.action-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 20px 30px; /* iPhoneの下部バー考慮 */
+    box-sizing: border-box;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+    z-index: 100;
+    text-align: center;
 }
 
 .alert-text {
-  color: #ff69b4;
-  font-size: 0.9em;
-  text-align: center;
-  margin-bottom: 10px;
+    color: var(--theme-color-pink);
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
 }
+
+/* 送信ボタン（決定ボタン） */
+.btn-submit {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, var(--theme-color-pink) 0%, var(--theme-color-purple) 100%);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(236, 2, 126, 0.3);
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-submit:disabled {
+    background: #ccc;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+/* ▲▲▲ ヒミツの質問設定画面 ここまで ▲▲▲ */
