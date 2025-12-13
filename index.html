@@ -575,23 +575,25 @@
       </p>
 
       <div class="topic-list">
-        <div v-for="(topic, index) in secretTopics" :key="index" class="topic-item">
-          <button 
+        <div v-for="(topic, index) in secretTopics" :key="index" 
+             class="topic-wrapper" 
+             :class="{ 'active': isTopicSelected(topic) }"> <button 
             class="btn topic-btn" 
-            :class="{ 'selected': isTopicSelected(topic) }"
+            :class="{ 'selected': isTopicSelected(topic), 'disabled': !isTopicSelected(topic) && selectedTopics.length >= 2 }"
             @click="toggleTopic(topic)"
-            :disabled="!isTopicSelected(topic) && selectedTopics.length >= 2"
           >
             {{ topic }}
+            <span v-if="isTopicSelected(topic)" class="check-mark">
+                <i class="fas fa-check"></i> </span>
           </button>
 
-          <div v-if="isTopicSelected(topic)" class="question-input-area">
-            <p class="input-label">具体的な質問内容：</p>
+          <div v-if="isTopicSelected(topic)" class="input-slide-down">
+            <span class="input-label">具体的な質問を入力してください</span>
             <input 
               type="text" 
               v-model="questionInputs[topic]" 
-              placeholder="例：休日は何をして過ごすのが好き？"
-              class="input-text"
+              :placeholder="'例：' + getPlaceholder(topic)" 
+              class="input-text question-input"
             >
           </div>
         </div>
