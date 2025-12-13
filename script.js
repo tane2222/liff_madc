@@ -1103,6 +1103,19 @@ var vueApp = new Vue({
       // 必要であればここで currentMatchId をセット
       // this.currentMatchId = "ここでIDを取得してセット";
     },
+      // script.js の methods に追加するとより親切なプレースホルダーが出せます
+     getPlaceholder: function(topic) {
+       var examples = {
+    '仕事の価値観': '今の仕事で一番やりがいを感じる時は？',
+    '恋愛のスタンス': '連絡頻度はどれくらいが理想？',
+    'お金の使い方': '自己投資で一番使っているものは？',
+    '休日の過ごし方': 'インドア派？アウトドア派？',
+    '食の好み': '一番好きな手料理は何ですか？',
+    '譲れないコト': 'これだけは許せない！という事は？',
+    'その他': '自由に質問を入力してください'
+     };
+     return examples[topic] || '質問を入力してください';
+    },
 
     // GASへ送信する処理
     submitSecretQuestions: function() {
