@@ -1140,7 +1140,7 @@ var vueApp = new Vue({
       };
 
 // ★★★注意：以下のURLはあなたのGASデプロイURLに書き換えてください★★★
-     //  var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec'; 
+     var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwyKAZqLjwcc_Z_8ZLinHOhaGFcUPd9n_Asjf52oYbVpX3Kj3XYTT5cTiyO3luxiHGL3Q/exec'; 
         
        fetch(GAS_API_URL,  {
         method: 'POST',
