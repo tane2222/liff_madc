@@ -1139,7 +1139,7 @@ var vueApp = new Vue({
         })
       };
 
-       fetch(GAS_API_UR,  
+       fetch(GAS_API_URL,  
         method: 'POST',
         body: JSON.stringify(payload)
       })
