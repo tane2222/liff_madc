@@ -1139,10 +1139,7 @@ var vueApp = new Vue({
         })
       };
 
-      // ★★★注意：以下のURLはあなたのGASデプロイURLに書き換えてください★★★
-      var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbx.../exec'; 
-
-      fetch(GAS_API_URL, {
+       fetch(GAS_API_UR,  
         method: 'POST',
         body: JSON.stringify(payload)
       })
