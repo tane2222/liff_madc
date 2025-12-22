@@ -848,6 +848,12 @@ window.addEventListener('DOMContentLoaded', () => {
                 
                 // ★★★ ここで分岐：マッチング成立なら演出画面へ！ ★★★
                 if (result.isMatch) {
+                    // ▼▼▼ 追加：Vueインスタンスに matchId を渡す！ ▼▼▼
+                    if (typeof vueApp !== 'undefined' && result.matchId) {
+                        vueApp.currentMatchId = result.matchId;
+                        console.log("Match ID set to Vue:", result.matchId);
+                    }
+                    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
                     
                     // 1. 自分のプロフィール画像URLを取得
                     const myProfile = await liff.getProfile();
@@ -855,7 +861,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     
                     // 2. 相手の画像URL
                     let partnerImgUrl = targetUser.profileImageUrl;
-                    if (!partnerImgUrl || partnerImgUrl.includes('thumbnail')) {
+                    else (!partnerImgUrl || partnerImgUrl.includes('thumbnail')) {
                         partnerImgUrl = 'https://placehold.jp/150x150.png';
                     }
                     
@@ -1099,6 +1105,13 @@ var vueApp = new Vue({
 
       // Vueの画面を表示する
       this.currentView = 'match-question';
+
+        // ▼▼▼ 追加：デバッグ用ログ ▼▼▼
+      console.log("Starting Secret Question Phase. MatchID:", this.currentMatchId);
+      if (!this.currentMatchId) {
+          alert("エラー：マッチングIDが見つかりません。もう一度最初から試してください。");
+      }
+    },
       
       // 必要であればここで currentMatchId をセット
       // this.currentMatchId = "ここでIDを取得してセット";
