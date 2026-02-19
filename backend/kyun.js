@@ -48,7 +48,7 @@ function handleKyunAction(senderId, receiverId) {
   // ボットのIDは "LINE_BOT_" で始まると仮定（MAIN.gsの生成ルールに合わせる）
   if (receiverId && receiverId.startsWith('LINE_BOT_')) {
     // --- ボットへのキュン送信処理（即マッチング） ---
-    
+
     // 1. ログ記録（相手IDはボットIDのまま）
     const recordId = Utilities.getUuid();
     kyunLogSheet.appendRow([recordId, senderId, '送信', "'-1", '', new Date(), '', receiverId]);
@@ -57,9 +57,9 @@ function handleKyunAction(senderId, receiverId) {
     // 2. 自分への通知
     // ボットから即レスが来たように見せる
     const botName = "AIパートナー"; // 必要ならIDから名前を復元するロジックを追加
-    const textMessage = { 
-      "type": "text", 
-      "text": `あ、キュンありがとう！\n私も${botName}だよ！よろしくね！\n(※これはAIとのチュートリアルマッチングです)` 
+    const textMessage = {
+      "type": "text",
+      "text": `あ、キュンありがとう！\n私も${botName}だよ！よろしくね！\n(※これはAIとのチュートリアルマッチングです)`
     };
     pushMessage(senderId, [textMessage]);
 
@@ -95,14 +95,14 @@ function handleKyunAction(senderId, receiverId) {
     pushMessage(senderId, [confirmationMessage]);
     return { isMatch: false, matchId: null };
 
-  // 2. 残りポイントが3より多い場合
+    // 2. 残りポイントが3より多い場合
   } else if (currentPoints > 3) {
     // ▼▼▼ 修正：実行結果（オブジェクト）をそのまま受け取る ▼▼▼
     result = executeSendKyun(senderId, receiverId);
   } else {
     pushMessage(senderId, [{ "type": "text", "text": 'キュンポイントが不足しています。' }]);
   }
-  
+
   return result; // ★結果を返す
 }
 
@@ -120,7 +120,7 @@ function handleConfirmAndSendKyun(senderId) {
   if (receiverId) {
     executeSendKyun(senderId, receiverId);
   }
-  
+
   // 状態をクリア
   cancelKyunProcess(senderId);
 }
@@ -145,16 +145,16 @@ function cancelKyunProcess(senderId) {
 function executeSendKyun(senderId, receiverId) {
   // ▼▼▼ 修正：初期値をオブジェクトに変更 ▼▼▼
   let result = { isMatch: false, matchId: null };
-  
+
 
   if (consumeKyunPoint(senderId)) {
     const recordId = Utilities.getUuid();
-    
+
     // ログ書き込み
     kyunLogSheet.appendRow([recordId, senderId, '送信', "'-1", '', new Date(), '', receiverId]);
-    
+
     // ★★★ 重要修正: 書き込みを即座に確定させる ★★★
-    SpreadsheetApp.flush(); 
+    SpreadsheetApp.flush();
     // これがないと、直後の checkForMutualKyun で今書き込んだデータが読み取れない場合があります
 
     // 相手への通知
@@ -190,7 +190,7 @@ function executeSendKyun(senderId, receiverId) {
   } else {
     pushMessage(senderId, [{ "type": "text", "text": 'エラーによりキュンを消費できませんでした。' }]);
   }
-  
+
   return result;
 }
 
@@ -272,7 +272,7 @@ function getKyunPointStatus(userId) {
     }
   }
 
-  const detailTexts = Object.keys(expiryGroups).sort((a,b) => parseInt(a) - parseInt(b)).map(key => {
+  const detailTexts = Object.keys(expiryGroups).sort((a, b) => parseInt(a) - parseInt(b)).map(key => {
     return `・${key}に${expiryGroups[key]}キュンが失効`;
   });
 
@@ -329,8 +329,8 @@ function sendKyunPointStatusMessage(userId) {
 // ▼▼▼ マッチング成立通知を送信する関数 ▼▼▼
 function sendMatchSuccessNotification(userLineId, partnerLiffId) {
   // あなたのLIFF URL
-  const LIFF_BASE_URL = "https://liff.line.me/2008378264-4O97qRYQ"; 
-  
+  const LIFF_BASE_URL = PropertiesService.getScriptProperties().getProperty('LIFF_BASE_URL');
+
   const matchUrl = `${LIFF_BASE_URL}?mode=match_success&partnerLiffId=${partnerLiffId}`;
 
   const message = [
