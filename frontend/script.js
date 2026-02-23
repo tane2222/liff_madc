@@ -48,6 +48,19 @@ function showPage(pageId) {
 
     // ★★★ プログレスバーとロゴの表示制御 ★★★
     updateRegistrationHeader(pageId);
+
+    // ★★★ ホーム画面表示時にカードレイアウトを初期化 ★★★
+    if (pageId === 'my-page') {
+        const cards = document.querySelectorAll('.nav-card');
+        if (cards.length > 0 && typeof window.activateCard === 'function') {
+            // Give DOM a tick to render block sizes
+            requestAnimationFrame(() => {
+                let activeCard = document.querySelector('.nav-card.active');
+                if (!activeCard) activeCard = cards[0];
+                window.activateCard(activeCard);
+            });
+        }
+    }
 }
 
 // ▼▼▼ 画像プリロードとアニメーション制御関数（修正版） ▼▼▼
@@ -1249,36 +1262,43 @@ var vueApp = new Vue({
 });
 // ▼▼▼ ニュースナビゲーション風 UI のカード切り替えロジック ▼▼▼
 function activateCard(clickedCard) {
+    const container = document.querySelector('.stack-nav-container');
     const cards = Array.from(document.querySelectorAll('.nav-card'));
-    if (!cards.length) return;
-    
-    // Find index of clicked card
+
+    if (!cards.length || !container) return;
+
+    const containerHeight = container.clientHeight;
+
+    // Fallback logic internally
     let clickedIndex = cards.indexOf(clickedCard);
-    
-    // Fallback if called without specific card (e.g. init)
-    if (clickedIndex === -1 && clickedCard === 0) {
+    if (clickedIndex === -1) {
         clickedIndex = 0;
         clickedCard = cards[0];
     }
-    
-    const HEADER_HEIGHT = 70; // Must match CSS .card-header { height: 70px; }
-    
+
+    const HEADER_HEIGHT = 70; // Must match CSS .card-header height
+
     cards.forEach((card, index) => {
-        // Toggle active class for content fade CSS
+        // Toggle active design class
         if (index === clickedIndex) {
             card.classList.add('active');
         } else {
             card.classList.remove('active');
         }
-        
-        // Transform logic (accordion stack)
+
+        // Z-Index for visual stacking
+        card.style.zIndex = (index === clickedIndex) ? 50 : (10 + index);
+
+        // Calculate the absolutely positioned "top" in pixels
         if (index <= clickedIndex) {
-            // Stack at the top
-            card.style.transform = `translateY(${index * HEADER_HEIGHT}px)`;
+            // Stack sequentially at the top: 0px, 70px, 140px...
+            card.style.top = `${index * HEADER_HEIGHT}px`;
         } else {
-            // Stack at the bottom
-            const distance = (cards.length - index) * HEADER_HEIGHT;
-            card.style.transform = `translateY(calc(100% - ${distance}px))`;
+            // Stack completely out of view at the bottom (peeking out)
+            // Example: container is 600px tall. 4 cards total. Clicked is 0.
+            // Index 1 bottom peeking height: containerHeight - (3 * 70px)
+            const peekingOffset = containerHeight - ((cards.length - index) * HEADER_HEIGHT);
+            card.style.top = `${peekingOffset}px`;
         }
     });
 }
@@ -1286,19 +1306,25 @@ function activateCard(clickedCard) {
 // Make globally accessible
 window.activateCard = activateCard;
 
-// Execute immediately on DOMContentLoaded
+// Execute on DOMContentLoaded if visible
 window.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.nav-card');
-    if (cards.length > 0) {
-        // Initial setup without animation for smoother load
-        const navCards = Array.from(cards);
-        navCards.forEach(c => c.style.transition = 'none');
-        activateCard(cards[0]);
-        
-        // Restore transition after a tiny delay
-        setTimeout(() => {
-            navCards.forEach(c => c.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)');
-        }, 50);
+    const myPage = document.getElementById('my-page');
+    // only layout if visible, otherwise wait for showPage
+    if (myPage && myPage.style.display !== 'none') {
+        const cards = document.querySelectorAll('.nav-card');
+        if (cards.length > 0) {
+            const navCards = Array.from(cards);
+            navCards.forEach(c => c.style.transition = 'none');
+            activateCard(cards[0]);
+
+            setTimeout(() => {
+                navCards.forEach(c => c.style.transition = 'top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)');
+            }, 50);
+        }
+    } else {
+        // ensure transition is active for when showPage calls it
+        const cards = document.querySelectorAll('.nav-card');
+        Array.from(cards).forEach(c => c.style.transition = 'top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)');
     }
 });
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
