@@ -1247,3 +1247,47 @@ var vueApp = new Vue({
         }
     }
 });
+function activateCard(clickedCard) {
+    const cards = document.querySelectorAll('.nav-card');
+    const cardArray = Array.from(cards);
+    
+    const clickedIndex = cardArray.indexOf(clickedCard);
+    
+    // reset all cards
+    cards.forEach(c => {
+        c.classList.remove('active');
+    });
+    
+    // Set clicked as active
+    clickedCard.classList.add('active');
+    
+    // Position cards
+    const TOP_OFFSET = 0; // The active card stays at the very top of the container
+    const STACK_OFFSET_Y = 55; // How much of the inactive cards peek out from the top
+    
+    cards.forEach((card, i) => {
+        if (card.classList.contains('active')) {
+            card.style.top = '0px';
+        } else {
+            // For inactive cards, stack them sequentially from the top
+            // If it comes before the active one it gets stacked above it visually? No, active is always on top.
+            // Wait, in the reference GIF, inactive cards are stacked AT THE TOP.
+            // When you click one, it expands to push its content UP, covering the ones below it.
+            card.style.top = (i * STACK_OFFSET_Y) + 'px';
+        }
+    });
+
+    // Bring active card to the front of the stacking context
+    cards.forEach(c => c.style.zIndex = '10');
+    clickedCard.style.zIndex = '50';
+}
+window.activateCard = activateCard;
+
+// Initialize stack on load
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.nav-card');
+    if(cards.length > 0) {
+        activateCard(cards[0]); // Default open the first one
+    }
+});
+
