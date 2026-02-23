@@ -108,6 +108,10 @@ function doPost(e) {
     else if (request.action === 'registerUserAssistant') {
       responseData = registerUserAssistant(request.liffUserId, request.assistantType);
     }
+    // ▼▼▼ 【基本情報変更】ニックネーム更新（ステップを変更しない） ▼▼▼
+    else if (request.action === 'updateNickname') {
+      responseData = updateNickname(request.liffUserId, request.nickname);
+    }
     // ▼▼▼ 【新規追加】LIFFからのキュン送信処理（修正版） ▼▼▼
     // MAIN.gs
 
@@ -1758,6 +1762,29 @@ function registerUserNickname(liffUserId, nickname) {
     return { success: false, message: e.message };
   }
 }
+
+/**
+ * [LIFF用] ニックネームを更新する（登録ステップを変更しない）
+ */
+function updateNickname(liffUserId, nickname) {
+  try {
+    const allLiffIdsRaw = contact.getRange(2, 29, contact.getLastRow() - 1, 1).getValues().flat();
+    const allLiffIds = allLiffIdsRaw.map(id => String(id).trim());
+    const rowIndexInArray = allLiffIds.indexOf(liffUserId.trim());
+
+    if (rowIndexInArray === -1) throw new Error('ユーザーが見つかりません。');
+
+    const userRow = rowIndexInArray + 2;
+
+    // ニックネームを更新（ステップは変更しない）
+    contact.getRange(userRow, ContactColumn.Nickname).setValue(nickname);
+
+    return { success: true, nickname: nickname };
+  } catch (e) {
+    return { success: false, message: e.message };
+  }
+}
+
 /**
  * [LIFF用] STEP4：従業員番号を登録し、Step 5へ進める関数
  */

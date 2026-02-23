@@ -474,7 +474,7 @@
                 </button>
             </div>
             <ul class="menu-list">
-                <li onclick="alert('基本情報の編集機能は準備中です')">
+                <li onclick="openBasicInfoModal()">
                     <i class="fas fa-user-edit"></i> 基本情報の変更
                 </li>
                 <li onclick="alert('写真の変更機能は準備中です')">
@@ -494,6 +494,30 @@
            </div>
         <!-- ヘッダーのメニュー表示画面ここまで-->
         
+        <!-- ニックネーム編集モーダル -->
+        <div id="basic-info-modal" class="modal-overlay">
+            <div class="modal-content-box">
+                <div class="modal-header">
+                    <h3>基本情報の変更</h3>
+                    <button class="modal-close-btn" onclick="closeBasicInfoModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 12px; font-size: 0.9em; color: #666;">ニックネームを変更できます。</p>
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label style="display:block; font-size:0.85em; color:#888; margin-bottom:6px;"><i class="fas fa-user"></i> ニックネーム</label>
+                        <input type="text" id="edit-nickname-input" class="registration-input" placeholder="ニックネームを入力" maxlength="20" style="width:100%; box-sizing:border-box;">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="modal-action-btn" style="background:#ccc; color:#333; flex:1;" onclick="closeBasicInfoModal()">キャンセル</button>
+                        <button class="modal-action-btn" id="save-nickname-btn" style="flex:1;" onclick="saveNickname()">保存する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ニックネーム編集モーダルここまで -->
+
         <!-- レーダーチャートポップアップ-->
             <div id="diagnosis-modal" class="modal-overlay">
             <div class="modal-content-box">
