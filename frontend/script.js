@@ -1247,47 +1247,58 @@ var vueApp = new Vue({
         }
     }
 });
+// ▼▼▼ ニュースナビゲーション風 UI のカード切り替えロジック ▼▼▼
 function activateCard(clickedCard) {
-    const cards = document.querySelectorAll('.nav-card');
-    const cardArray = Array.from(cards);
+    const cards = Array.from(document.querySelectorAll('.nav-card'));
+    if (!cards.length) return;
     
-    const clickedIndex = cardArray.indexOf(clickedCard);
+    // Find index of clicked card
+    let clickedIndex = cards.indexOf(clickedCard);
     
-    // reset all cards
-    cards.forEach(c => {
-        c.classList.remove('active');
-    });
+    // Fallback if called without specific card (e.g. init)
+    if (clickedIndex === -1 && clickedCard === 0) {
+        clickedIndex = 0;
+        clickedCard = cards[0];
+    }
     
-    // Set clicked as active
-    clickedCard.classList.add('active');
+    const HEADER_HEIGHT = 70; // Must match CSS .card-header { height: 70px; }
     
-    // Position cards
-    const TOP_OFFSET = 0; // The active card stays at the very top of the container
-    const STACK_OFFSET_Y = 55; // How much of the inactive cards peek out from the top
-    
-    cards.forEach((card, i) => {
-        if (card.classList.contains('active')) {
-            card.style.top = '0px';
+    cards.forEach((card, index) => {
+        // Toggle active class for content fade CSS
+        if (index === clickedIndex) {
+            card.classList.add('active');
         } else {
-            // For inactive cards, stack them sequentially from the top
-            // If it comes before the active one it gets stacked above it visually? No, active is always on top.
-            // Wait, in the reference GIF, inactive cards are stacked AT THE TOP.
-            // When you click one, it expands to push its content UP, covering the ones below it.
-            card.style.top = (i * STACK_OFFSET_Y) + 'px';
+            card.classList.remove('active');
+        }
+        
+        // Transform logic (accordion stack)
+        if (index <= clickedIndex) {
+            // Stack at the top
+            card.style.transform = `translateY(${index * HEADER_HEIGHT}px)`;
+        } else {
+            // Stack at the bottom
+            const distance = (cards.length - index) * HEADER_HEIGHT;
+            card.style.transform = `translateY(calc(100% - ${distance}px))`;
         }
     });
-
-    // Bring active card to the front of the stacking context
-    cards.forEach(c => c.style.zIndex = '10');
-    clickedCard.style.zIndex = '50';
 }
+
+// Make globally accessible
 window.activateCard = activateCard;
 
-// Initialize stack on load
-document.addEventListener('DOMContentLoaded', () => {
+// Execute immediately on DOMContentLoaded
+window.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.nav-card');
-    if(cards.length > 0) {
-        activateCard(cards[0]); // Default open the first one
+    if (cards.length > 0) {
+        // Initial setup without animation for smoother load
+        const navCards = Array.from(cards);
+        navCards.forEach(c => c.style.transition = 'none');
+        activateCard(cards[0]);
+        
+        // Restore transition after a tiny delay
+        setTimeout(() => {
+            navCards.forEach(c => c.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)');
+        }, 50);
     }
 });
-
+// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
