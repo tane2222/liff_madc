@@ -7,7 +7,7 @@
     <title>マダココ LIFF App</title>
     <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=3.0.0">
+    <link rel="stylesheet" href="style.css?v=4.0.1">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -38,10 +38,9 @@
             <main class="main-content stack-nav-container">
 
                 <!-- CARD 1: プロフィール＆ステータス -->
-                <div class="nav-card card-profile active" onclick="activateCard(this)">
+                <div class="nav-card card-profile active" onclick="activateCard(this, event)">
                     <div class="card-header">
                         <h2>PROFILE</h2>
-                        <i class="fas fa-chevron-up toggle-icon"></i>
                     </div>
                     <div class="card-content-section">
                         <header class="profile-header">
@@ -66,10 +65,9 @@
                 </div>
 
                 <!-- CARD 2: 今日のピックアップ -->
-                <div class="nav-card card-pickup" onclick="activateCard(this)">
+                <div class="nav-card card-pickup" onclick="activateCard(this, event)">
                     <div class="card-header">
                         <h2>PICK UP</h2>
-                        <i class="fas fa-chevron-up toggle-icon"></i>
                     </div>
                     <div class="card-content-section">
                         <section class="pickup-section">
@@ -84,10 +82,9 @@
                 </div>
 
                 <!-- CARD 3: タイムライン -->
-                <div class="nav-card card-timeline" onclick="activateCard(this)">
+                <div class="nav-card card-timeline" onclick="activateCard(this, event)">
                     <div class="card-header">
                         <h2>TIMELINE</h2>
-                        <i class="fas fa-chevron-up toggle-icon"></i>
                     </div>
                     <div class="card-content-section">
                         <section class="timeline">
@@ -114,10 +111,9 @@
                 </div>
 
                 <!-- CARD 4: お知らせ・写真登録 -->
-                <div class="nav-card card-notice" onclick="activateCard(this)">
+                <div class="nav-card card-notice" onclick="activateCard(this, event)">
                     <div class="card-header">
                         <h2>NOTICE</h2>
-                        <i class="fas fa-chevron-up toggle-icon"></i>
                     </div>
                     <div class="card-content-section">
                         <section id="photo-upload-promo" class="photo-upload-promo">
@@ -700,7 +696,7 @@
     </div>
 
     <script src="swiper-bundle.min.js"></script>
-    <script src="script.js?v=2.0.1"></script>
+    <script src="script.js?v=4.0.1"></script>
 </body>
 
 </html>

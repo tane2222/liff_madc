@@ -1260,8 +1260,10 @@ var vueApp = new Vue({
         }
     }
 });
+let isListMode = false;
+
 // ▼▼▼ ニュースナビゲーション風 UI のカード切り替えロジック ▼▼▼
-function activateCard(clickedCard) {
+function activateCard(clickedCard, event) {
     const container = document.querySelector('.stack-nav-container');
     const cards = Array.from(document.querySelectorAll('.nav-card'));
 
@@ -1270,62 +1272,113 @@ function activateCard(clickedCard) {
     // 最新の高さを取得 (display:noneからの復帰も考慮)
     const containerHeight = container.getBoundingClientRect().height;
 
-    // Fallback logic internally
-    let clickedIndex = cards.indexOf(clickedCard);
-    if (clickedIndex === -1) {
-        clickedIndex = 0;
-        clickedCard = cards[0];
+    // アクティブなヘッダーをタップした場合はリストモードへ戻す
+    if (event && clickedCard && clickedCard.classList.contains('active')) {
+        const isHeader = event.target.closest('.card-header');
+        if (isHeader) {
+            clickedCard = null;
+        }
+    }
+
+    isListMode = (clickedCard === null);
+
+    let clickedIndex = -1;
+    if (!isListMode) {
+        clickedIndex = cards.indexOf(clickedCard);
+        if (clickedIndex === -1) {
+            clickedIndex = 0;
+        }
     }
 
     const HEADER_HEIGHT = 70; // Must match CSS .card-header height
 
     cards.forEach((card, index) => {
         // Toggle active design class
-        if (index === clickedIndex) {
+        if (!isListMode && index === clickedIndex) {
             card.classList.add('active');
         } else {
             card.classList.remove('active');
         }
 
         // Z-Index for visual stacking
-        card.style.zIndex = (index === clickedIndex) ? 50 : (10 + index);
+        card.style.zIndex = (!isListMode && index === clickedIndex) ? 50 : (10 + index);
 
         // Calculate the hardware-accelerated "transform" in pixels
-        if (index <= clickedIndex) {
-            // Stack sequentially at the top: 0px, 70px, 140px...
-            card.style.transform = `translateY(${index * HEADER_HEIGHT}px)`;
+        if (isListMode) {
+            // リストモード：縦列に均等割り当てしてナビゲーション全体を見せる
+            // containerの少し隙間を開けるように割り当て
+            const listSlotHeight = containerHeight / cards.length;
+            card.style.transform = `translateY(${index * listSlotHeight}px)`;
         } else {
-            // Stack at the bottom (peeking out)
-            // Example: container is 600px tall. 4 cards total. Clicked is 0.
-            // Index 1 bottom peeking height: containerHeight - (3 * 70px)
-            const peekingOffset = containerHeight - ((cards.length - index) * HEADER_HEIGHT);
-            card.style.transform = `translateY(${peekingOffset}px)`;
+            // アクティブモード：選択したカードを開き他を上下に退避
+            if (index <= clickedIndex) {
+                card.style.transform = `translateY(${index * HEADER_HEIGHT}px)`;
+            } else {
+                const peekingOffset = containerHeight - ((cards.length - index) * HEADER_HEIGHT);
+                card.style.transform = `translateY(${peekingOffset}px)`;
+            }
         }
     });
 }
-
-// Make globally accessible
 window.activateCard = activateCard;
 
-// Execute on DOMContentLoaded if visible
+// タッチスワイプでリストモードに戻す処理（下に引っ張る）
+let startY = 0;
+let isPulling = false;
+
 window.addEventListener('DOMContentLoaded', () => {
     const myPage = document.getElementById('my-page');
-    // only layout if visible, otherwise wait for showPage
+    // DOM準備時の初期レイアウト呼び出し
     if (myPage && myPage.style.display !== 'none') {
         const cards = document.querySelectorAll('.nav-card');
         if (cards.length > 0) {
             const navCards = Array.from(cards);
             navCards.forEach(c => c.style.transition = 'none');
-            activateCard(cards[0]);
+            activateCard(cards[0], null);
 
             setTimeout(() => {
                 navCards.forEach(c => c.style.transition = 'transform 0.65s cubic-bezier(0.25, 1.15, 0.4, 1)');
             }, 50);
         }
     } else {
-        // ensure transition is active for when showPage calls it
         const cards = document.querySelectorAll('.nav-card');
         Array.from(cards).forEach(c => c.style.transition = 'transform 0.65s cubic-bezier(0.25, 1.15, 0.4, 1)');
+    }
+
+    // スワイプ判定イベント登録
+    const container = document.querySelector('.stack-nav-container');
+    if (container) {
+        container.addEventListener('touchstart', (e) => {
+            if (isListMode) return;
+            const activeContent = document.querySelector('.nav-card.active .card-content-section');
+            // コンテンツが一番上までスクロールされている時だけ「下引っ張り」を許可
+            if (!activeContent || activeContent.scrollTop <= 0) {
+                startY = e.touches[0].clientY;
+                isPulling = true;
+            } else {
+                isPulling = false;
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isPulling || isListMode) return;
+            const activeContent = document.querySelector('.nav-card.active .card-content-section');
+            if (activeContent && activeContent.scrollTop > 0) {
+                isPulling = false; // スクロールが始まってしまったらキャンセル
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+            if (!isPulling || isListMode) return;
+            const currentY = e.changedTouches[0].clientY;
+            const deltaY = currentY - startY;
+
+            // 50px以上下に向かって引っ張られたらリストモードへ移行
+            if (deltaY > 50) {
+                activateCard(null, null);
+            }
+            isPulling = false;
+        });
     }
 });
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
