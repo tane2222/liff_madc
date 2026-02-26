@@ -268,36 +268,36 @@ body {
 
 .nav-card {
     position: absolute;
-    top: 100%;
-    /* Default offscreen */
+    top: 0;
     left: 0;
     width: 100%;
-    /* 4 cards, so height is 100% - (3 * 70px) = 100% - 210px */
+    /* Cards need to reach the very bottom when stacked */
     height: calc(100% - 210px);
     border-radius: 20px 20px 0 0;
-    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.1);
-    transition: top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+    /* Premium Spring motion! */
+    transition: transform 0.65s cubic-bezier(0.25, 1.15, 0.4, 1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    will-change: top;
+    will-change: transform;
 }
 
 /* Header colors matching the 'vibrant' request */
 .card-profile {
-    background: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+    background: linear-gradient(135deg, #FF3D68 0%, #FF2052 100%);
 }
 
 .card-pickup {
-    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
 }
 
 .card-timeline {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
 }
 
 .card-notice {
-    background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
 }
 
 .card-header {

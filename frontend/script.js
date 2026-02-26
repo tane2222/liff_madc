@@ -1267,7 +1267,8 @@ function activateCard(clickedCard) {
 
     if (!cards.length || !container) return;
 
-    const containerHeight = container.clientHeight;
+    // 最新の高さを取得 (display:noneからの復帰も考慮)
+    const containerHeight = container.getBoundingClientRect().height;
 
     // Fallback logic internally
     let clickedIndex = cards.indexOf(clickedCard);
@@ -1289,16 +1290,16 @@ function activateCard(clickedCard) {
         // Z-Index for visual stacking
         card.style.zIndex = (index === clickedIndex) ? 50 : (10 + index);
 
-        // Calculate the absolutely positioned "top" in pixels
+        // Calculate the hardware-accelerated "transform" in pixels
         if (index <= clickedIndex) {
             // Stack sequentially at the top: 0px, 70px, 140px...
-            card.style.top = `${index * HEADER_HEIGHT}px`;
+            card.style.transform = `translateY(${index * HEADER_HEIGHT}px)`;
         } else {
-            // Stack completely out of view at the bottom (peeking out)
+            // Stack at the bottom (peeking out)
             // Example: container is 600px tall. 4 cards total. Clicked is 0.
             // Index 1 bottom peeking height: containerHeight - (3 * 70px)
             const peekingOffset = containerHeight - ((cards.length - index) * HEADER_HEIGHT);
-            card.style.top = `${peekingOffset}px`;
+            card.style.transform = `translateY(${peekingOffset}px)`;
         }
     });
 }
@@ -1318,13 +1319,13 @@ window.addEventListener('DOMContentLoaded', () => {
             activateCard(cards[0]);
 
             setTimeout(() => {
-                navCards.forEach(c => c.style.transition = 'top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)');
+                navCards.forEach(c => c.style.transition = 'transform 0.65s cubic-bezier(0.25, 1.15, 0.4, 1)');
             }, 50);
         }
     } else {
         // ensure transition is active for when showPage calls it
         const cards = document.querySelectorAll('.nav-card');
-        Array.from(cards).forEach(c => c.style.transition = 'top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)');
+        Array.from(cards).forEach(c => c.style.transition = 'transform 0.65s cubic-bezier(0.25, 1.15, 0.4, 1)');
     }
 });
 // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
